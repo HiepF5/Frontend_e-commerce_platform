@@ -27,7 +27,9 @@ export default defineConfig({
       '@helper': path.resolve(__dirname, './src/helper'),
       '@hooks': path.resolve(__dirname, './src/hooks'),
       '@middleware': path.resolve(__dirname, './src/middleware'),
-      '@type': path.resolve(__dirname, './src/type')
+      '@type': path.resolve(__dirname, './src/type'),
+      '@features': path.resolve(__dirname, './src/features'),
+      '@shared': path.resolve(__dirname, './src/shared'),
     }
   }
 })

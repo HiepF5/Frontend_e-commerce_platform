@@ -18,6 +18,9 @@ module.exports = {
         paths: [path.resolve(__dirname, '')],
         extensions: ['.js', '.jsx', '.ts', '.tsx']
       },
+        typescript: {
+        project: path.resolve(__dirname, './tsconfig.json')
+      }
     }
   },
   plugins: ['prettier'],
@@ -27,6 +30,8 @@ module.exports = {
     // Cảnh báo khi thẻ <a target='_blank'> mà không có rel="noreferrer"
     'react/jsx-no-target-blank': 'warn',
     'react-refresh/only-export-components': 'warn',
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
     // Tăng cường một số rule prettier (copy từ file .prettierrc qua)
     'prettier/prettier': [
       'warn',
