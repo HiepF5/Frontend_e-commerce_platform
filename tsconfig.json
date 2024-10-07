@@ -1,16 +1,10 @@
 {
-  "files": [],
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
   "compilerOptions": {
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "typeRoots": ["./node_modules/@types", "./src/types"],
 
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -43,7 +37,9 @@
       "@middleware/*": ["src/middleware/*"],
       "@type/*": ["src/type/*"],
       "@features/*": ["src/features/*"],
-      "@shared/*": ["src/shared/*"],
+      "@shared/*": ["src/shared/*"]
     }
   },
+  "include": ["src"],
+  "references": [{ "path": "./tsconfig.node.json" }]
 }

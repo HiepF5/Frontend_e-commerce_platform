@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
 import In_2 from '@assets/SignInImg/In_2.png'
-import GG from '@assets/SignInImg/Google.png'
-import TW from '@assets/SignInImg/twitter.png'
 import { FaEyeSlash, FaEye } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -18,7 +16,7 @@ const MainSignUp = () => {
 
   const [showPassword, setShowPassword] = useState(false)
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
     setFormData({
       ...formData,
@@ -28,7 +26,7 @@ const MainSignUp = () => {
 
   const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     if (formData.password !== formData.confirmPassword) {
@@ -36,20 +34,23 @@ const MainSignUp = () => {
       return
     }
 
-    const response = await fetch('http://localhost:8081/auth/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: formData.username,
-        address: 'Hưng yên',
-        email: formData.email,
-        fullName: 'New Customer',
-        phoneNumber: '0975251857',
-        password: formData.password
-      })
-    })
+    const response = await fetch(
+      'http://localhost:9000/api/guest/users/register',
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          address: 'Hưng yên',
+          email: formData.email,
+          fullName: 'New Customer',
+          phoneNumber: '0975251857',
+          password: formData.password
+        })
+      }
+    )
 
     const data = await response.json()
     console.log(data)
@@ -70,7 +71,7 @@ const MainSignUp = () => {
           </div>
           <div className='container flex flex-col gap-y-4 pt-5'>
             <h1 className='font-bold text-2xl text-left'>Sign Up</h1>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={(e) => handleSubmit(e)}>
               <div className='flex flex-col text-left gap-2'>
                 <label>Username</label>
                 <input
@@ -132,7 +133,10 @@ const MainSignUp = () => {
                 />
               </div>
               <div className='text-left'>
-                <span>Use 8 or more characters with a mix of letters, numbers & symbols</span>
+                <span>
+                  Use 8 or more characters with a mix of letters, numbers &
+                  symbols
+                </span>
                 <div className='flex items-center gap-2'>
                   <input
                     id='a'
@@ -142,7 +146,9 @@ const MainSignUp = () => {
                     onChange={handleChange}
                     className='h-4 w-4 accent-pink-500'
                   />
-                  <label htmlFor='a'>Agree to our Terms of use and Privacy Policy</label>
+                  <label htmlFor='a'>
+                    Agree to our Terms of use and Privacy Policy
+                  </label>
                 </div>
                 <div className='flex items-center gap-2'>
                   <input
@@ -157,7 +163,10 @@ const MainSignUp = () => {
                 </div>
               </div>
               <div className='text-left'>
-                <button type='submit' className='border rounded bg-[#8A33FD] text-white px-8 p-2'>
+                <button
+                  type='submit'
+                  className='border rounded bg-[#8A33FD] text-white px-8 p-2'
+                >
                   Sign Up
                 </button>
                 <p>Already have an account? Log in</p>
