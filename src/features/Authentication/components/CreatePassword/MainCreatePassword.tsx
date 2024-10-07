@@ -7,7 +7,7 @@ const MainCreatePassword = () => {
     <div className='container'>
       <div>
         <div className='grid grid-cols-2 text-center'>
-          <div className='max-w-[956px] h-[675px]'>
+          <div className='max-w-[956px] h-[625px]'>
             <img src={In_6} alt='' className='w-full h-full object-cover' />
           </div>
           <div className='container flex flex-col gap-y-4 pt-5'>

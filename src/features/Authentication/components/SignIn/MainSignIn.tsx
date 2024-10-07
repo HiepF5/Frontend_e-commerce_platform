@@ -37,19 +37,11 @@ const MainSignIn = () => {
     <div className='container'>
       <div>
         <div className='grid grid-cols-2 text-center'>
-          <div className='max-w-[956px] h-[675px]'>
+          <div className='max-w-[956px] h-[625px]'>
             <img src={In_1} alt='' className='w-full h-full object-cover' />
           </div>
           <div className='container flex flex-col gap-y-4 pt-5'>
             <h1 className='font-bold text-2xl text-left pb-6'>Sign In Page</h1>
-            <div className='flex items-center gap-x-3 border-2 rounded px-32 py-2 border-gray-600/40'>
-              <img src={GG} alt='' />
-              <button className='text-[#8A33FD]'>Continue With Google</button>
-            </div>
-            <div className='flex items-center gap-x-3 border-2 rounded px-32 py-2 border-gray-600/40'>
-              <img src={TW} alt='' />
-              <button className='text-[#8A33FD]'>Continue With Twitter</button>
-            </div>
             <form >
               <div className='flex flex-col text-left'>
                 <span>User name or email address</span>
