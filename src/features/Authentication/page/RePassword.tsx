@@ -1,6 +1,7 @@
 import React from 'react'
-import NavbarLogin from '../components/NavbarLogin/NavbarLogin'
-import MainRePassword from '../Login/RePassword/MainRePassword'
+import NavbarLogin from '../../../shared/components/NavbarLogin/NavbarLogin'
+import MainRePassword from '../components/RePassword/MainRePassword'
+
 
 const RePassword = () => {
   return (
