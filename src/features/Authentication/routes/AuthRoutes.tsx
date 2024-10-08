@@ -18,11 +18,46 @@ const AuthRoutes = (): JSX.Element => {
         </AuthLayout>
       )
     },
-    { path: 'signup', element: <SignUp /> },
-    { path: 'register', element: <CreatePassword /> },
-    { path: 'checkemail', element: <CheckEmail /> },
-    { path: 'repassword', element: <RePassword /> },
-    { path: 'verification', element: <Verification /> }
+    {
+      path: 'signup',
+      element: (
+        <AuthLayout layoutQuery={'xs'}>
+          <SignUp />
+        </AuthLayout>
+      )
+    },
+    {
+      path: 'register',
+      element: (
+        <AuthLayout layoutQuery={'xs'}>
+          <CreatePassword />
+        </AuthLayout>
+      )
+    },
+    {
+      path: 'checkemail',
+      element: (
+        <AuthLayout layoutQuery={'xs'}>
+          <CheckEmail />
+        </AuthLayout>
+      )
+    },
+    {
+      path: 'repassword',
+      element: (
+        <AuthLayout layoutQuery={'xs'}>
+          <RePassword />
+        </AuthLayout>
+      )
+    },
+    {
+      path: 'verification',
+      element: (
+        <AuthLayout layoutQuery={'xs'}>
+          <Verification />
+        </AuthLayout>
+      )
+    }
   ]
 
   const element = useRoutes(routes)

@@ -1,13 +1,11 @@
-import React from 'react'
-import In_5 from '@assets/SignInImg/In_5.png'
-import { IoIosArrowBack } from 'react-icons/io'
+import Img_Verification from '@assets/SignInImg/siderbar_verification.png'
 const MainVerification = () => {
   return (
     <div className='container'>
       <div>
         <div className='grid grid-cols-2 text-center'>
-          <div className='max-w-[956px] h-[625px]'>
-            <img src={In_5} alt='' className='w-full h-full object-cover' />
+          <div style={{ height: 'calc(100vh - 100px)' }}>
+            <img src={Img_Verification} alt='' className=' h-full object-cover' />
           </div>
           <div className='container flex flex-col gap-y-4 pt-5'>
             <h1 className='font-bold text-3xl text-left '>Verification</h1>

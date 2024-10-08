@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  themeColor: localStorage.getItem('themeColor') ?? '#19857b'
+  themeColor: localStorage.getItem('themeColor') ?? '#CB1C22'
 };
 
 const themeSlice = createSlice({

@@ -5,7 +5,6 @@ import { environment } from '@config/environment';
 import { API_ENDPOINTS_ACCOUNT } from '@config/apiConfig';
 
 export const getLogin = async (data: ILoginFormRequest): Promise<IBaseResponse<ILoginResponse>> => {
-  debugger;
   try {
     const form_data = new FormData();
     form_data.append('username', data.username)

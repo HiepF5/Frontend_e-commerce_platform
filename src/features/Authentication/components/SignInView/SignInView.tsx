@@ -5,16 +5,17 @@ import {
   IconButton,
   Typography,
   Link,
-  Divider
+  Divider,
+  Button
 } from '@mui/material'
-import { LoadingButton } from '@mui/lab'
 import { Iconify } from '@shared/components/iconify'
 import { useAppDispatch, useAppSelector } from '@store/hook'
 import { login } from '../../slices/authSlice'
 import { setCookie } from '../../slices/authSlice'
 import { useNavigate } from 'react-router-dom'
 
-import In_1 from '@assets/SignInImg/In_1.png'
+import Img_SignIn from '@assets/SignInImg/siderbar_signin.png'
+import { toast } from 'react-toastify'
 
 const SignInView = () => {
   const [username, setUsername] = useState('')
@@ -33,6 +34,7 @@ const SignInView = () => {
           dispatch(setCookie())
           console.log('Login success')
           navigate('/')
+          toast.success('Login success')
         }
       } catch (err) {
         console.error('Login failed:', err)
@@ -44,8 +46,8 @@ const SignInView = () => {
   return (
     <div className='container'>
       <div className='grid grid-cols-2 text-center'>
-        <div className='max-w-[956px] h-[625px]'>
-          <img src={In_1} alt='' className='w-full h-full object-cover' />
+        <div className='' style={{ height: 'calc(100vh - 100px)' }}>
+          <img src={Img_SignIn} alt='' className=' h-full object-cover' />
         </div>
         <div className='container flex flex-col gap-y-4 pt-5'>
           <Box
@@ -102,16 +104,16 @@ const SignInView = () => {
               sx={{ mb: 3 }}
             />
 
-            <LoadingButton
+            <Button
               fullWidth
               size='large'
               type='submit'
-              color='inherit'
+              color='primary'
               variant='contained'
               onClick={handleSignIn}
             >
               Sign in
-            </LoadingButton>
+            </Button>
           </Box>
 
           {error && <Typography color='error'>{error}</Typography>}

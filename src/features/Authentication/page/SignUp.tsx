@@ -1,6 +1,6 @@
 import React from 'react'
 import NavbarLogin from '../../../shared/components/NavbarLogin/NavbarLogin'
-import MainSignUp from '../components/SignUp/MainSignUp'
+import MainSignUp from '../components/SignUpView/SignUpView'
 
 
 const SignUp = () => {

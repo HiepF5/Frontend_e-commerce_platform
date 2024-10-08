@@ -1,4 +1,3 @@
-import React from 'react'
 import Logo from '@assets/HomeImg/Logo_Main.png'
 import { CiSearch } from 'react-icons/ci'
 import { IoMdArrowDropdown } from 'react-icons/io'
@@ -6,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const NavbarLogin = () => {
   return (
-    <div className='container px-[100px] py-4'>
+    <div className='container  py-4'>
       <div className='flex justify-around items-center'>
         <div className=''>
           <img className='' src={Logo} alt='' />
@@ -38,12 +37,12 @@ const NavbarLogin = () => {
             <span>English(United States)</span>
             <IoMdArrowDropdown />
           </div>
-          <button className='border rounded bg-[#8A33FD] text-white px-8 p-2'>
-            <Link to='/Login'>Login </Link>
+          <button className='border rounded bg-primary text-white px-8 p-2'>
+            <Link to='/auth/signin'>Login </Link>
           </button>
 
-          <button className='border rounded text-[#8A33FD] px-8'>
-            <Link to='/signUp'>Sign Up </Link>
+          <button className='border rounded text-primary px-8'>
+            <Link to='/auth/signUp'>Sign Up </Link>
           </button>
         </ul>
       </div>

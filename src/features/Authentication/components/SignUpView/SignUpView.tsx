@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import In_2 from '@assets/SignInImg/In_2.png'
+
+import Img_SignUp from '@assets/SignInImg/siderbar_signup.png'
 import { FaEyeSlash, FaEye } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
 
-const MainSignUp = () => {
+const SignUpView = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
@@ -66,8 +67,12 @@ const MainSignUp = () => {
     <div className='container'>
       <div>
         <div className='grid grid-cols-2 text-center'>
-          <div className='max-w-[956px] h-[625px]'>
-            <img src={In_2} alt='' className='w-full h-full object-cover' />
+          <div style={{ height: 'calc(100vh - 100px)' }}>
+            <img
+              src={Img_SignUp}
+              alt=''
+              className=' h-full object-cover'
+            />
           </div>
           <div className='container flex flex-col gap-y-4 pt-5'>
             <h1 className='font-bold text-2xl text-left'>Sign Up</h1>
@@ -179,4 +184,4 @@ const MainSignUp = () => {
   )
 }
 
-export default MainSignUp
+export default SignUpView

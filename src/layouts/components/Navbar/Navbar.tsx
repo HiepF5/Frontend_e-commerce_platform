@@ -68,7 +68,7 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
      duration-200 relative z-40'
     >
       {/* Upper Navbar */}
-      <div className='bg-primary/40 py-2'>
+      <div className='bg-primary py-2'>
         <div
           className='container flex 
         justify-between items-center '
@@ -107,8 +107,8 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
             {/* order button */}
             <button
               onClick={() => handleOrderPopup()}
-              className='bg-gradient-to-r from-primary
-          to-secondary transition-all duration-200
+              className='bg-gradient-to-r from-orange-400
+          to-lime-400 transition-all duration-200
           text-white py-1 px-4 rounded-full flex 
           items-center gap-3 group'
             >
@@ -129,8 +129,8 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
             </button>
             <button
               onClick={() => handleSignIn()}
-              className='bg-gradient-to-r from-primary
-          to-secondary transition-all duration-200
+              className='bg-gradient-to-r from-orange-400
+          to-lime-400 transition-all duration-200
           text-white py-1 px-4 rounded-full flex 
           items-center gap-3 group'
             >

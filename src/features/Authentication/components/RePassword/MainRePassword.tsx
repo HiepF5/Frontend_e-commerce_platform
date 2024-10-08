@@ -1,15 +1,21 @@
 import React from 'react'
-import In_3 from '@assets/SignInImg/In_3.png'
+import Img_Repassword from '@assets/SignInImg/siderbar_repassword.png'
 const MainRePassword = () => {
   return (
     <div className='container'>
       <div>
         <div className='grid grid-cols-2 text-center'>
-          <div className='max-w-[956px] h-[625px]'>
-            <img src={In_3} alt='' className='w-full h-full object-cover' />
+          <div style={{ height: 'calc(100vh - 100px)' }}>
+            <img
+              src={Img_Repassword}
+              alt=''
+              className=' h-full object-cover'
+            />
           </div>
           <div className='container flex flex-col gap-y-4 pt-5'>
-            <h1 className='font-bold text-2xl text-left '>Reset Your Password</h1>
+            <h1 className='font-bold text-2xl text-left '>
+              Reset Your Password
+            </h1>
             <span className='text-left text-gray-400/95'>
               Enter your email and we'll send you a link to reset your password.
             </span>
@@ -26,7 +32,9 @@ const MainRePassword = () => {
             </div>
 
             <div className='text-left'>
-              <button className='border rounded bg-[#8A33FD] text-white px-8 p-2'>Send</button>
+              <button className='border rounded bg-[#8A33FD] text-white px-8 p-2'>
+                Send
+              </button>
               <p>Back to Login</p>
             </div>
           </div>

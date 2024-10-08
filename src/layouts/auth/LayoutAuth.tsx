@@ -14,14 +14,12 @@ export function AuthLayout({ sx, children, layoutQuery, ...other }: MainProps) {
   const renderContent = (
     <Box
       sx={{
-        py: 5,
-        px: 3,
         width: 1,
         borderRadius: 2,
         display: 'flex',
         flexDirection: 'column',
         bgcolor: 'background.default',
-        maxWidth: 'var(--layout-auth-content-width)'
+
       }}
     >
       {children}
