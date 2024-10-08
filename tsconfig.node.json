@@ -15,14 +15,15 @@
       "@constants/*": ["src/constants/*"],
       "@layouts/*": ["src/layouts/*"],
       "@redux/*": ["src/redux/*"],
+      "@store/*": ["src/store/*"],
       "@plugin/*": ["src/plugin/*"],
       "@api/*": ["src/api/*"],
       "@css/*": ["src/assets/css/*"],
       "@helper/*": ["src/helper/*"],
       "@hooks/*": ["src/hooks/*"],
       "@middleware/*": ["src/middleware/*"],
-      "@type/*": ["src/type/*"],
-      "@shared/*": ["src/shared/*"],
+      "@types/*": ["src/types/*"],
+      "@shared/*": ["src/shared/*"]
     }
   },
   "include": ["vite.config.ts"]

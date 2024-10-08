@@ -28,14 +28,16 @@
       "@pages/*": ["src/pages/*"],
       "@constants/*": ["src/constants/*"],
       "@layouts/*": ["src/layouts/*"],
+      "@config/*": ["src/config/*"],
       "@redux/*": ["src/redux/*"],
+      "@store/*": ["src/store/*"],
       "@plugin/*": ["src/plugin/*"],
       "@api/*": ["src/api/*"],
       "@css/*": ["src/assets/css/*"],
       "@helper/*": ["src/helper/*"],
       "@hooks/*": ["src/hooks/*"],
       "@middleware/*": ["src/middleware/*"],
-      "@type/*": ["src/type/*"],
+      "@types/*": ["src/types/*"],
       "@features/*": ["src/features/*"],
       "@shared/*": ["src/shared/*"]
     }

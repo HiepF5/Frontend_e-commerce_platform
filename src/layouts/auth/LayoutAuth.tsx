@@ -1,0 +1,46 @@
+import type { BoxProps } from '@mui/material/Box';
+import type { Breakpoint } from '@mui/system';
+
+import Box from '@mui/material/Box';
+import { useTheme } from '@mui/system';
+
+
+type MainProps = BoxProps & {
+  layoutQuery: Breakpoint;
+};
+
+export function AuthLayout({ sx, children, layoutQuery, ...other }: MainProps) {
+
+  const renderContent = (
+    <Box
+      sx={{
+        py: 5,
+        px: 3,
+        width: 1,
+        borderRadius: 2,
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: 'background.default',
+        maxWidth: 'var(--layout-auth-content-width)'
+      }}
+    >
+      {children}
+    </Box>
+  )
+
+  return (
+    <Box
+      component='main'
+      sx={{
+        display: 'flex',
+        flex: '1 1 auto',
+        alignItems: 'center',
+        flexDirection: 'column',
+        ...sx
+      }}
+      {...other}
+    >
+      {renderContent}
+    </Box>
+  )
+}

@@ -2,7 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
-  themeColor: localStorage.getItem('themeColor') ?? '#19857b' // Màu mặc định hoặc lấy từ localStorage
+  themeColor: localStorage.getItem('themeColor') ?? '#19857b'
 };
 
 const themeSlice = createSlice({

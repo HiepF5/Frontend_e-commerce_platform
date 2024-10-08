@@ -1,6 +1,7 @@
 import React from 'react'
 import NavbarLogin from '../../../shared/components/NavbarLogin/NavbarLogin'
-import MainSignIn from '../components/SignIn/MainSignIn'
+import MainSignIn from '../components/SignInView/SignInView'
+import { SignInView } from '../components/SignInView/SignInView'
 
 
 const SignIn = () => {
@@ -9,7 +10,6 @@ const SignIn = () => {
       <div>
         <NavbarLogin />
         <MainSignIn />
-        
       </div>
     </div>
   )

@@ -2,8 +2,10 @@ import React from 'react'
 import Logo from '@assets/logo.png'
 import { IoMdSearch } from 'react-icons/io'
 import { FaCaretDown, FaCartShopping } from 'react-icons/fa6'
+import { FaSignInAlt } from 'react-icons/fa'
 import DarkMode from './DarkMode'
 import { data } from 'autoprefixer'
+import { useNavigate } from 'react-router-dom'
 const Menu = [
   {
     id: 1,
@@ -54,6 +56,11 @@ interface NavbarProps {
 }
 
 const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
+  const navigate = useNavigate()
+  const handleSignIn = () => {
+    navigate('/auth/signin')
+  }
+    
   return (
     <div
       className='shadow-md bg-white
@@ -120,6 +127,28 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
              '
               />
             </button>
+            <button
+              onClick={() => handleSignIn()}
+              className='bg-gradient-to-r from-primary
+          to-secondary transition-all duration-200
+          text-white py-1 px-4 rounded-full flex 
+          items-center gap-3 group'
+            >
+              <span
+                className='group-hover:block 
+            hidden transition-all
+            duration-200'
+              >
+                SignIn
+              </span>
+              <FaSignInAlt
+                className='text-xl
+             text-white
+               drop-shadow-sm 
+               cursor-pointer
+             '
+              />
+            </button>
             {/* Darkmode Switch */}
             <div>
               <DarkMode />
@@ -143,7 +172,10 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
           ))}
           {/* Simple Dropdown and Links */}
           <li className='group relative cursor-pointer'>
-            <a href='#' className='flex items-center gap-[2px] py-2 duration-200'>
+            <a
+              href='#'
+              className='flex items-center gap-[2px] py-2 duration-200'
+            >
               Trending Products
               <span>
                 <FaCaretDown

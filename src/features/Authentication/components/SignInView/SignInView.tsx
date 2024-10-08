@@ -1,124 +1,150 @@
 import { useState, useCallback } from 'react'
-
-import Box from '@mui/material/Box'
-import Link from '@mui/material/Link'
-import Divider from '@mui/material/Divider'
-import TextField from '@mui/material/TextField'
-import IconButton from '@mui/material/IconButton'
-import Typography from '@mui/material/Typography'
-import LoadingButton from '@mui/lab/LoadingButton'
-import InputAdornment from '@mui/material/InputAdornment'
+import {
+  Box,
+  TextField,
+  IconButton,
+  Typography,
+  Link,
+  Divider
+} from '@mui/material'
+import { LoadingButton } from '@mui/lab'
 import { Iconify } from '@shared/components/iconify'
+import { useAppDispatch, useAppSelector } from '@store/hook'
+import { login } from '../../slices/authSlice'
+import { setCookie } from '../../slices/authSlice'
+import { useNavigate } from 'react-router-dom'
 
-// import { useRouter } from 'src/routes/hooks'
+import In_1 from '@assets/SignInImg/In_1.png'
 
-
-
-export function SignInView() {
-  // const router = useRouter()
-
+const SignInView = () => {
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const navigate = useNavigate()
+
+  const dispatch = useAppDispatch()
+  const { error } = useAppSelector((state) => state.auth)
 
   const handleSignIn = useCallback(() => {
-    // router.push('/')
-  }, []) //router
+    ;(async () => {
+      try {
+        const result = await dispatch(login({ username, password }))
+        if (result.meta.requestStatus === 'fulfilled') {
+          dispatch(setCookie())
+          console.log('Login success')
+          navigate('/')
+        }
+      } catch (err) {
+        console.error('Login failed:', err)
+      }
+    })()
+  }, [dispatch, username, password])
 
-  const renderForm = (
-    <Box display='flex' flexDirection='column' alignItems='flex-end'>
-      <TextField
-        fullWidth
-        name='email'
-        label='Email address'
-        defaultValue='hello@gmail.com'
-        InputLabelProps={{ shrink: true }}
-        sx={{ mb: 3 }}
-      />
-
-      <Link variant='body2' color='inherit' sx={{ mb: 1.5 }}>
-        Forgot password?
-      </Link>
-
-      <TextField
-        fullWidth
-        name='password'
-        label='Password'
-        defaultValue='@demo1234'
-        InputLabelProps={{ shrink: true }}
-        type={showPassword ? 'text' : 'password'}
-        InputProps={{
-          endAdornment: (
-            <InputAdornment position='end'>
-              <IconButton
-                onClick={() => setShowPassword(!showPassword)}
-                edge='end'
-              >
-                {/* <Iconify
-                  icon={
-                    showPassword ? 'solar:eye-bold' : 'solar:eye-closed-bold'
-                  }
-                /> */}
-              </IconButton>
-            </InputAdornment>
-          )
-        }}
-        sx={{ mb: 3 }}
-      />
-
-      <LoadingButton
-        fullWidth
-        size='large'
-        type='submit'
-        color='inherit'
-        variant='contained'
-        onClick={handleSignIn}
-      >
-        Sign in
-      </LoadingButton>
-    </Box>
-  )
 
   return (
-    <>
-      <Box
-        gap={1.5}
-        display='flex'
-        flexDirection='column'
-        alignItems='center'
-        sx={{ mb: 5 }}
-      >
-        <Typography variant='h5'>Sign in</Typography>
-        <Typography variant='body2' color='text.secondary'>
-          Don’t have an account?
-          <Link variant='subtitle2' sx={{ ml: 0.5 }}>
-            Get started
-          </Link>
-        </Typography>
-      </Box>
+    <div className='container'>
+      <div className='grid grid-cols-2 text-center'>
+        <div className='max-w-[956px] h-[625px]'>
+          <img src={In_1} alt='' className='w-full h-full object-cover' />
+        </div>
+        <div className='container flex flex-col gap-y-4 pt-5'>
+          <Box
+            gap={1.5}
+            display='flex'
+            flexDirection='column'
+            alignItems='center'
+            sx={{ mb: 5 }}
+          >
+            <Typography variant='h5'>Sign in</Typography>
+            <Typography variant='body2' color='text.secondary'>
+              Don’t have an account?
+              <Link variant='subtitle2' sx={{ ml: 0.5 }}>
+                Get started
+              </Link>
+            </Typography>
+          </Box>
 
-      {renderForm}
+          <Box display='flex' flexDirection='column' alignItems='flex-end'>
+            <TextField
+              fullWidth
+              name='email'
+              label='Email address'
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              sx={{ mb: 3 }}
+            />
 
-      <Divider
-        sx={{ my: 3, '&::before, &::after': { borderTopStyle: 'dashed' } }}
-      >
-        <Typography
-          variant='overline'
-          sx={{ color: 'text.secondary', fontWeight: 'fontWeightMedium' }}
-        >
-          OR
-        </Typography>
-      </Divider>
+            <TextField
+              fullWidth
+              name='password'
+              label='Password'
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              InputLabelProps={{ shrink: true }}
+              type={showPassword ? 'text' : 'password'}
+              InputProps={{
+                endAdornment: (
+                  <IconButton
+                    onClick={() => setShowPassword(!showPassword)}
+                    edge='end'
+                  >
+                    <Iconify
+                      icon={
+                        showPassword
+                          ? 'solar:eye-bold'
+                          : 'solar:eye-closed-bold'
+                      }
+                    />
+                  </IconButton>
+                )
+              }}
+              sx={{ mb: 3 }}
+            />
 
-      <Box gap={1} display='flex' justifyContent='center'>
-        <IconButton color='inherit'>
-          <Iconify icon='logos:google-icon' />
-        </IconButton>
-        <IconButton color='inherit'>
-          <Iconify icon='eva:github-fill' />
-        </IconButton>
-        <IconButton color='inherit'>
-          <Iconify icon='ri:twitter-x-fill' />
-        </IconButton>
-      </Box>
-    </>
+            <LoadingButton
+              fullWidth
+              size='large'
+              type='submit'
+              color='inherit'
+              variant='contained'
+              onClick={handleSignIn}
+            >
+              Sign in
+            </LoadingButton>
+          </Box>
+
+          {error && <Typography color='error'>{error}</Typography>}
+
+          <Divider
+            sx={{
+              my: 3,
+              '&::before, &::after': { borderTopStyle: 'dashed' }
+            }}
+          >
+            <Typography
+              variant='overline'
+              sx={{ color: 'text.secondary', fontWeight: 'fontWeightMedium' }}
+            >
+              OR
+            </Typography>
+          </Divider>
+
+          <Box gap={1} display='flex' justifyContent='center'>
+            <IconButton color='inherit'>
+              <Iconify icon='logos:google-icon' />
+            </IconButton>
+            <IconButton color='inherit'>
+              <Iconify icon='eva:github-fill' />
+            </IconButton>
+            <IconButton color='inherit'>
+              <Iconify icon='ri:twitter-x-fill' />
+            </IconButton>
+          </Box>
+        </div>
+      </div>
+    </div>
   )
 }
+
+export default SignInView
