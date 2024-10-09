@@ -15,3 +15,12 @@ export interface ILoginFormRequest {
   username: string 
   password: string 
 }
+export interface ISignupFormRequest {
+  firstName: string;
+  lastName: string;
+  dob: string; 
+  phoneNumber: string;
+  email: string;
+  username: string;
+  password: string;
+}

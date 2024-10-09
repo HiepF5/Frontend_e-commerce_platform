@@ -30,14 +30,14 @@ const SignInView = () => {
     ;(async () => {
       try {
         const result = await dispatch(login({ username, password }))
-        if (result.meta.requestStatus === 'fulfilled') {
+        const payload = result.payload as { code: number };
+        if (result.meta.requestStatus === 'fulfilled' && payload.code === 200) {
           dispatch(setCookie())
-          console.log('Login success')
           navigate('/')
           toast.success('Login success')
         }
       } catch (err) {
-        console.error('Login failed:', err)
+        toast.error('Login failed')
       }
     })()
   }, [dispatch, username, password])

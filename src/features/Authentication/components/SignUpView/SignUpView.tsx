@@ -1,21 +1,37 @@
 import React, { useState } from 'react'
-
 import Img_SignUp from '@assets/SignInImg/siderbar_signup.png'
 import { FaEyeSlash, FaEye } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import {
+  TextField,
+  Button,
+  Checkbox,
+  FormControlLabel,
+  Typography,
+  IconButton,
+  InputAdornment,
+  Grid
+} from '@mui/material'
+import { useAppDispatch } from '@store/hook'
+import { signup } from '../../slices/authSlice'// Đảm bảo đường dẫn đúng
 
 const SignUpView = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    firstName: '',
+    lastName: '',
+    dob: '',
+    phoneNumber: '',
     email: '',
+    username: '',
     password: '',
     confirmPassword: '',
     agreeTerms: false,
-    subscribeNewsletter: false
   })
 
   const [showPassword, setShowPassword] = useState(false)
+  const dispatch = useAppDispatch() 
+  const navigate = useNavigate()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target
@@ -25,8 +41,6 @@ const SignUpView = () => {
     })
   }
 
-  const navigate = useNavigate()
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
 
@@ -35,28 +49,26 @@ const SignUpView = () => {
       return
     }
 
-    const response = await fetch(
-      'http://localhost:9000/api/guest/users/register',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          username: formData.username,
-          address: 'Hưng yên',
-          email: formData.email,
-          fullName: 'New Customer',
-          phoneNumber: '0975251857',
-          password: formData.password
-        })
-      }
+    const response = await dispatch(
+      signup({
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        dob: formData.dob,
+        phoneNumber: formData.phoneNumber,
+        email: formData.email,
+        username: formData.username,
+        password: formData.password
+      })
     )
+    console.log(response)
 
-    const data = await response.json()
-    console.log(data)
-    toast.success('Bạn đăng kí thành công')
-    navigate('/login')
+    const payload = response.payload as { code: number };
+    if (response.meta.requestStatus === 'fulfilled' && payload.code === 200) {
+      toast.success('Bạn đã đăng ký thành công!')
+      navigate('/auth/verification')
+    } else {
+      toast.error("Đăng ký thất bại") 
+    }
   }
 
   const toggleShowPassword = () => {
@@ -68,114 +80,152 @@ const SignUpView = () => {
       <div>
         <div className='grid grid-cols-2 text-center'>
           <div style={{ height: 'calc(100vh - 100px)' }}>
-            <img
-              src={Img_SignUp}
-              alt=''
-              className=' h-full object-cover'
-            />
+            <img src={Img_SignUp} alt='' className='h-full object-cover' />
           </div>
           <div className='container flex flex-col gap-y-4 pt-5'>
-            <h1 className='font-bold text-2xl text-left'>Sign Up</h1>
-            <form onSubmit={(e) => handleSubmit(e)}>
-              <div className='flex flex-col text-left gap-2'>
-                <label>Username</label>
-                <input
-                  type='text'
-                  name='username'
-                  value={formData.username}
-                  onChange={handleChange}
-                  placeholder='designer@gmail.com'
-                  className='h-16 px-4 border rounded border-gray-300 outline-none text-gray-700 text-lg'
-                />
-              </div>
-              <div className='flex flex-col text-left pt-8 gap-2'>
-                <label>Email Address</label>
-                <input
-                  type='email'
-                  name='email'
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder='designer@gmail.com'
-                  className='h-16 px-4 border rounded border-gray-300 outline-none text-gray-700 text-lg'
-                />
-              </div>
-              <div className='flex flex-col text-left gap-2'>
-                <div className='flex justify-between items-center'>
-                  <label>Password</label>
-                  <div
-                    className='flex justify-between items-center gap-2 text-gray-400 cursor-pointer'
-                    onClick={toggleShowPassword}
-                  >
-                    {showPassword ? <FaEye /> : <FaEyeSlash />}
-                    <span>{showPassword ? 'Hide' : 'Show'}</span>
-                  </div>
-                </div>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name='password'
-                  value={formData.password}
-                  onChange={handleChange}
-                  className='h-16 px-4 border rounded border-gray-300 outline-none text-gray-700 text-lg'
-                />
-              </div>
-              <div className='flex flex-col text-left gap-2'>
-                <div className='flex justify-between items-center'>
-                  <label>Confirm Password</label>
-                  <div
-                    className='flex justify-between items-center gap-2 text-gray-400 cursor-pointer'
-                    onClick={toggleShowPassword}
-                  >
-                    {showPassword ? <FaEye /> : <FaEyeSlash />}
-                    <span>{showPassword ? 'Hide' : 'Show'}</span>
-                  </div>
-                </div>
-                <input
-                  type={showPassword ? 'text' : 'password'}
-                  name='confirmPassword'
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  className='h-16 px-4 border rounded border-gray-300 outline-none text-gray-700 text-lg'
-                />
-              </div>
-              <div className='text-left'>
-                <span>
-                  Use 8 or more characters with a mix of letters, numbers &
-                  symbols
-                </span>
-                <div className='flex items-center gap-2'>
-                  <input
-                    id='a'
-                    name='agreeTerms'
-                    type='checkbox'
-                    checked={formData.agreeTerms}
+            <Typography variant='h5'>Sign Up</Typography>
+            <form onSubmit={handleSubmit}>
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label='First Name'
+                    name='firstName'
+                    value={formData.firstName}
                     onChange={handleChange}
-                    className='h-4 w-4 accent-pink-500'
+                    variant='outlined'
+                    fullWidth
+                    margin='normal'
                   />
-                  <label htmlFor='a'>
-                    Agree to our Terms of use and Privacy Policy
-                  </label>
-                </div>
-                <div className='flex items-center gap-2'>
-                  <input
-                    id='s'
-                    name='subscribeNewsletter'
-                    type='checkbox'
-                    checked={formData.subscribeNewsletter}
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label='Last Name'
+                    name='lastName'
+                    value={formData.lastName}
                     onChange={handleChange}
-                    className='h-4 w-4 accent-pink-500'
+                    variant='outlined'
+                    fullWidth
+                    margin='normal'
                   />
-                  <label htmlFor='s'>Subscribe to our monthly newsletter</label>
-                </div>
-              </div>
-              <div className='text-left'>
-                <button
-                  type='submit'
-                  className='border rounded bg-[#8A33FD] text-white px-8 p-2'
-                >
-                  Sign Up
-                </button>
-                <p>Already have an account? Log in</p>
-              </div>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label='Date of Birth'
+                    type='date'
+                    name='dob'
+                    value={formData.dob}
+                    onChange={handleChange}
+                    variant='outlined'
+                    fullWidth
+                    margin='normal'
+                    InputLabelProps={{ shrink: true }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label='Phone Number'
+                    name='phoneNumber'
+                    value={formData.phoneNumber}
+                    onChange={handleChange}
+                    variant='outlined'
+                    fullWidth
+                    margin='normal'
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label='Email Address'
+                    type='email'
+                    name='email'
+                    value={formData.email}
+                    onChange={handleChange}
+                    variant='outlined'
+                    fullWidth
+                    margin='normal'
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    label='Username'
+                    name='username'
+                    value={formData.username}
+                    onChange={handleChange}
+                    variant='outlined'
+                    fullWidth
+                    margin='normal'
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    type={showPassword ? 'text' : 'password'}
+                    name='password'
+                    label='Password'
+                    value={formData.password}
+                    onChange={handleChange}
+                    variant='outlined'
+                    fullWidth
+                    margin='normal'
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <IconButton onClick={toggleShowPassword}>
+                            {showPassword ? <FaEye /> : <FaEyeSlash />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    type={showPassword ? 'text' : 'password'}
+                    name='confirmPassword'
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    variant='outlined'
+                    label='Confirm Password'
+                    fullWidth
+                    margin='normal'
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position='end'>
+                          <IconButton onClick={toggleShowPassword}>
+                            {showPassword ? <FaEye /> : <FaEyeSlash />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Typography variant='body2'>
+                    Use 8 or more characters with a mix of letters, numbers &
+                    symbols
+                  </Typography>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={formData.agreeTerms}
+                        onChange={handleChange}
+                        name='agreeTerms'
+                        color='primary'
+                      />
+                    }
+                    label='Agree to our Terms of use and Privacy Policy'
+                  />
+                 
+                </Grid>
+                <Grid item xs={12}>
+                  <Button
+                    type='submit'
+                    variant='contained'
+                    color='primary'
+                    fullWidth
+                  >
+                    Sign Up
+                  </Button>
+                </Grid>
+              </Grid>
             </form>
           </div>
         </div>
