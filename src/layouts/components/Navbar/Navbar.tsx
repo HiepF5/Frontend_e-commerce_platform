@@ -3,11 +3,14 @@ import Logo from '@assets/logo.png'
 import { IoMdSearch } from 'react-icons/io'
 import { FaCaretDown, FaCartShopping } from 'react-icons/fa6'
 import { FaSignInAlt } from 'react-icons/fa'
+import { FaUserCircle } from 'react-icons/fa'
 import DarkMode from './DarkMode'
 import { data } from 'autoprefixer'
 import { useNavigate } from 'react-router-dom'
-import { useAppSelector } from '@store/hook'
+import { useAppDispatch, useAppSelector } from '@store/hook'
 import { Avatar, Box, Typography } from '@mui/material'
+import { logout } from '@features/Authentication/slices/authSlice'
+import { toast } from 'react-toastify'
 const Menu = [
   {
     id: 1,
@@ -59,11 +62,21 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
   const navigate = useNavigate()
+   const dispatch = useAppDispatch() 
   const handleSignIn = () => {
     navigate('/auth/signin')
+
   }
-  const { user } = useAppSelector((state) => state.auth)
-  console.log(user)
+  const handleSignOut = () => {
+    localStorage.removeItem('user')
+    dispatch(logout())
+    navigate('/')
+    toast.success('SignOut success')
+  }
+  const handleRegister = () => {
+    navigate('/auth/signup')
+  }
+  const user = JSON.parse(localStorage.getItem('user') || 'null')
   return (
     <div
       className='shadow-md bg-white
@@ -131,37 +144,85 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
               />
             </button>
             {!user?.full_name ? (
-              <button
-                onClick={() => handleSignIn()}
-                className='bg-gradient-to-r from-orange-400
+              <>
+                <button
+                  onClick={() => handleSignIn()}
+                  className='bg-gradient-to-r from-orange-400
           to-lime-400 transition-all duration-200
           text-white py-1 px-4 rounded-full flex 
           items-center gap-3 group'
-              >
-                <span
-                  className='group-hover:block 
+                >
+                  <span
+                    className='group-hover:block 
             hidden transition-all
             duration-200'
-                >
-                  SignIn
-                </span>
-                <FaSignInAlt
-                  className='text-xl
+                  >
+                    SignIn
+                  </span>
+                  <FaSignInAlt
+                    className='text-xl
              text-white
                drop-shadow-sm 
                cursor-pointer
              '
-                />
-              </button>
+                  />
+                </button>
+                <button
+                  onClick={() => handleRegister()}
+                  className='bg-gradient-to-r from-orange-400
+          to-lime-400 transition-all duration-200
+          text-white py-1 px-4 rounded-full flex 
+          items-center gap-3 group'
+                >
+                  <span
+                    className='group-hover:block 
+            hidden transition-all
+            duration-200'
+                  >
+                    Register
+                  </span>
+                  <FaUserCircle
+                    className='text-xl
+             text-white
+               drop-shadow-sm 
+               cursor-pointer
+             '
+                  />
+                </button>
+              </>
             ) : (
-              <Box display='flex' alignItems='center' gap={2}>
-                <Avatar
-                  src={user?.image_url}
-                  alt='User'
-                  sx={{ width: 40, height: 40 }}
-                />
-                <Typography>{user?.full_name}</Typography>
-              </Box>
+              <>
+                <Box display='flex' alignItems='center' gap={2}>
+                  <Avatar
+                    src={user?.image_url}
+                    alt='User'
+                    sx={{ width: 40, height: 40 }}
+                  />
+                  <Typography>{user?.full_name}</Typography>
+                </Box>
+                <button
+                  onClick={() => handleSignOut()}
+                  className='bg-gradient-to-r from-orange-400
+          to-lime-400 transition-all duration-200
+          text-white py-1 px-4 rounded-full flex 
+          items-center gap-3 group'
+                >
+                  <span
+                    className='group-hover:block 
+            hidden transition-all
+            duration-200'
+                  >
+                    SignOut
+                  </span>
+                  <FaSignInAlt
+                    className='text-xl
+             text-white
+               drop-shadow-sm 
+               cursor-pointer
+             '
+                  />
+                </button>
+              </>
             )}
             {/* Darkmode Switch */}
             <div>

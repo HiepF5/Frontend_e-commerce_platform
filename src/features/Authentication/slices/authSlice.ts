@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getLogin, postSignup } from '@api/authApi';
-import { ILoginFormRequest, ILoginResponse, ISignupFormRequest } from '~/types/auth.interface';
+import { getLogin, postRepassword, postSignup, postVerification, postCreateNewPassword } from '@api/authApi';
+import { ILoginFormRequest, ILoginResponse, INewPasswordRequest, IResetPasswordRequest, ISignupFormRequest, IVerificationRequest,  } from '~/types/auth.interface';
 import { IBaseResponse } from '~/types/base.interface';
 import Cookies from 'js-cookie';
 interface AuthState {
@@ -46,6 +46,39 @@ export const signup = createAsyncThunk(
     }
   }
 );
+export const verifycation = createAsyncThunk(
+  'auth/verifycation',
+  async (data: IVerificationRequest, { rejectWithValue }) => {
+    try {
+      const response: IBaseResponse<string> = await postVerification(data);
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to verifycation');
+    }
+  }
+);
+export const rePassword = createAsyncThunk(
+  'auth/rePassword',
+  async (data: IResetPasswordRequest, { rejectWithValue }) => {
+    try {
+      const response: IBaseResponse<string> = await postRepassword(data);
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to rePassword');
+    }
+  }
+);
+export const createPassword = createAsyncThunk(
+  'auth/createPassword',
+  async (data: INewPasswordRequest, { rejectWithValue }) => {
+    try {
+      const response: IBaseResponse<string> = await postCreateNewPassword(data);
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to createPassword');
+    }
+  }
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -61,7 +94,12 @@ const authSlice = createSlice({
       if (state.accessToken) {
         Cookies.set('accessToken', state.accessToken, { expires: 7 });
       }
-    }
+    },
+    setInfoUserLocalstorage(state) {
+      if (state.user) {
+        localStorage.setItem('user', JSON.stringify(state.user));
+      }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -97,9 +135,49 @@ const authSlice = createSlice({
       .addCase(signup.rejected, (state, action) => {
         state.status = false;
         state.error = action.payload as string;
+        
       })
+      //verifycation
+      .addCase(verifycation.pending, (state) => {
+        state.status = false;
+      })
+      .addCase(verifycation.fulfilled, (state, action) => {
+        state.status = true;
+        state.error = null;
+        state.code = action.payload.code as number;
+      })
+      .addCase(verifycation.rejected, (state, action) => {
+        state.status = false;
+        state.error = action.payload as string;
+      })
+      //rePassword
+      .addCase(rePassword.pending, (state) => {
+        state.status = false;
+      })
+      .addCase(rePassword.fulfilled, (state, action) => {
+        state.status = true;
+        state.error = null;
+        state.code = action.payload.code as number;
+      })
+      .addCase(rePassword.rejected, (state, action) => {
+        state.status = false;
+        state.error = action.payload as string;
+      })
+      //createPassword
+      .addCase(createPassword.pending, (state) => {
+        state.status = false;
+      })
+      .addCase(createPassword.fulfilled, (state, action) => {
+        state.status = true;
+        state.error = null;
+        state.code = action.payload.code as number;
+      })
+      .addCase(createPassword.rejected, (state, action) => {
+        state.status = false;
+        state.error = action.payload as string;
+      });
   },
 });
 
-export const { logout, setCookie } = authSlice.actions;
+export const { logout, setCookie, setInfoUserLocalstorage } = authSlice.actions;
 export default authSlice.reducer;

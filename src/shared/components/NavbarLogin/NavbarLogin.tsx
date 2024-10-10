@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 
 const NavbarLogin = () => {
   return (
-    <div className='container  py-4'>
+    <div className='container py-4 border-b-2 border-solid'>
       <div className='flex justify-around items-center'>
         <div className=''>
           <img className='' src={Logo} alt='' />

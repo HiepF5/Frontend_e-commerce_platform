@@ -1,6 +1,6 @@
 import Img_Checkmail from '@assets/SignInImg/siderbar_checkmail.png'
 import { IoIosArrowBack } from 'react-icons/io'
-const MainCheckEmail = () => {
+const CheckEmailView = () => {
   return (
     <div className='container'>
       <div>
@@ -30,4 +30,4 @@ const MainCheckEmail = () => {
   )
 }
 
-export default MainCheckEmail
+export default CheckEmailView

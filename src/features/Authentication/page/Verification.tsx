@@ -1,6 +1,6 @@
 import React from 'react'
 import NavbarLogin from '../../../shared/components/NavbarLogin/NavbarLogin'
-import MainVerification from '../components/Verification/MainVerification'
+import VerificationView from '../components/Verification/VerificationView'
 
 
 const Verification = () => {
@@ -8,7 +8,7 @@ const Verification = () => {
     <div>
       <div>
         <NavbarLogin />
-        <MainVerification />
+        <VerificationView />
       </div>
     </div>
   )

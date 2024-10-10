@@ -1,6 +1,6 @@
 import React from 'react'
 import NavbarLogin from '../../../shared/components/NavbarLogin/NavbarLogin'
-import MainCreatePassword from '../components/CreatePassword/MainCreatePassword'
+import CreatePasswordView from '../components/CreatePassword/CreatePasswordView'
 
 
 const CreatePassword = () => {
@@ -8,7 +8,7 @@ const CreatePassword = () => {
     <div>
       <div>
         <NavbarLogin />
-        <MainCreatePassword />
+        <CreatePasswordView />
       </div>
     </div>
   )

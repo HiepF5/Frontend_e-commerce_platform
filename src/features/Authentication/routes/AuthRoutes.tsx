@@ -27,7 +27,7 @@ const AuthRoutes = (): JSX.Element => {
       )
     },
     {
-      path: 'register',
+      path: 'createpassword',
       element: (
         <AuthLayout layoutQuery={'xs'}>
           <CreatePassword />

@@ -1,3 +1,4 @@
+//Response
 export interface ILoginResponse {
   access_token: string
   refresh_token: string
@@ -11,6 +12,7 @@ export interface ILoginResponse {
   issued_at: string
   expire_at: string
 }
+//Request
 export interface ILoginFormRequest {
   username: string 
   password: string 
@@ -23,4 +25,16 @@ export interface ISignupFormRequest {
   email: string;
   username: string;
   password: string;
+}
+export interface IVerificationRequest {
+  email: string;
+  verify_code: string;
+}
+export interface IResetPasswordRequest {
+  email: string;
+}
+export interface INewPasswordRequest {
+  email: string;
+  verify_code: string;
+  new_password: string;
 }

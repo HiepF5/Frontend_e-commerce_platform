@@ -1,13 +1,13 @@
 import React from 'react'
 import NavbarLogin from '../../../shared/components/NavbarLogin/NavbarLogin'
-import MainCheckEmail from '../components/CheckEmail/MainCheckEmail'
+import CheckEmailView from '../components/CheckEmail/CheckEmailView'
 
 const CheckEmail = () => {
   return (
     <div>
       <div>
         <NavbarLogin />
-        <MainCheckEmail />
+        <CheckEmailView />
       </div>
     </div>
   )

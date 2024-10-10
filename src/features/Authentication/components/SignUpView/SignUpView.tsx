@@ -62,10 +62,11 @@ const SignUpView = () => {
     )
     const payload = response.payload as { code: number };
     if (response.meta.requestStatus === 'fulfilled' && payload.code === 200) {
-      toast.success('Bạn đã đăng ký thành công!')
+      toast.success('Bạn hãy xác nhận mã code trong mail!')
+      localStorage.setItem('emailRegister', JSON.stringify(formData.email))
       navigate('/auth/verification')
     } else {
-      toast.error("Đăng ký thất bại") 
+      toast.error((response.payload as { message: string }).message) 
     }
   }
 

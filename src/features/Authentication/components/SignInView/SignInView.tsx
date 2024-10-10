@@ -10,7 +10,7 @@ import {
 } from '@mui/material'
 import { Iconify } from '@shared/components/iconify'
 import { useAppDispatch, useAppSelector } from '@store/hook'
-import { login } from '../../slices/authSlice'
+import { login, setInfoUserLocalstorage } from '../../slices/authSlice'
 import { setCookie } from '../../slices/authSlice'
 import { useNavigate } from 'react-router-dom'
 
@@ -33,6 +33,7 @@ const SignInView = () => {
         const payload = result.payload as { code: number };
         if (result.meta.requestStatus === 'fulfilled' && payload.code === 200) {
           dispatch(setCookie())
+          dispatch(setInfoUserLocalstorage())
           navigate('/')
           toast.success('Login success')
         }
@@ -41,8 +42,9 @@ const SignInView = () => {
       }
     })()
   }, [dispatch, username, password])
-
-
+  const handleForgotPassword = () => {
+    navigate('/auth/repassword')
+  }
   return (
     <div className='container'>
       <div className='grid grid-cols-2 text-center'>
@@ -58,11 +60,11 @@ const SignInView = () => {
             sx={{ mb: 5 }}
           >
             <Typography variant='h5'>Sign in</Typography>
-            <Typography variant='body2' color='text.secondary'>
+            <Typography variant='body2' color='text.secondary' >
               Don’t have an account?
-              <Link variant='subtitle2' sx={{ ml: 0.5 }}>
+                <Link variant='subtitle2' sx={{ ml: 0.5 }} onClick={() => navigate('/auth/signup')} >
                 Get started
-              </Link>
+                </Link>
             </Typography>
           </Box>
 
@@ -103,7 +105,13 @@ const SignInView = () => {
               }}
               sx={{ mb: 3 }}
             />
-
+            <Link
+              variant='body2'
+              sx={{ alignSelf: 'flex-start', mb: 3, cursor: 'pointer' }}
+              onClick={handleForgotPassword}
+            >
+              Forgot password?
+            </Link>
             <Button
               fullWidth
               size='large'
