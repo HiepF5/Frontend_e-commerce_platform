@@ -60,8 +60,6 @@ const SignUpView = () => {
         password: formData.password
       })
     )
-    console.log(response)
-
     const payload = response.payload as { code: number };
     if (response.meta.requestStatus === 'fulfilled' && payload.code === 200) {
       toast.success('Bạn đã đăng ký thành công!')
