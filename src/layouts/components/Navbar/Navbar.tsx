@@ -6,30 +6,32 @@ import { FaSignInAlt } from 'react-icons/fa'
 import DarkMode from './DarkMode'
 import { data } from 'autoprefixer'
 import { useNavigate } from 'react-router-dom'
+import { useAppSelector } from '@store/hook'
+import { Avatar, Box, Typography } from '@mui/material'
 const Menu = [
   {
     id: 1,
-    name: 'Home',
+    name: 'Trang chủ',
     link: '/#'
   },
   {
     id: 2,
-    name: 'Top Rated',
+    name: 'Thiết bị điện tử',
     link: '/#services'
   },
   {
     id: 3,
-    name: 'Kids Wear',
+    name: 'Máy tính',
     link: '/#'
   },
   {
     id: 3,
-    name: 'Mens Wear',
+    name: 'Laptop',
     link: '/#'
   },
   {
     id: 3,
-    name: 'Electronics',
+    name: 'Điện thoại và phụ kiện',
     link: '/#'
   }
 ]
@@ -52,7 +54,7 @@ const DropdownLinks = [
   }
 ]
 interface NavbarProps {
-  handleOrderPopup: () => void;
+  handleOrderPopup: () => void
 }
 
 const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
@@ -60,7 +62,8 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
   const handleSignIn = () => {
     navigate('/auth/signin')
   }
-    
+  const { user } = useAppSelector((state) => state.auth)
+  console.log(user)
   return (
     <div
       className='shadow-md bg-white
@@ -127,28 +130,39 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
              '
               />
             </button>
-            <button
-              onClick={() => handleSignIn()}
-              className='bg-gradient-to-r from-orange-400
+            {!user?.full_name ? (
+              <button
+                onClick={() => handleSignIn()}
+                className='bg-gradient-to-r from-orange-400
           to-lime-400 transition-all duration-200
           text-white py-1 px-4 rounded-full flex 
           items-center gap-3 group'
-            >
-              <span
-                className='group-hover:block 
+              >
+                <span
+                  className='group-hover:block 
             hidden transition-all
             duration-200'
-              >
-                SignIn
-              </span>
-              <FaSignInAlt
-                className='text-xl
+                >
+                  SignIn
+                </span>
+                <FaSignInAlt
+                  className='text-xl
              text-white
                drop-shadow-sm 
                cursor-pointer
              '
-              />
-            </button>
+                />
+              </button>
+            ) : (
+              <Box display='flex' alignItems='center' gap={2}>
+                <Avatar
+                  src={user?.image_url}
+                  alt='User'
+                  sx={{ width: 40, height: 40 }}
+                />
+                <Typography>{user?.full_name}</Typography>
+              </Box>
+            )}
             {/* Darkmode Switch */}
             <div>
               <DarkMode />

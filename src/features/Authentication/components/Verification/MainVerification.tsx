@@ -20,7 +20,7 @@ const MainVerification = () => {
             </div>
 
             <div className='text-left'>
-              <button className='border rounded bg-[#8A33FD] text-white px-8 p-2'>Verify Code</button>
+              <button className='border rounded bg-[#8A33FD] text-white px-8 p-2'>Verify Code 2</button>
             </div>
           </div>
         </div>
