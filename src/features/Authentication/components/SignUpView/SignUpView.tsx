@@ -64,7 +64,7 @@ const SignUpView = () => {
     if (response.meta.requestStatus === 'fulfilled' && payload.code === 200) {
       toast.success('Bạn hãy xác nhận mã code trong mail!')
       localStorage.setItem('emailRegister', JSON.stringify(formData.email))
-      navigate('/auth/verification')
+      navigate('/auth/checkemail')
     } else {
       toast.error((response.payload as { message: string }).message) 
     }
@@ -201,7 +201,7 @@ const SignUpView = () => {
                     Use 8 or more characters with a mix of letters, numbers &
                     symbols
                   </Typography>
-                  <FormControlLabel
+                  {/* <FormControlLabel
                     control={
                       <Checkbox
                         checked={formData.agreeTerms}
@@ -211,7 +211,7 @@ const SignUpView = () => {
                       />
                     }
                     label='Agree to our Terms of use and Privacy Policy'
-                  />
+                  /> */}
                  
                 </Grid>
                 <Grid item xs={12}>
