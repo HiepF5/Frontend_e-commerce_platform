@@ -7,60 +7,13 @@ import { FaUserCircle } from 'react-icons/fa'
 import DarkMode from './DarkMode'
 import { data } from 'autoprefixer'
 import { useNavigate } from 'react-router-dom'
-import { useAppDispatch, useAppSelector } from '@store/hook'
+import { useAppDispatch } from '@store/hook'
 import { Avatar, Box, Typography } from '@mui/material'
 import { logout } from '@features/Authentication/slices/authSlice'
 import { toast } from 'react-toastify'
-const Menu = [
-  {
-    id: 1,
-    name: 'Trang chủ',
-    link: '/#'
-  },
-  {
-    id: 2,
-    name: 'Thiết bị điện tử',
-    link: '/#services'
-  },
-  {
-    id: 3,
-    name: 'Máy tính',
-    link: '/#'
-  },
-  {
-    id: 3,
-    name: 'Laptop',
-    link: '/#'
-  },
-  {
-    id: 3,
-    name: 'Điện thoại và phụ kiện',
-    link: '/#'
-  }
-]
+import { Menu, DropdownLinks } from '@config/constants/paths'
 
-const DropdownLinks = [
-  {
-    id: 1,
-    name: 'Trending Products',
-    link: '/#'
-  },
-  {
-    id: 2,
-    name: 'Best Selling',
-    link: '/#'
-  },
-  {
-    id: 3,
-    name: 'Top Rated',
-    link: '/#'
-  }
-]
-interface NavbarProps {
-  handleOrderPopup: () => void
-}
-
-const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
+const Navbar = () => {
   const navigate = useNavigate()
    const dispatch = useAppDispatch() 
   const handleSignIn = () => {
@@ -122,7 +75,6 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
             </div>
             {/* order button */}
             <button
-              onClick={() => handleOrderPopup()}
               className='bg-gradient-to-r from-orange-400
           to-lime-400 transition-all duration-200
           text-white py-1 px-4 rounded-full flex 
@@ -192,7 +144,12 @@ const Navbar: React.FC<NavbarProps> = ({ handleOrderPopup }) => {
               </>
             ) : (
               <>
-                <Box display='flex' alignItems='center' gap={2}>
+                <Box
+                  display='flex'
+                  alignItems='center'
+                  gap={2}
+                  onClick={() => navigate('/user/profile')}
+                >
                   <Avatar
                     src={user?.image_url}
                     alt='User'

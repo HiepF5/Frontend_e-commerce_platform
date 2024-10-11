@@ -27,7 +27,7 @@ const LandingPage = () => {
   }, [])
   return (
     <div>
-      <Navbar handleOrderPopup={handleOrderPopup} />
+      <Navbar />
       <Hero handleOrderPopup={handleOrderPopup} />
       <Products />
       <TopProducts handleOrderPopup={handleOrderPopup} />

@@ -9,6 +9,7 @@ import LandingPage from '../features/LandingPage/pages/LandingPage'
 // eslint-disable-next-line @typescript-eslint/promise-function-async
 const AdminRoutes = lazy(() => import('../features/Admin/routes/AdminRoutes'))
 const AuthRoutes = lazy(() => import('../features/Authentication/routes/AuthRoutes'))
+const UserRoutes = lazy(() => import('../features/User/routes/UserRoutes'))
 const MainRoutes = (): JSX.Element => {
   return (
     <Router>
@@ -16,6 +17,7 @@ const MainRoutes = (): JSX.Element => {
         <Routes>
           <Route path='/auth/*' element={<AuthRoutes />} />
           <Route path='/' element={<LandingPage />} />
+          <Route path='/user/*' element={<UserRoutes />} />
           <Route element={<AuthenticatedGuard />}>
             <Route path='/admin/*' element={<AdminRoutes />} />
           </Route>
