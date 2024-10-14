@@ -21,6 +21,7 @@ export interface ISignupFormRequest {
   firstName: string;
   lastName: string;
   dob: string; 
+  isMale: number;
   phoneNumber: string;
   email: string;
   username: string;

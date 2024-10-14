@@ -8,10 +8,15 @@ import {
   Button,
   Checkbox,
   FormControlLabel,
+  FormControlLabel as MuiFormControlLabel,
   Typography,
   IconButton,
   InputAdornment,
-  Grid
+  Grid,
+  FormControl,
+  FormLabel,
+  RadioGroup,
+  Radio
 } from '@mui/material'
 import { useAppDispatch } from '@store/hook'
 import { signup } from '../../slices/authSlice'// Đảm bảo đường dẫn đúng
@@ -21,6 +26,7 @@ const SignUpView = () => {
     firstName: '',
     lastName: '',
     dob: '',
+    isMale: true,
     phoneNumber: '',
     email: '',
     username: '',
@@ -40,6 +46,12 @@ const SignUpView = () => {
       [name]: type === 'checkbox' ? checked : value
     })
   }
+   const handleGenderChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+     setFormData({
+       ...formData,
+       isMale: e.target.value === 'male'
+     })
+   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -54,6 +66,7 @@ const SignUpView = () => {
         firstName: formData.firstName,
         lastName: formData.lastName,
         dob: formData.dob,
+        isMale: 1,
         phoneNumber: formData.phoneNumber,
         email: formData.email,
         username: formData.username,
@@ -197,22 +210,33 @@ const SignUpView = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
+                  <FormControl component='fieldset'>
+                    <FormLabel component='legend'>Gender</FormLabel>
+                    <RadioGroup
+                      row
+                      aria-label='gender'
+                      name='isMale'
+                      value={formData.isMale ? 'male' : 'female'}
+                      onChange={handleGenderChange}
+                    >
+                      <MuiFormControlLabel
+                        value='male'
+                        control={<Radio />}
+                        label='Male'
+                      />
+                      <MuiFormControlLabel
+                        value='female'
+                        control={<Radio />}
+                        label='Female'
+                      />
+                    </RadioGroup>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12}>
                   <Typography variant='body2'>
                     Use 8 or more characters with a mix of letters, numbers &
                     symbols
                   </Typography>
-                  {/* <FormControlLabel
-                    control={
-                      <Checkbox
-                        checked={formData.agreeTerms}
-                        onChange={handleChange}
-                        name='agreeTerms'
-                        color='primary'
-                      />
-                    }
-                    label='Agree to our Terms of use and Privacy Policy'
-                  /> */}
-                 
                 </Grid>
                 <Grid item xs={12}>
                   <Button
