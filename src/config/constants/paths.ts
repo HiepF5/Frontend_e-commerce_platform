@@ -18,12 +18,12 @@ export const Menu = [
     link: '/#'
   },
   {
-    id: 3,
+    id: 4,
     name: 'Laptop',
     link: '/#'
   },
   {
-    id: 3,
+    id: 5,
     name: 'Điện thoại và phụ kiện',
     link: '/#'
   }

@@ -12,6 +12,7 @@ import { Avatar, Box, Typography } from '@mui/material'
 import { logout } from '@features/Authentication/slices/authSlice'
 import { toast } from 'react-toastify'
 import { Menu, DropdownLinks } from '@config/constants/paths'
+import Cookies from 'js-cookie'
 
 const Navbar = () => {
   const navigate = useNavigate()
@@ -23,6 +24,7 @@ const Navbar = () => {
   const handleSignOut = () => {
     localStorage.removeItem('user')
     dispatch(logout())
+    Cookies.remove('accessToken')
     navigate('/')
     toast.success('SignOut success')
   }

@@ -6,8 +6,10 @@ import { Outlet } from 'react-router-dom'
 const LayoutPage = () => {
   return (
     <div>
-      <Navbar  />
+      <Navbar />
+      <div className='h-[87vh]'>
         <Outlet />
+      </div>
       <Footer />
     </div>
   )
