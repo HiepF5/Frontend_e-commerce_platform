@@ -2,17 +2,24 @@ import React, { useState } from 'react'
 import { Box, TextField, Button, Typography } from '@mui/material'
 import { toast } from 'react-toastify'
 import { StyledCard } from '@shared/libs/mui/Style'
+import { changePassword } from '../slices/UserSlice'
+import { useAppDispatch } from '@store/hook'
 const ChangePassword = () => {
   const [email, setEmail] = useState('')
   const [oldPassword, setOldPassword] = useState('')
   const [newPassword, setNewPassword] = useState('')
-
+  const dispatch = useAppDispatch()
   const handleChangePassword = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    // Logic to handle password change
+
     try {
-      // Call API to change password
-      // Example: await changePasswordAPI({ email, oldPassword, newPassword });
+      dispatch(
+        changePassword({
+          email: email,
+          old_password: oldPassword,
+          new_password: newPassword
+        })
+      )
       toast.success('Password changed successfully')
     } catch (error) {
       toast.error('Failed to change password')

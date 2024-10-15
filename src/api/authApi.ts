@@ -72,7 +72,6 @@ export const postCreateNewPassword = async (data: INewPasswordRequest): Promise<
   form_data.append('email', data.email);
   form_data.append('new_password', data.new_password);
   form_data.append('verify_code', data.verify_code);
-
   try {
     const response = await axios.put<IBaseResponse<string>>(
       `${API_ENDPOINTS_ACCOUNT.ApiCheckForgot}`,

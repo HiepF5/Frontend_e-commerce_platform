@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { IBaseResponse } from '~/types/base.interface';
-import { IGetUserDetailRequest, IUser } from '~/types/users.interface';
-import { getUserInfo } from '@api/userApi';
+import { IChangeInfoRequest, IChangePasswordRequest, IGetUserDetailRequest, IUser } from '~/types/users.interface';
+import { getUserInfo, putChangeInfo, putChangePassword } from '@api/userApi';
 interface UserState {
   status: boolean;
   accessToken: string | null;
@@ -30,14 +30,43 @@ export const getInfo = createAsyncThunk(
     }
   }
 );
-
+export const changePassword = createAsyncThunk(
+  'user/changePassword',
+  async (data: IChangePasswordRequest, { rejectWithValue }) => {
+    try {
+      const response: IBaseResponse<string> = await putChangePassword(data);
+      return response.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to ChangPassword');
+    }
+  }
+);
+export const changeInfo = createAsyncThunk(
+  'user/putChangeInfo',
+  async (data: IChangeInfoRequest, { rejectWithValue }) => {
+    debugger;
+    try {
+      const response: IBaseResponse<string> = await putChangeInfo(data);
+      return response.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to ChangPassword');
+    }
+  }
+);
 // Tạo slice cho Redux
 const UserSlice = createSlice({
   name: 'user',
   initialState,
-  reducers: {},
+  reducers: {
+    setInfoUserLocalstorage(state) {
+      if (state.user) {
+        localStorage.setItem('user', JSON.stringify(state.user));
+      }
+    },
+  },
   extraReducers: (builder) => {
     builder
+    // Xử lý cho action getInfo
       .addCase(getInfo.pending, (state) => {
         state.status = false;
       })
@@ -49,8 +78,36 @@ const UserSlice = createSlice({
       .addCase(getInfo.rejected, (state, action) => {
         state.status = false;
         state.error = action.payload as string;
+      })
+      // Xử lý cho action changePassword
+      .addCase(changePassword.pending, (state) => {
+        state.status = false;
+      })
+      .addCase(changePassword.fulfilled, (state, action) => {
+        state.status = true;
+        state.code = 200;
+        state.error = null;
+      })
+      .addCase(changePassword.rejected, (state, action) => {
+        state.status = false;
+        state.code = 400;
+        state.error = action.payload as string;
+      })
+      // Xử lý cho action changeInfo
+      .addCase(changeInfo.pending, (state) => {
+        state.status = false;
+      })
+      .addCase(changeInfo.fulfilled, (state, action) => {
+        state.status = true;
+        state.code = 200;
+        state.error = null;
+      })
+      .addCase(changeInfo.rejected, (state, action) => {
+        state.status = false;
+        state.code = 400;
+        state.error = action.payload as string;
       });
   },
 });
-export const {  } = UserSlice.actions;
+export const {  setInfoUserLocalstorage } = UserSlice.actions;
 export default UserSlice.reducer;

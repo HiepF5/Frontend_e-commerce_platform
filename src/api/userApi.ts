@@ -12,7 +12,6 @@ export const getUserInfo = async (
   data: IGetUserDetailRequest
 ): Promise<IBaseResponse<IUser>> => {
   try {
-    console.log("email", data)
     const response = await axios.get<IBaseResponse<IUser>>(
       `${API_ENDPOINTS_USERS.ApiGetUserDetail}`,
        {
@@ -54,6 +53,7 @@ export const putChangePassword = async (
 export const putChangeInfo = async (
   data: IChangeInfoRequest
 ): Promise<IBaseResponse<string>> => {
+  debugger;
   try {
     const response = await axios.put<IBaseResponse<string>>(
       `${API_ENDPOINTS_USERS.ApiChangeInfo}`,

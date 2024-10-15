@@ -1,11 +1,12 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Avatar,
   Box,
   CardContent,
   Typography,
   Chip,
-  Grid
+  Grid,
+  Button
 } from '@mui/material'
 import {
   FaUser,
@@ -14,25 +15,64 @@ import {
   FaBirthdayCake,
   FaUserTag
 } from 'react-icons/fa'
-import { AvatarSection, IconWrapper, InfoItem, InfoSection, StyledCard } from '@shared/libs/mui/Style'
+import {
+  AvatarSection,
+  IconWrapper,
+  InfoItem,
+  InfoSection,
+  StyledCard
+} from '@shared/libs/mui/Style'
 import { useAppDispatch, useAppSelector } from '@store/hook'
-import { getInfo } from '../slices/UserSlice'
+import {
+  changeInfo,
+  getInfo,
+  setInfoUserLocalstorage
+} from '../slices/UserSlice'
+import ChangeInfoDialog from './ChangeInfoDialog'
+import { IChangeInfoRequest } from '~/types/users.interface'
+import { toast } from 'react-toastify'
 
 const UserInfo = () => {
   const dispatch = useAppDispatch()
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [shouldUpdate, setShouldUpdate] = useState(false)
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user') || 'null')
-    dispatch(getInfo({ email: user.email })) 
-  }, [dispatch])
+    dispatch(getInfo({ email: user.email }))
+    dispatch(setInfoUserLocalstorage())
+  }, [dispatch, shouldUpdate])
   const { user: userInfo } = useAppSelector((state) => state.user)
-  console.log(userInfo);
+  const handleDialogOpen = () => {
+    setDialogOpen(true)
+  }
+
+  const handleDialogClose = () => {
+    setDialogOpen(false)
+  }
+
+  const handleSave = async (updatedInfo: IChangeInfoRequest) => {
+    try {
+      // Gọi action và chờ kết quả
+      const resultAction = await dispatch(changeInfo({ ...updatedInfo }))
+
+      if (changeInfo.fulfilled.match(resultAction)) {
+        setShouldUpdate((prev) => !prev) 
+        toast.success('User info changed successfully') 
+      } else if (changeInfo.rejected.match(resultAction)) {
+        toast.error(typeof resultAction.payload === 'string' ? resultAction.payload : 'Failed to update user info') // Thông báo lỗi
+      }
+    } catch (error) {
+      toast.error('An error occurred') // Thông báo lỗi chung khi có lỗi khác
+    }
+  }
+
 
   return (
     <StyledCard>
       <AvatarSection>
         <Avatar
           alt={`${userInfo?.first_name} ${userInfo?.last_name}`}
-          src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=150&q=80'
+          src={userInfo?.image_url}
           sx={{ width: 120, height: 120, boxShadow: 3 }}
         />
       </AvatarSection>
@@ -135,6 +175,22 @@ const UserInfo = () => {
             </Box>
           </Box>
         </CardContent>
+        <Button
+          type='button'
+          variant='contained'
+          color='primary'
+          onClick={handleDialogOpen}
+        >
+          Change Info
+        </Button>
+        {userInfo && (
+          <ChangeInfoDialog
+            open={dialogOpen}
+            onClose={handleDialogClose}
+            userInfo={userInfo}
+            onSave={handleSave}
+          />
+        )}
       </InfoSection>
     </StyledCard>
   )

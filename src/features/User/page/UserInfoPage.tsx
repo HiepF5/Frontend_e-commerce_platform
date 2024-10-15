@@ -5,6 +5,7 @@ const UserInfoPage = () => {
   return (
     <div className='h-full'>
         <UserInfo />
+        
     </div>
   )
 }

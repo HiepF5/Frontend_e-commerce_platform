@@ -19,7 +19,6 @@ const Navbar = () => {
    const dispatch = useAppDispatch() 
   const handleSignIn = () => {
     navigate('/auth/signin')
-
   }
   const handleSignOut = () => {
     localStorage.removeItem('user')
