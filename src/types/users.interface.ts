@@ -1,3 +1,4 @@
+//Request
 export interface IChangePasswordRequest {
   email: string;
   old_password: string;
@@ -18,6 +19,7 @@ export interface IChangeAvatarRequest {
 export interface IGetUserDetailRequest {
   email: string;
 }
+//Response
 export interface IUser {
   user_code: string;        
   image_url: string;       

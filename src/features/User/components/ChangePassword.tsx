@@ -22,7 +22,7 @@ const ChangePassword = () => {
       )
       toast.success('Password changed successfully')
     } catch (error) {
-      toast.error('Failed to change password')
+      toast.error('Failed to change password 4')
     }
   }
 

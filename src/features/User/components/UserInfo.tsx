@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {
   Avatar,
   Box,
@@ -22,26 +22,24 @@ import {
   InfoSection,
   StyledCard
 } from '@shared/libs/mui/Style'
-import { useAppDispatch, useAppSelector } from '@store/hook'
-import {
-  changeInfo,
-  getInfo,
-  setInfoUserLocalstorage
-} from '../slices/UserSlice'
-import ChangeInfoDialog from './ChangeInfoDialog'
-import { IChangeInfoRequest } from '~/types/users.interface'
-import { toast } from 'react-toastify'
+import {IUser } from '~/types/users.interface'
+import ChangeAvatarDialog from './ChangeAvatarDialog'
+interface UserInfoProps {
+  setDialogOpen: (open: boolean) => void
+  shouldUpdate: boolean
+  userInfo: IUser
+  onChangeAvatar: (file: File) => Promise<void>
+  onDialogOpen: () => void
+}
 
-const UserInfo = () => {
-  const dispatch = useAppDispatch()
-  const [dialogOpen, setDialogOpen] = useState(false)
-  const [shouldUpdate, setShouldUpdate] = useState(false)
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem('user') || 'null')
-    dispatch(getInfo({ email: user.email }))
-    dispatch(setInfoUserLocalstorage())
-  }, [dispatch, shouldUpdate])
-  const { user: userInfo } = useAppSelector((state) => state.user)
+const UserInfo: React.FC<UserInfoProps> = ({
+  userInfo,
+  onDialogOpen,
+  onChangeAvatar
+}) => {
+  const [avatarPreview, setAvatarPreview] = useState(userInfo.image_url)
+  
+   const [dialogOpen, setDialogOpen] = useState(false)
   const handleDialogOpen = () => {
     setDialogOpen(true)
   }
@@ -49,31 +47,25 @@ const UserInfo = () => {
   const handleDialogClose = () => {
     setDialogOpen(false)
   }
-
-  const handleSave = async (updatedInfo: IChangeInfoRequest) => {
-    try {
-      // Gọi action và chờ kết quả
-      const resultAction = await dispatch(changeInfo({ ...updatedInfo }))
-
-      if (changeInfo.fulfilled.match(resultAction)) {
-        setShouldUpdate((prev) => !prev) 
-        toast.success('User info changed successfully') 
-      } else if (changeInfo.rejected.match(resultAction)) {
-        toast.error(typeof resultAction.payload === 'string' ? resultAction.payload : 'Failed to update user info') // Thông báo lỗi
-      }
-    } catch (error) {
-      toast.error('An error occurred') // Thông báo lỗi chung khi có lỗi khác
-    }
-  }
-
-
+   const handleAvatarChange = async (file: File) => {
+     const previewUrl = URL.createObjectURL(file) 
+     setAvatarPreview(previewUrl) 
+     await onChangeAvatar(file) 
+   }
   return (
     <StyledCard>
       <AvatarSection>
         <Avatar
           alt={`${userInfo?.first_name} ${userInfo?.last_name}`}
-          src={userInfo?.image_url}
+          src={avatarPreview}
           sx={{ width: 120, height: 120, boxShadow: 3 }}
+          onClick={handleDialogOpen}
+        />
+        <ChangeAvatarDialog
+          open={dialogOpen}
+          onClose={handleDialogClose}
+          userInfo={userInfo}
+          onChangeAvatar={handleAvatarChange}
         />
       </AvatarSection>
       <InfoSection>
@@ -179,18 +171,10 @@ const UserInfo = () => {
           type='button'
           variant='contained'
           color='primary'
-          onClick={handleDialogOpen}
+          onClick={onDialogOpen}
         >
           Change Info
         </Button>
-        {userInfo && (
-          <ChangeInfoDialog
-            open={dialogOpen}
-            onClose={handleDialogClose}
-            userInfo={userInfo}
-            onSave={handleSave}
-          />
-        )}
       </InfoSection>
     </StyledCard>
   )

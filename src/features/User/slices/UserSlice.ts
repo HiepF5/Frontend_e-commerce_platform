@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { IBaseResponse } from '~/types/base.interface';
-import { IChangeInfoRequest, IChangePasswordRequest, IGetUserDetailRequest, IUser } from '~/types/users.interface';
-import { getUserInfo, putChangeInfo, putChangePassword } from '@api/userApi';
+import { IChangeAvatarRequest, IChangeInfoRequest, IChangePasswordRequest, IGetUserDetailRequest, IUser } from '~/types/users.interface';
+import { getUserInfo, putChangeAvt, putChangeInfo, putChangePassword } from '@api/userApi';
 interface UserState {
   status: boolean;
   accessToken: string | null;
@@ -42,14 +42,26 @@ export const changePassword = createAsyncThunk(
   }
 );
 export const changeInfo = createAsyncThunk(
-  'user/putChangeInfo',
+  'user/changeInfo',
   async (data: IChangeInfoRequest, { rejectWithValue }) => {
     debugger;
     try {
       const response: IBaseResponse<string> = await putChangeInfo(data);
       return response.data; 
     } catch (error: any) {
-      return rejectWithValue(error.response?.data?.message || 'Failed to ChangPassword');
+      return rejectWithValue(error.response?.data?.message || 'Failed to ChangInfo');
+    }
+  }
+);
+export const changeAvatar = createAsyncThunk(
+  'user/changeAvatar',
+  async (data: IChangeAvatarRequest, { rejectWithValue }) => {
+    debugger;
+    try {
+      const response: IBaseResponse<string> = await putChangeAvt(data);
+      return response.data; 
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to ChangAvt');
     }
   }
 );
@@ -106,7 +118,22 @@ const UserSlice = createSlice({
         state.status = false;
         state.code = 400;
         state.error = action.payload as string;
+      })
+      // Xử lý cho action changeAvatar
+      .addCase(changeAvatar.pending, (state) => {
+        state.status = false;
+      })
+      .addCase(changeAvatar.fulfilled, (state, action) => {
+        state.status = true;
+        state.code = 200;
+        state.error = null;
+      })
+      .addCase(changeAvatar.rejected, (state, action) => {
+        state.status = false;
+        state.code = 400;
+        state.error = action.payload as string;
       });
+
   },
 });
 export const {  setInfoUserLocalstorage } = UserSlice.actions;

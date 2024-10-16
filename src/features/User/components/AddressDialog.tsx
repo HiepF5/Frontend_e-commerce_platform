@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Dialog,
   DialogTitle,
@@ -8,7 +8,9 @@ import {
 } from '@mui/material'
 import NewAddressForm from './NewAddressDialog'
 import AddressList from './AddressList'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useAppDispatch, useAppSelector } from '@store/hook'
+import { getAddress } from '../slices/AddressSlice'
 
 interface FormData {
   name: string
@@ -16,26 +18,20 @@ interface FormData {
   details: string
 }
 
-export type AddressType = 'home' | 'work' 
+export type AddressType = 'home' | 'work'
+
 const AddressDialog = () => {
-  const [selectedAddress, setSelectedAddress] = useState('An Hoàng')
   const [showForm, setShowForm] = useState(false)
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
-  const addresses = [
-    {
-      name: 'An Hoàng',
-      phone: '+84 867 865 001',
-      details: 'Kí Túc Xá B2, Bưu Chính, Phường Mộ Lao, Quận Hà Đông, Hà Nội',
-      default: true
-    },
-    {
-      name: 'Hoàng Văn An',
-      phone: '+84 867 865 001',
-      details: 'Thị Trấn Thiệu Hóa, Huyện Thiệu Hóa, Thanh Hóa',
-      default: false
-    }
-  ]
+  useEffect(() => {
+    dispatch(getAddress())
+  }, [dispatch])
+
+  const { address } = useAppSelector((state) => state.address) || {
+    address: []
+  }
 
   const handleShowForm = () => {
     setShowForm(true)
@@ -51,10 +47,6 @@ const AddressDialog = () => {
     setShowForm(false) // Close the form
   }
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedAddress(event.target.value)
-  }
-
   return (
     <Dialog open={true}>
       <DialogTitle>{showForm ? 'Địa chỉ mới' : 'Địa Chỉ Của Tôi'}</DialogTitle>
@@ -66,10 +58,8 @@ const AddressDialog = () => {
           />
         ) : (
           <AddressList
-            addresses={addresses}
-            selectedAddress={selectedAddress}
-            handleChange={handleChange}
-            handleShowForm={handleShowForm}
+            addresses={address}
+            handleShowForm={handleShowForm} // No more selectedAddress or handleChange
           />
         )}
       </DialogContent>
