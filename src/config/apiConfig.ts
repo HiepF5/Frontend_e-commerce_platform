@@ -2,6 +2,7 @@ const enum EPATHS {
   ServiceAccount = '/guest/users',
   ServiceUsers = '/all/users',
   ServiceAddress = '/customer/address',
+  ServiceGhn = '/guest/ghn',
 }
 export const API_ENDPOINTS_ACCOUNT = {
   ApiLogin: `${EPATHS.ServiceAccount}/login`,
@@ -21,6 +22,11 @@ export const API_ENDPOINTS_ADDRESS = {
   ApiCreateAddress: `${EPATHS.ServiceAddress}/create`,
   ApiUpdateAddress: `${EPATHS.ServiceAddress}/update`,
   ApiDeleteAddress: `${EPATHS.ServiceAddress}/delete`,
+};
+export const API_ENDPOINTS_GHN = {
+  ApiGetProvince: `${EPATHS.ServiceGhn}/province`,
+  ApiGetDistrict: `${EPATHS.ServiceGhn}/district`,
+  ApiGetWard: `${EPATHS.ServiceGhn}/ward`,
 };
 
 

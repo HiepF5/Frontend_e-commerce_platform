@@ -6,11 +6,11 @@ import {
   DialogActions,
   Button
 } from '@mui/material'
-import NewAddressForm from './NewAddressDialog'
 import AddressList from './AddressList'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@store/hook'
 import { getAddress } from '../slices/AddressSlice'
+import NewAddressForm from './NewAddressDialog'
 
 interface FormData {
   name: string
@@ -54,8 +54,7 @@ const AddressDialog = () => {
         {showForm ? (
           <NewAddressForm
             handleCancelForm={handleCancelForm}
-            handleFormSubmit={handleFormSubmit}
-          />
+            handleFormSubmit={handleFormSubmit} open={false}          />
         ) : (
           <AddressList
             addresses={address}
