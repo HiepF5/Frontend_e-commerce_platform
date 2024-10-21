@@ -12,7 +12,7 @@ export interface IAddress {
 }
 export interface IAddressRequest {
   addressId?: number;
-  addressType: number;    
+  addressType: AddressType;    
   fullName: string;       
   phoneNumber: string;  
   wardId: string;         
@@ -28,3 +28,4 @@ export interface IAddressRequest {
 export interface IDeleteAddressRequest {
   addressId: string;
 }
+export type AddressType = 1 | 2

@@ -13,20 +13,14 @@ import { IAddress } from '~/types/address.interface'
 
 interface AddressListProps {
   addresses: IAddress[] | null
-  handleShowForm: () => void
+  handleShowForm: (address: IAddress | null) => void // Pass address to the form
 }
 
 const AddressList: React.FC<AddressListProps> = ({
   addresses,
   handleShowForm
 }) => {
-  const [isEditMode, setIsEditMode] = useState(false)
-  const [selectedAddress, setSelectedAddress] = useState<string | undefined>(
-  )
-
-  const handleUpdateClick = () => {
-    setIsEditMode(!isEditMode) // Toggle edit mode
-  }
+  const [selectedAddress, setSelectedAddress] = useState<string | undefined>()
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedAddress(event.target.value)
@@ -54,14 +48,15 @@ const AddressList: React.FC<AddressListProps> = ({
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={4} textAlign='right'>
-                  {isEditMode && (
-                    <FormControlLabel
-                      value={address.address_id}
-                      control={<Radio />}
-                      label=''
-                    />
-                  )}
-                  <Button variant='text' onClick={handleUpdateClick}>
+                  <FormControlLabel
+                    value={address.address_id}
+                    control={<Radio />}
+                    label=''
+                  />
+                  <Button
+                    variant='text'
+                    onClick={() => handleShowForm(address)}
+                  >
                     Cập nhật
                   </Button>
                 </Grid>
@@ -73,17 +68,23 @@ const AddressList: React.FC<AddressListProps> = ({
                     </Typography>
                   </Box>
                   <Box
-                    display='inline-block' // Changed to inline-block
+                    display='inline-block'
                     border={1}
                     borderColor={address.is_default ? 'error.main' : 'grey.300'}
                     borderRadius='4px'
                     p={1}
                     mt={1}
-                    bgcolor={address.is_default ? 'error.light' : 'background.default'}
+                    bgcolor={
+                      address.is_default ? 'error.light' : 'background.default'
+                    }
                   >
                     <Typography
                       variant='caption'
-                      color={address.is_default ? 'error.contrastText' : 'textSecondary'}
+                      color={
+                        address.is_default
+                          ? 'error.contrastText'
+                          : 'textSecondary'
+                      }
                     >
                       {address.is_default ? 'Mặc định' : 'Địa chỉ lấy hàng'}
                     </Typography>
@@ -103,7 +104,7 @@ const AddressList: React.FC<AddressListProps> = ({
       <Button
         variant='outlined'
         style={{ marginTop: '10px' }}
-        onClick={handleShowForm}
+        onClick={() => handleShowForm(null)} // Show form for new address
       >
         + Thêm Địa Chỉ Mới
       </Button>

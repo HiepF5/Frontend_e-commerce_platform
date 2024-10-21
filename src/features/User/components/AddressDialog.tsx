@@ -9,19 +9,15 @@ import {
 import AddressList from './AddressList'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@store/hook'
-import { getAddress } from '../slices/AddressSlice'
+import { createAddress, getAddress } from '../slices/AddressSlice'
 import NewAddressForm from './NewAddressDialog'
-
-interface FormData {
-  name: string
-  phone: string
-  details: string
-}
-
-export type AddressType = 'home' | 'work'
+import { IAddressRequest, IAddress } from '~/types/address.interface'
 
 const AddressDialog = () => {
   const [showForm, setShowForm] = useState(false)
+  const [editingAddress, setEditingAddress] = useState<IAddress | null>(
+    null
+  )
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
@@ -33,18 +29,20 @@ const AddressDialog = () => {
     address: []
   }
 
-  const handleShowForm = () => {
+  const handleShowForm = (address: IAddress | null) => {
     setShowForm(true)
+    setEditingAddress(address)
   }
 
   const handleCancelForm = () => {
     setShowForm(false)
+    setEditingAddress(null) 
   }
 
-  const handleFormSubmit = (formData: FormData, addressType: AddressType) => {
-    console.log('Form Data:', formData)
-    console.log('Address Type:', addressType)
-    setShowForm(false) // Close the form
+  const handleFormSubmit = (formData: IAddressRequest) => {
+    dispatch(createAddress(formData)) 
+    setShowForm(false)
+    setEditingAddress(null)
   }
 
   return (
@@ -54,11 +52,13 @@ const AddressDialog = () => {
         {showForm ? (
           <NewAddressForm
             handleCancelForm={handleCancelForm}
-            handleFormSubmit={handleFormSubmit} open={false}          />
+            handleFormSubmit={handleFormSubmit}
+            initialData={editingAddress}
+          />
         ) : (
           <AddressList
             addresses={address}
-            handleShowForm={handleShowForm} // No more selectedAddress or handleChange
+            handleShowForm={handleShowForm} 
           />
         )}
       </DialogContent>

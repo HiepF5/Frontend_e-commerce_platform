@@ -8,37 +8,68 @@ import {
   Typography,
   DialogActions
 } from '@mui/material'
-import { AddressType } from './AddressDialog'
 import { useAppDispatch, useAppSelector } from '@store/hook'
 import { getProvince, getDistrict, getWard } from '../slices/GhnSlice'
+import { IAddressRequest, AddressType, IAddress } from '~/types/address.interface'
+import { mapAddressType } from '@shared/utils/mapAddressType'
 
 interface NewAddressFormProps {
   handleCancelForm: () => void
-  handleFormSubmit: (
-    formData: { name: string; phone: string; details: string },
-    addressType: AddressType
-  ) => void
+  handleFormSubmit: (formData: IAddressRequest) => void
+  initialData?: IAddress| null // Accept initial data for editing
 }
 
 const NewAddressForm: React.FC<NewAddressFormProps> = ({
   handleCancelForm,
-  handleFormSubmit
+  handleFormSubmit,
+  initialData
 }) => {
   const dispatch = useAppDispatch()
   const { provinces, districts, wards, status } = useAppSelector(
     (state) => state.ghn
   )
-
-  const [addressType, setAddressType] = useState<AddressType>('home')
-  const [formData, setFormData] = useState({
-    name: '',
-    phone: '',
-    province: '',
-    district: '',
-    ward: '',
-    specificAddress: '',
-    details: ''
+  const [formData, setFormData] = useState<IAddressRequest>({
+    addressType: 1,
+    fullName: '',
+    phoneNumber: '',
+    provinceId: '',
+    districtId: '',
+    wardId: '',
+    provinceName: '',
+    districtName: '',
+    wardName: '',
+    houseName: '',
+    note: '',
+    isDefault: true
   })
+  const transformAddressToRequest = (
+  address: IAddress
+): IAddressRequest => {
+  return {
+    addressId: address.address_id,
+    addressType: mapAddressType(address.address_type),
+    fullName: address.full_name,
+    phoneNumber: address.phone_number,
+    wardId: address.ward_id,
+    districtId: address.district_id,
+    provinceId: address.province_id,
+    houseName: '',
+    wardName: '',
+    districtName: '',
+    provinceName: '',
+    note: address.note || '',
+    isDefault: address.is_default
+  };
+};
+  useEffect(() => {
+    if (initialData) {
+      const transformedData = transformAddressToRequest(
+        initialData,
+      )
+      setFormData(transformedData)
+    }
+  }, [initialData])
+
 
   useEffect(() => {
     dispatch(getProvince())
@@ -55,49 +86,88 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
   }
 
   const handleProvinceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedProvince = event.target.value
+    const selectedProvinceId = event.target.value
+    const selectedProvince = provinces?.find(
+      (province) => province.ProvinceID === Number(selectedProvinceId)
+    )
+    const selectedProvinceName = selectedProvince
+      ? selectedProvince.ProvinceName
+      : ''
+
     setFormData((prevData) => ({
       ...prevData,
-      province: selectedProvince,
-      district: '', // Reset district and ward when province changes
-      ward: ''
+      provinceId: selectedProvinceId,
+      districtId: '',
+      wardId: '',
+      provinceName: selectedProvinceName,
+      districtName: '',
+      wardName: ''
     }))
-    dispatch(getDistrict({ province_id: selectedProvince }))
+    dispatch(getDistrict({ province_id: selectedProvinceId }))
   }
 
   const handleDistrictChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedDistrict = event.target.value
+    const selectedDistrictId = event.target.value
+    const selectedDistrict = districts?.find(
+      (district) => district.DistrictID === Number(selectedDistrictId)
+    )
+    const selectedDistrictName = selectedDistrict
+      ? selectedDistrict.DistrictName
+      : ''
+
     setFormData((prevData) => ({
       ...prevData,
-      district: selectedDistrict,
-      ward: '' // Reset ward when district changes
+      districtId: selectedDistrictId,
+      wardId: '',
+      districtName: selectedDistrictName,
+      wardName: ''
     }))
-    dispatch(getWard({ district_id: selectedDistrict }))
+    dispatch(getWard({ district_id: selectedDistrictId }))
   }
 
-  const handleAddressTypeChange = (
+  const handleWardChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedWardId = event.target.value
+    const selectedWard = wards?.find(
+      (ward) => ward.WardCode === selectedWardId
+    ) || { WardName: '' }
+
+    setFormData((prevData) => ({
+      ...prevData,
+      wardId: selectedWardId,
+      wardName: selectedWard.WardName
+    }))
+  }
+
+  const handleToggleChange = (
     event: React.MouseEvent<HTMLElement>,
     newType: AddressType
   ) => {
     if (newType !== null) {
-      setAddressType(newType)
+      setFormData((prevData) => ({
+        ...prevData,
+        addressType: newType
+      }))
     }
+  }
+
+  const handleSubmit = () => {
+    handleFormSubmit(formData)
   }
 
   return (
     <>
       <TextField
         label='Họ và tên'
-        name='name'
-        value={formData.name}
+        name='fullName'
+        value={formData.fullName}
         onChange={handleFormInputChange}
         fullWidth
         margin='normal'
       />
       <TextField
         label='Số điện thoại'
-        name='phone'
-        value={formData.phone}
+        name='phoneNumber'
+        value={formData.phoneNumber}
         onChange={handleFormInputChange}
         fullWidth
         margin='normal'
@@ -105,15 +175,15 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
       <TextField
         select
         label='Tỉnh/Thành phố'
-        name='province'
-        value={formData.province}
+        name='provinceId'
+        value={formData.provinceId}
         onChange={handleProvinceChange}
         fullWidth
         margin='normal'
         disabled={status}
       >
         {status ? (
-          <MenuItem value=''>Đang tải...</MenuItem>
+          <MenuItem value='loading'>Đang tải...</MenuItem>
         ) : (
           provinces?.map((province) => (
             <MenuItem key={province.ProvinceID} value={province.ProvinceID}>
@@ -122,19 +192,18 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
           ))
         )}
       </TextField>
-
       <TextField
         select
         label='Quận/Huyện'
-        name='district'
-        value={formData.district}
+        name='districtId'
+        value={formData.districtId}
         onChange={handleDistrictChange}
         fullWidth
         margin='normal'
-        disabled={!formData.province || status}
+        disabled={!formData.provinceId || status}
       >
         {status ? (
-          <MenuItem value=''>Đang tải...</MenuItem>
+          <MenuItem value='loading'>Đang tải...</MenuItem>
         ) : (
           districts?.map((district) => (
             <MenuItem key={district.DistrictID} value={district.DistrictID}>
@@ -143,19 +212,18 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
           ))
         )}
       </TextField>
-
       <TextField
         select
         label='Phường/Xã'
-        name='ward'
-        value={formData.ward}
-        onChange={handleFormInputChange}
+        name='wardId'
+        value={formData.wardId}
+        onChange={handleWardChange}
         fullWidth
         margin='normal'
-        disabled={!formData.district || status}
+        disabled={!formData.districtId || status}
       >
         {status ? (
-          <MenuItem value=''>Đang tải...</MenuItem>
+          <MenuItem value='loading'>Đang tải...</MenuItem>
         ) : (
           wards?.map((ward) => (
             <MenuItem key={ward.WardCode} value={ward.WardCode}>
@@ -164,39 +232,40 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
           ))
         )}
       </TextField>
-
       <TextField
         label='Địa chỉ cụ thể'
-        name='specificAddress'
-        value={formData.specificAddress}
+        name='houseName'
+        value={formData.houseName}
         onChange={handleFormInputChange}
         fullWidth
         margin='normal'
       />
-      <Button variant='outlined' style={{ marginTop: '10px' }}>
-        + Thêm vị trí
-      </Button>
+      <TextField
+        label='Ghi chú'
+        name='note'
+        value={formData.note}
+        onChange={handleFormInputChange}
+        fullWidth
+        margin='normal'
+      />
 
       <Typography style={{ marginTop: '20px' }}>Loại địa chỉ:</Typography>
       <ToggleButtonGroup
-        value={addressType}
+        value={formData.addressType}
         exclusive
-        onChange={handleAddressTypeChange}
+        onChange={handleToggleChange}
         aria-label='Address Type'
         style={{ marginTop: '10px', marginBottom: '20px' }}
       >
-        <ToggleButton value='Nhà Riêng'>Nhà Riêng</ToggleButton>
-        <ToggleButton value='Văn Phòng'>Văn Phòng</ToggleButton>
+        <ToggleButton value={1}>Nhà Riêng</ToggleButton>
+        <ToggleButton value={2}>Văn Phòng</ToggleButton>
       </ToggleButtonGroup>
 
       <DialogActions>
         <Button onClick={handleCancelForm} color='secondary'>
           Trở Lại
         </Button>
-        <Button
-          onClick={() => handleFormSubmit(formData, addressType)}
-          color='primary'
-        >
+        <Button onClick={handleSubmit} color='primary'>
           Hoàn thành
         </Button>
       </DialogActions>

@@ -1,4 +1,3 @@
-import React from 'react'
 import AddressDialog from '../components/AddressDialog'
 
 const AddressPage = () => {

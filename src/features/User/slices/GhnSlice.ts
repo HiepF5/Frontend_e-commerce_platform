@@ -8,7 +8,7 @@ import {
   IWardData,
   IWardRequest
 } from '~/types/ghn.interface'
-import { getProvinceApi, getDistrictApi, getWardApi } from '@api/ghnApI'
+import { getProvinceApi, getDistrictApi, getWardApi } from '@api/ghnApi'
 interface GhnState {
   status: boolean
   accessToken: string | null
