@@ -1,9 +1,9 @@
-import AddressDialog from '../components/AddressDialog'
+import AddressDialog from "../components/AddressDialog"
 
 const AddressPage = () => {
   return (
     <div>
-      <AddressDialog/>
+      <AddressDialog />
     </div>
   )
 }

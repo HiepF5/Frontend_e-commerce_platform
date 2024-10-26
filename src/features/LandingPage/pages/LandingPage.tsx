@@ -10,6 +10,7 @@ import Testimonials from '../components/Testimonials/Testimonials';
 import Popup from '../components/Popup/Popup';
 import Navbar from '../../../layouts/components/Navbar/Navbar';
 import Footer from '../../../layouts/components/Footer/Footer';
+import ChatBot from '@features/ChatBot/components/ChatBot';
 const LandingPage = () => {
   const [orderPopup, setOrderPopup] = useState(false)
 
@@ -33,8 +34,9 @@ const LandingPage = () => {
       <TopProducts handleOrderPopup={handleOrderPopup} />
       <Banner />
       <Subscribe />
-      <Testimonials/>
-      <Footer/>
+      <Testimonials />
+      <Footer />
+      <ChatBot />
       <Popup orderPopup={orderPopup} setOrderPopup={setOrderPopup} />
     </div>
   )

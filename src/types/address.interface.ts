@@ -8,6 +8,10 @@ export interface IAddress {
   ward_id: string;
   district_id: string;
   province_id: string;
+  house_name: string;
+  ward_name: string;
+  district_name: string;
+  province_name: string;
   note?: string; 
 }
 export interface IAddressRequest {

@@ -53,7 +53,6 @@ export const putChangePassword = async (
 export const putChangeInfo = async (
   data: IChangeInfoRequest
 ): Promise<IBaseResponse<string>> => {
-  debugger;
   try {
     const response = await axios.put<IBaseResponse<string>>(
       `${API_ENDPOINTS_USERS.ApiChangeInfo}`,

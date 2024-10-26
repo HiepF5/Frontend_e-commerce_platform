@@ -9,9 +9,9 @@ import {
 import AddressList from './AddressList'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch, useAppSelector } from '@store/hook'
-import { createAddress, getAddress } from '../slices/AddressSlice'
+import { createAddress, deleteAddress, getAddress, updateAddress } from '../slices/AddressSlice'
 import NewAddressForm from './NewAddressDialog'
-import { IAddressRequest, IAddress } from '~/types/address.interface'
+import { IAddressRequest, IAddress, IDeleteAddressRequest } from '~/types/address.interface'
 
 const AddressDialog = () => {
   const [showForm, setShowForm] = useState(false)
@@ -39,10 +39,27 @@ const AddressDialog = () => {
     setEditingAddress(null) 
   }
 
-  const handleFormSubmit = (formData: IAddressRequest) => {
-    dispatch(createAddress(formData)) 
-    setShowForm(false)
-    setEditingAddress(null)
+  const handleFormSubmit = async (formData: IAddressRequest) => {
+    const action = editingAddress ? updateAddress : createAddress
+    try {
+      await dispatch(action(formData)).unwrap()
+      await dispatch(getAddress()).unwrap()
+      setShowForm(false)
+      setEditingAddress(null)
+    } catch (error) {
+      console.error('Error updating/creating address:', error)
+    }
+  }
+  const handleRemoveAddress = async (addressId: number) => {
+    const deleteRequest: IDeleteAddressRequest = {
+      addressId: addressId.toString()
+    }
+    try {
+      await dispatch(deleteAddress(deleteRequest)).unwrap()
+      await dispatch(getAddress()).unwrap()
+    } catch (error) {
+      console.error('Error removing address:', error)
+    }
   }
 
   return (
@@ -57,8 +74,9 @@ const AddressDialog = () => {
           />
         ) : (
           <AddressList
-            addresses={address}
-            handleShowForm={handleShowForm} 
+              addresses={address}
+              handleShowForm={handleShowForm} 
+              handleRemoveAddress={handleRemoveAddress}            
           />
         )}
       </DialogContent>

@@ -44,7 +44,6 @@ export const changePassword = createAsyncThunk(
 export const changeInfo = createAsyncThunk(
   'user/changeInfo',
   async (data: IChangeInfoRequest, { rejectWithValue }) => {
-    debugger;
     try {
       const response: IBaseResponse<string> = await putChangeInfo(data);
       return response.data; 
@@ -56,7 +55,6 @@ export const changeInfo = createAsyncThunk(
 export const changeAvatar = createAsyncThunk(
   'user/changeAvatar',
   async (data: IChangeAvatarRequest, { rejectWithValue }) => {
-    debugger;
     try {
       const response: IBaseResponse<string> = await putChangeAvt(data);
       return response.data; 

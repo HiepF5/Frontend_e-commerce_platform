@@ -10,13 +10,17 @@ import {
 } from '@mui/material'
 import { useAppDispatch, useAppSelector } from '@store/hook'
 import { getProvince, getDistrict, getWard } from '../slices/GhnSlice'
-import { IAddressRequest, AddressType, IAddress } from '~/types/address.interface'
+import {
+  IAddressRequest,
+  AddressType,
+  IAddress
+} from '~/types/address.interface'
 import { mapAddressType } from '@shared/utils/mapAddressType'
 
 interface NewAddressFormProps {
   handleCancelForm: () => void
   handleFormSubmit: (formData: IAddressRequest) => void
-  initialData?: IAddress| null // Accept initial data for editing
+  initialData?: IAddress | null // Accept initial data for editing
 }
 
 const NewAddressForm: React.FC<NewAddressFormProps> = ({
@@ -29,6 +33,7 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
     (state) => state.ghn
   )
   const [formData, setFormData] = useState<IAddressRequest>({
+    addressId: undefined,
     addressType: 1,
     fullName: '',
     phoneNumber: '',
@@ -42,34 +47,40 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
     note: '',
     isDefault: true
   })
-  const transformAddressToRequest = (
-  address: IAddress
-): IAddressRequest => {
-  return {
-    addressId: address.address_id,
-    addressType: mapAddressType(address.address_type),
-    fullName: address.full_name,
-    phoneNumber: address.phone_number,
-    wardId: address.ward_id,
-    districtId: address.district_id,
-    provinceId: address.province_id,
-    houseName: '',
-    wardName: '',
-    districtName: '',
-    provinceName: '',
-    note: address.note || '',
-    isDefault: address.is_default
-  };
-};
+
+  const isEditMode = !!initialData 
+
+  const transformAddressToRequest = (address: IAddress): IAddressRequest => {
+    return {
+      addressId: address.address_id,
+      addressType: mapAddressType(address.address_type),
+      fullName: address.full_name,
+      phoneNumber: address.phone_number,
+      wardId: address.ward_id,
+      districtId: address.district_id,
+      provinceId: address.province_id,
+      houseName: address.house_name,
+      wardName: address.ward_name,
+      districtName: address.district_name,
+      provinceName: address.province_name,
+      note: address.note || '',
+      isDefault: address.is_default
+    }
+  }
+
   useEffect(() => {
     if (initialData) {
-      const transformedData = transformAddressToRequest(
-        initialData,
-      )
+      const transformedData = transformAddressToRequest(initialData)
       setFormData(transformedData)
-    }
-  }, [initialData])
+      if (initialData.province_id) {
+        dispatch(getDistrict({ province_id: initialData.province_id }))
+      }
 
+      if (initialData.district_id) {
+        dispatch(getWard({ district_id: initialData.district_id }))
+      }
+    }
+  }, [initialData, dispatch])
 
   useEffect(() => {
     dispatch(getProvince())
@@ -152,6 +163,23 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
 
   const handleSubmit = () => {
     handleFormSubmit(formData)
+    if (!isEditMode) {
+      setFormData({
+        addressId: undefined,
+        addressType: 1,
+        fullName: '',
+        phoneNumber: '',
+        provinceId: '',
+        districtId: '',
+        wardId: '',
+        provinceName: '',
+        districtName: '',
+        wardName: '',
+        houseName: '',
+        note: '',
+        isDefault: true
+      })
+    }
   }
 
   return (
@@ -266,7 +294,7 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
           Trở Lại
         </Button>
         <Button onClick={handleSubmit} color='primary'>
-          Hoàn thành
+          {isEditMode ? 'Cập Nhật' : 'Tạo Mới'}
         </Button>
       </DialogActions>
     </>

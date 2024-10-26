@@ -57,7 +57,6 @@ export const createAddress = createAsyncThunk(
 export const updateAddress = createAsyncThunk(
   'user/updateAddress',
   async (data: IAddressRequest, { rejectWithValue }) => {
-    debugger
     try {
       const response: IBaseResponse<IAddress> = await updateAddressApi(data)
       return response.data
@@ -71,7 +70,6 @@ export const updateAddress = createAsyncThunk(
 export const deleteAddress = createAsyncThunk(
   'user/deleteAddress',
   async (data: IDeleteAddressRequest, { rejectWithValue }) => {
-    debugger
     try {
       const response: IBaseResponse<string> = await deleteAddressApi(data)
       return response.data

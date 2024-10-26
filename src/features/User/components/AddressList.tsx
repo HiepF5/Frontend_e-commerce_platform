@@ -6,24 +6,50 @@ import {
   Box,
   RadioGroup,
   Radio,
-  FormControlLabel
+  FormControlLabel,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle
 } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
-import { IAddress } from '~/types/address.interface'
+import { IAddress, IDeleteAddressRequest } from '~/types/address.interface'
 
 interface AddressListProps {
   addresses: IAddress[] | null
   handleShowForm: (address: IAddress | null) => void // Pass address to the form
+  handleRemoveAddress: (addressId: number) => void // Function to remove address
 }
 
 const AddressList: React.FC<AddressListProps> = ({
   addresses,
-  handleShowForm
+  handleShowForm,
+  handleRemoveAddress
 }) => {
   const [selectedAddress, setSelectedAddress] = useState<string | undefined>()
+  const [openDialog, setOpenDialog] = useState<boolean>(false)
+  const [addressToRemove, setAddressToRemove] = useState<number | null>(null)
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedAddress(event.target.value)
+  }
+
+  const handleOpenDialog = (addressId: number) => {
+    setAddressToRemove(addressId)
+    setOpenDialog(true)
+  }
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false)
+    setAddressToRemove(null)
+  }
+
+  const handleConfirmRemove = () => {
+    if (addressToRemove) {
+      handleRemoveAddress(addressToRemove)
+    }
+    handleCloseDialog()
   }
 
   return (
@@ -58,6 +84,13 @@ const AddressList: React.FC<AddressListProps> = ({
                     onClick={() => handleShowForm(address)}
                   >
                     Cập nhật
+                  </Button>
+                  <Button
+                    variant='text'
+                    color='error'
+                    onClick={() => handleOpenDialog(address.address_id)}
+                  >
+                    Xóa
                   </Button>
                 </Grid>
                 <Grid item xs={12}>
@@ -108,6 +141,24 @@ const AddressList: React.FC<AddressListProps> = ({
       >
         + Thêm Địa Chỉ Mới
       </Button>
+
+      {/* Dialog for confirmation */}
+      <Dialog open={openDialog} onClose={handleCloseDialog}>
+        <DialogTitle>Xác nhận xóa</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Bạn có chắc chắn muốn xóa địa chỉ này không?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseDialog} color='primary'>
+            Hủy
+          </Button>
+          <Button onClick={handleConfirmRemove} color='error'>
+            Xóa
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   )
 }
