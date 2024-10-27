@@ -4,7 +4,9 @@ import {
   Home as HomeIcon,
   AccountBalance as BankIcon,
   LocationOn as AddressIcon,
-  VpnKey as KeyIcon
+  VpnKey as KeyIcon,
+  Store as StoreIcon,
+  Storefront as ShopManagementIcon
 } from '@mui/icons-material'
 
 const NavbarLayoutUser = () => {
@@ -47,6 +49,26 @@ const NavbarLayoutUser = () => {
           className='text-gray-800 font-medium text-lg hover:text-yellow-600'
         >
           Đổi mật khẩu
+        </Link>
+      </div>
+      <div className='flex items-center p-4 gap-4 rounded-lg transition-all duration-300 hover:bg-gray-100 hover:scale-105 hover:shadow-lg'>
+        <StoreIcon className='text-yellow-600' />
+
+        <Link
+          to='/user/subcribe-shop'
+          className='text-gray-800 font-medium text-lg hover:text-yellow-600'
+        >
+          Đăng kí Shop
+        </Link>
+      </div>
+      <div className='flex items-center p-4 gap-4 rounded-lg transition-all duration-300 hover:bg-gray-100 hover:scale-105 hover:shadow-lg'>
+        <ShopManagementIcon className='text-yellow-600' />
+
+        <Link
+          to='/user/manage-shop'
+          className='text-gray-800 font-medium text-lg hover:text-yellow-600'
+        >
+          Quản lí Shop
         </Link>
       </div>
     </>

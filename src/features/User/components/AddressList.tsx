@@ -6,15 +6,11 @@ import {
   Box,
   RadioGroup,
   Radio,
-  FormControlLabel,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle
+  FormControlLabel
 } from '@mui/material'
 import LocationOnIcon from '@mui/icons-material/LocationOn'
-import { IAddress, IDeleteAddressRequest } from '~/types/address.interface'
+import { IAddress } from '~/types/address.interface'
+import { ConfirmDialog } from '@shared/components/DiaglogComfirm/DiaglogComfirm'
 
 interface AddressListProps {
   addresses: IAddress[] | null
@@ -142,23 +138,14 @@ const AddressList: React.FC<AddressListProps> = ({
         + Thêm Địa Chỉ Mới
       </Button>
 
-      {/* Dialog for confirmation */}
-      <Dialog open={openDialog} onClose={handleCloseDialog}>
-        <DialogTitle>Xác nhận xóa</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Bạn có chắc chắn muốn xóa địa chỉ này không?
-          </DialogContentText>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={handleCloseDialog} color='primary'>
-            Hủy
-          </Button>
-          <Button onClick={handleConfirmRemove} color='error'>
-            Xóa
-          </Button>
-        </DialogActions>
-      </Dialog>
+      {/* Replace the Dialog with ConfirmDialog */}
+      <ConfirmDialog
+        open={openDialog}
+        onClose={handleCloseDialog}
+        action='xóa'
+        title='địa chỉ'
+        onConfirm={handleConfirmRemove}
+      />
     </>
   )
 }

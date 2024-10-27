@@ -5,6 +5,8 @@ import UserInfoPage from '../page/UserInfoPage'
 import LayoutUser from '../components/LayoutUser'
 import ChangePasswordPage from '../page/ChangePasswordPage'
 import AddressPage from '../page/AddressPage'
+import SubcribeShopPage from '../page/SubcribeShopPage'
+import ManageShopPage from '../page/ManageShopPage'
 
 const UserRoutes = (): JSX.Element => {
   const routes = [
@@ -31,6 +33,14 @@ const UserRoutes = (): JSX.Element => {
             {
               path: 'change-password',
               element: <ChangePasswordPage />
+            },
+            {
+              path: 'subcribe-shop',
+              element: <SubcribeShopPage />
+            },
+            {
+              path: 'manage-shop',
+              element: <ManageShopPage />
             }
           ]
         }

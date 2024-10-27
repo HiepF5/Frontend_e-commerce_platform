@@ -7,7 +7,7 @@ const LayoutPage = () => {
   return (
     <div>
       <Navbar />
-      <div className='h-[87vh]'>
+      <div className='relative' style={{ minHeight: '87vh' }}>
         <Outlet />
       </div>
       <Footer />

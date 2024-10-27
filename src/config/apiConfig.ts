@@ -34,6 +34,15 @@ export const API_ENDPOINTS_CHATBOT = {
   ApiChatBotImage: `${EPATHS.ServiceGemini}/chat-image`,
   ApiChatBotStory: `${EPATHS.ServiceGemini}/chat-story`,//??
 };
+export const API_ENDPOINTS_SHOP = {
+  ApiCreateSubscribe: 'customer/shop/subscribe',
+  ApiGetShopDetail: 'customer/shop/get-detail',
+  ApiUpdateShop: 'owner/shop/update',
+  ApiRemoveShop: 'owner/shop/remove',
+  ApiRestoreShop: 'owner/shop/restore',
+  ApiLockShop: 'admin/shop/lock',
+  ApiFollowShop: 'customer/shop/follow-shop',
+};
 export const API_ENDPOINTS_ORDER = {
   ApiGetAllOrder: '/customer/orders/get-all',
   ApiCreateOrder: '/customer/orders/create',
@@ -56,9 +65,6 @@ export const API_ENDPOINTS_REVIEW = {
 };
 export const API_ENDPOINTS_BANNER = {
   ApiGetAllBanner: '/all/banners',
-};
-export const API_ENDPOINTS_SUBSCRIBE = {
-  ApiCreateSubscribe: '/customer/subscribes/create',
 };
 export const API_ENDPOINTS_TESTIMONIAL = {
   ApiGetAllTestimonial: '/all/testimonials',
