@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import TitleList from '~/shared/components/TitleList/TitleList'
+import TitleList from '@shared/components/TitleList/TitleList'
 import ProductItem from '../ProductItem/ProductItem'
 
 function BuyBestPrice() {

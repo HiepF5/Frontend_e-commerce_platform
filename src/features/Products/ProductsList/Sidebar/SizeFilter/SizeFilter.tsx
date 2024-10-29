@@ -1,7 +1,17 @@
 import { Disclosure } from '@headlessui/react'
-import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
-import InputFilter from '../../../components/InputFilter/InputFilter'
-export default function SizeFilter({ options }) {
+import { FaMinus, FaPlus } from 'react-icons/fa'
+import InputFilter from '@shared/components/InputFilter/InputFilter'
+interface Option {
+  value: string;
+  label: string;
+  checked: boolean;
+}
+
+interface SizeFilterProps {
+  options: Option[];
+}
+
+export default function SizeFilter({ options }: SizeFilterProps) {
   return (
     <Disclosure as='div' className='border-t border-gray-200 px-4 py-6'>
       {({ open }) => (
@@ -11,9 +21,9 @@ export default function SizeFilter({ options }) {
               <span className='font-medium text-gray-900'>Size</span>
               <span className='ml-6 flex items-center'>
                 {open ? (
-                  <MinusIcon className='h-5 w-5' aria-hidden='true' />
+                  <FaMinus className='h-5 w-5' aria-hidden='true' />
                 ) : (
-                  <PlusIcon className='h-5 w-5' aria-hidden='true' />
+                  <FaPlus className='h-5 w-5' aria-hidden='true' />
                 )}
               </span>
             </Disclosure.Button>
@@ -22,7 +32,12 @@ export default function SizeFilter({ options }) {
             <div className='space-y-2'>
               {options.map((option, optionIdx) => (
                 <div key={option.value} className='flex items-center'>
-                  <InputFilter id={optionIdx} value={option.value} label={option.label} checked={option.checked} />
+                  <InputFilter
+                    id={optionIdx}
+                    value={option.value}
+                    label={option.label}
+                    checked={option.checked}
+                  />
                 </div>
               ))}
             </div>

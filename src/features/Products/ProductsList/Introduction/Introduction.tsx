@@ -1,5 +1,5 @@
 import React from 'react'
-import TitleList from '../../components/TitleList/TitleList'
+import TitleList from '@shared/components/TitleList/TitleList'
 
 const Introduction = () => {
   return (

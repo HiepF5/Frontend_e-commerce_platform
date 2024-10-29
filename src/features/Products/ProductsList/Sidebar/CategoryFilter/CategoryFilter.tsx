@@ -1,7 +1,17 @@
 import { Disclosure } from '@headlessui/react'
-import { MinusIcon, PlusIcon } from '@heroicons/react/20/solid'
-import InputFilter from '../../../components/InputFilter/InputFilter'
-export default function CategoryFilter({ options }) {
+import { FaMinus, FaPlus } from 'react-icons/fa'
+import InputFilter from '@shared/components/InputFilter/InputFilter';
+interface Option {
+  value: string;
+  label: string;
+  checked: boolean;
+}
+
+interface CategoryFilterProps {
+  options: Option[];
+}
+
+export default function CategoryFilter({ options }: CategoryFilterProps) {
   return (
     <Disclosure as='div' className='border-t border-gray-200 px-4 py-6'>
       {({ open }) => (
@@ -11,9 +21,9 @@ export default function CategoryFilter({ options }) {
               <span className='font-medium text-gray-900'>Category</span>
               <span className='ml-6 flex items-center'>
                 {open ? (
-                  <MinusIcon className='h-5 w-5' aria-hidden='true' />
+                  <FaMinus className='h-5 w-5' aria-hidden='true' />
                 ) : (
-                  <PlusIcon className='h-5 w-5' aria-hidden='true' />
+                  <FaPlus className='h-5 w-5' aria-hidden='true' />
                 )}
               </span>
             </Disclosure.Button>
