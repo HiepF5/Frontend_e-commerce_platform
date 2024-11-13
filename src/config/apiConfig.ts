@@ -43,6 +43,15 @@ export const API_ENDPOINTS_SHOP = {
   ApiLockShop: 'admin/shop/lock',
   ApiFollowShop: 'customer/shop/follow-shop',
 };
+export const API_ENDPOINTS_SHOPREVIEW = {
+  ApiGetReviewByPage: '/guest/shop/page-review',
+  ApiCreateReview: 'customer/shop/create-review',
+  ApiUpdateReview: 'customer/shop/update-review',
+  ApiDeleteReview: 'customer/shop/delete-review',
+  ApiMyReview: 'customer/shop/my-review',
+  ApiAdminDeleteReview: 'admin/shop/delete-review',
+  ApiOwnerReplyReview: 'owner/shop/reply-review',
+};
 export const API_ENDPOINTS_ORDER = {
   ApiGetAllOrder: '/customer/orders/get-all',
   ApiCreateOrder: '/customer/orders/create',

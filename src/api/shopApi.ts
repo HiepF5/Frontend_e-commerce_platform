@@ -48,7 +48,7 @@ export const updateShopDetailApi = async (data: IInfoShop): Promise<IBaseRespons
     )
     return response.data
   } catch (error) {
-    console.error('Error in getShopDetailApi:', error)
+    console.error('Error in updateShopDetailApi:', error)
     throw error
   }
 }

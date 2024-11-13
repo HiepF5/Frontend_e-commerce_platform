@@ -41,7 +41,7 @@ const UserRoutes = (): JSX.Element => {
             {
               path: 'manage-shop',
               element: <ManageShopPage />
-            }
+            },
           ]
         }
       ]

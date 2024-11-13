@@ -23,6 +23,7 @@ const MainRoutes = (): JSX.Element => {
           <Route path='/product/*' element={<ProductRoutes />} />
           <Route path='/shop/*' element={<ShopRoutes />} />
           <Route path='/user/*' element={<UserRoutes />} />
+          <Route path='/messenger/*' element={<UserRoutes />} />
           <Route element={<AuthenticatedGuard />}>
             <Route path='/admin/*' element={<AdminRoutes />} />
           </Route>

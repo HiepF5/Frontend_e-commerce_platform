@@ -7,6 +7,7 @@ import addressReducer from '@features/User/slices/AddressSlice';
 import ghnReducer from '@features/User/slices/GhnSlice';
 import chatBotReducer from '@features/ChatBot/slices/ChatBotSlice';
 import shopReducer from '@features/User/slices/ShopSlice';
+import shopReviewReducer from '@features/Shop/slices/ShopReviewSlice';
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
@@ -16,6 +17,7 @@ export const store = configureStore({
     ghn: ghnReducer,
     chat: chatBotReducer,
     shop: shopReducer,
+    shopReview: shopReviewReducer,
   }
 });
 

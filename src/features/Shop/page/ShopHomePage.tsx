@@ -3,6 +3,7 @@ import React from 'react'
 import ShopHeader from '../components/ShopHeader'
 import ShopMenu from '../components/ShopMenu'
 import ShopListProducts, { products } from '../components/ShopListProducts'
+import { Outlet } from 'react-router-dom'
 
 
 const shopInfo = {
@@ -20,13 +21,9 @@ const ShopHomePage: React.FC = () => {
   return (
     <div className='container'>
       <Box bgcolor='#f5f5f5' p={2}>
-        {/* Header Shop */}
         <ShopHeader shopInfo={shopInfo} />
-
-        {/* Menu Shop */}
         <ShopMenu />
-
-        {/* Danh sách sản phẩm */}
+        <Outlet />
         <Typography variant='h5' mt={2} mb={2}>
           Gợi Ý Cho Bạn
         </Typography>

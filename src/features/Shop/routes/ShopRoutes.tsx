@@ -1,7 +1,8 @@
-import { Suspense } from 'react'
+import {  Suspense } from 'react'
 import { useRoutes } from 'react-router-dom'
 import LayoutPage from '@layouts/LayoutPage'
 import ShopHomePage from '../page/ShopHomePage'
+import ShopReviews from '../components/ShopReviews'
 const ShopRoutes = (): JSX.Element => {
   const routes = [
     {
@@ -9,8 +10,14 @@ const ShopRoutes = (): JSX.Element => {
       element: <LayoutPage />,
       children: [
         {
-          path: 'home',
-          element: <ShopHomePage />
+          path: '/',
+          element: <ShopHomePage />,
+          children: [
+            {
+              path: 'review-shop',
+              element: <ShopReviews />,           
+            },
+          ]
         }
       ]
     }

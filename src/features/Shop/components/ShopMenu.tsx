@@ -1,12 +1,18 @@
 import { Box, Tab, Tabs } from '@mui/material'
 import React from 'react'
+import { useNavigate } from 'react-router-dom'
 
 const ShopMenu: React.FC = () => {
   const [value, setValue] = React.useState(0)
+   const navigate = useNavigate()
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue)
-  }
+ const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+   setValue(newValue)
+   if (newValue === 6) {
+     // Assuming the "Review Shop" tab is the 7th tab (index 6)
+     navigate('/shop/review-shop')
+   }
+ }
 
   return (
     <Box mt={2} bgcolor='#fff'>
@@ -25,6 +31,7 @@ const ShopMenu: React.FC = () => {
         <Tab label='Sản phẩm bán chạy' />
         <Tab label='Giặt giũ chăm sóc nhà cửa' />
         <Tab label='Bảo vệ sức khỏe' />
+        <Tab label='Review Shop' />
         <Tab label='Thêm' />
       </Tabs>
     </Box>

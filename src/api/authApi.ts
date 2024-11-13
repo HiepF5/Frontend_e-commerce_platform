@@ -23,6 +23,7 @@ export const getLogin = async (data: ILoginFormRequest): Promise<IBaseResponse<I
   }
 };
 export const postSignup = async (data: ISignupFormRequest): Promise<IBaseResponse<string>> => {
+  debugger; 
   try {
     const response = await axios.post<IBaseResponse<string>>(
       `${API_ENDPOINTS_ACCOUNT.ApiRegister}`,

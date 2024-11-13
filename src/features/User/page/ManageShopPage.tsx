@@ -1,42 +1,59 @@
-import { IShopDetails } from '~/types/shop.interface'
-import { ManageShop } from '../components/ManageShop'
-import { Typography } from '@mui/material'
-// Dữ liệu mẫu
-const shopData: IShopDetails = {
-  businessType: 'HO_KINH_DOANH',
-  shopName: 'anshop123r434523',
-  shopLogo: 'shop.png',
-  description: 'e',
-  address: 'Hưng Yêne',
-  shopHotLine: '1242342',
-  shopEmail: 'h@gmail.com',
-  taxCode: null,
-  identityCode: '',
-  fullName: '',
-  frontIdentityCard:
-    'http://res.cloudinary.com/dcejjvibg/image/upload/v1729977678/zaagfa2helomixqgu10m.png',
-  backIdentityCard:
-    'http://res.cloudinary.com/dcejjvibg/image/upload/v1729977678/aar3t4js5detdoqvg1on.png',
-  rating: 0.0,
-  productQuantity: 0,
-  followCount: 0,
-  waitingOrder: 0,
-  processOrder: 0,
-  deliveringOrder: 0,
-  successOrder: 0,
-  cancelOrder: 0,
-  returnOrder: 0,
-  wardId: '',
-  districtId: '',
-  provinceId: '',
-  createdAt: '27/10/2024 04:21:19',
-  createdBy: 'nguyenconghiepnguyen171110@gmail.com'
-}
+// src/features/shop/pages/ManageShopPage.tsx
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-const ManageShopPage = () => {
+import { Typography, CircularProgress, Box } from '@mui/material'
+import ManageShop from '../components/ManageShop'
+import { useAppDispatch, useAppSelector } from '@store/hook'
+import { getShopDetail } from '../slices/ShopSlice'
+
+const ManageShopPage: React.FC = () => {
+  const dispatch = useAppDispatch()
+  const { shopData, loading, error } = useAppSelector(
+    (state) => state.shop
+  )
+
+  useEffect(() => {
+    dispatch(getShopDetail())
+  }, [dispatch])
+
+  if (loading) {
+    return (
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        height='100vh'
+      >
+        <CircularProgress />
+      </Box>
+    )
+  }
+
+  if (error) {
+    return (
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        height='100vh'
+      >
+        <Typography variant='h6' color='error'>
+          {error}
+        </Typography>
+      </Box>
+    )
+  }
+
   return (
     <div>
-      <ManageShop data={shopData} />
+      {shopData ? (
+        <ManageShop data={shopData} />
+      ) : (
+        <Typography variant='h6' color='error'>
+          No shop data available
+        </Typography>
+      )}
     </div>
   )
 }

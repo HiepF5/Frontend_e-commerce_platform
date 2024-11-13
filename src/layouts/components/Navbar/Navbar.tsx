@@ -1,7 +1,11 @@
 import React from 'react'
 import Logo from '@assets/logo.png'
 import { IoMdSearch } from 'react-icons/io'
-import { FaCaretDown, FaCartShopping } from 'react-icons/fa6'
+import {
+  FaCaretDown,
+  FaCartShopping,
+  FaFacebookMessenger
+} from 'react-icons/fa6'
 import { FaSignInAlt } from 'react-icons/fa'
 import { FaUserCircle } from 'react-icons/fa'
 import DarkMode from './DarkMode'
@@ -11,7 +15,7 @@ import { useAppDispatch } from '@store/hook'
 import { Avatar, Box, Typography } from '@mui/material'
 import { logout } from '@features/Authentication/slices/authSlice'
 import { toast } from 'react-toastify'
-import { Menu, DropdownLinks } from '@config/constants/paths'
+import { Menu, MenuDropdownLinks } from '@config/constants/paths'
 import Cookies from 'js-cookie'
 
 const Navbar = () => {
@@ -159,6 +163,28 @@ const Navbar = () => {
                   <Typography>{user?.full_name}</Typography>
                 </Box>
                 <button
+                  onClick={() => navigate('/messenger')}
+                  className='bg-gradient-to-r from-orange-400
+          to-lime-400 transition-all duration-200
+          text-white py-1 px-4 rounded-full flex 
+          items-center gap-3 group'
+                >
+                  <span
+                    className='group-hover:block 
+            hidden transition-all
+            duration-200'
+                  >
+                    Messenger
+                  </span>
+                  <FaFacebookMessenger
+                    className='text-xl
+             text-white
+               drop-shadow-sm 
+               cursor-pointer
+             '
+                  />
+                </button>
+                <button
                   onClick={() => handleSignOut()}
                   className='bg-gradient-to-r from-orange-400
           to-lime-400 transition-all duration-200
@@ -224,7 +250,7 @@ const Navbar = () => {
             bg-white p-2 text-black shadow-md'
             >
               <ul>
-                {DropdownLinks.map((data) => (
+                {MenuDropdownLinks.map((data) => (
                   <li key={data.id}>
                     <a
                       href={data.link}

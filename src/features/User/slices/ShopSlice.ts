@@ -4,11 +4,13 @@ import {
   followShopApi, 
   deleteShopApi, 
   restoreShopApi, 
-  updateShopDetailApi
+  updateShopDetailApi,
+  getShopDetailApi
 } from '@api/shopApi';
-import { IShopRequest, IShopFollowRequest, IInfoShop } from '~/types/shop.interface';
+import { IShopRequest, IShopFollowRequest, IInfoShop, IShopDetails } from '~/types/shop.interface';
 
 interface ShopState {
+  shopData: IShopDetails | null;
   loading: boolean;
   success: boolean;
   error: string | null;
@@ -16,6 +18,7 @@ interface ShopState {
 }
 
 const initialState: ShopState = {
+  shopData: null,
   loading: false,
   success: false,
   error: null,
@@ -84,6 +87,18 @@ export const restoreShop = createAsyncThunk(
     }
   }
 );
+//
+export const getShopDetail = createAsyncThunk(
+  'shop/getShopDetail',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await getShopDetailApi();
+      return response;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data?.message || 'Failed to get shop detail');
+    }
+  }
+);
 
 // Slice
 const ShopSlice = createSlice({
@@ -91,6 +106,7 @@ const ShopSlice = createSlice({
   initialState,
   reducers: {
     resetShopState: (state) => {
+      state.shopData = null;
       state.loading = false;
       state.success = false;
       state.error = null;
@@ -195,6 +211,19 @@ const ShopSlice = createSlice({
         state.success = false;
         state.error = action.payload
       })
+      //
+      .addCase(getShopDetail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getShopDetail.fulfilled, (state, action) => {
+        state.loading = false;
+        state.shopData = action.payload.data;
+      })
+      .addCase(getShopDetail.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
   }
 });
 

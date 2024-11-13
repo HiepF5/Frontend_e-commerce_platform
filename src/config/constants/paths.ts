@@ -1,48 +1,45 @@
-export const PATH = {
-
-};
 export const Menu = [
   {
     id: 1,
     name: 'Trang chủ',
-    link: '/#'
+    link: '/'
   },
   {
     id: 2,
     name: 'Thiết bị điện tử',
-    link: '/#services'
+    link: '/products/electronics'
   },
   {
     id: 3,
     name: 'Máy tính',
-    link: '/#'
+    link: '/products/computers'
   },
   {
     id: 4,
     name: 'Laptop',
-    link: '/#'
+    link: '/products/laptops'
   },
   {
     id: 5,
     name: 'Điện thoại và phụ kiện',
-    link: '/#'
+    link: '/products/phones'
   }
 ]
 
-export const DropdownLinks = [
+export const MenuDropdownLinks = [
   {
     id: 1,
-    name: 'Trending Products',
-    link: '/#'
+    name: 'Sản phẩm thịnh hành',
+    link: '/products/popular'
   },
   {
     id: 2,
-    name: 'Best Selling',
-    link: '/#'
+    name: 'Bán chạy nhất',
+    link: '/products/best-seller'
   },
   {
     id: 3,
-    name: 'Top Rated',
-    link: '/#'
+    name: 'Đánh giá cao',
+    link: '/products/top-rated'
   }
 ]
