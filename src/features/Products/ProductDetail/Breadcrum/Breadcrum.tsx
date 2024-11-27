@@ -1,6 +1,11 @@
 import React from 'react'
 import arrow_icon from '@assets/img/breadcrum_arrow.png'
-function Breadcrum({ product }) {
+interface Product {
+  brand: string;
+  name: string;
+}
+
+function Breadcrum({ product }: { product: Product }) {
   return (
     <div className='container flex items-center gap-8 text-gray-600 text-base font-semibold capitalize my-[60px] mx-[170px] '>
       HOME

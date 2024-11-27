@@ -8,6 +8,7 @@ import ghnReducer from '@features/User/slices/GhnSlice';
 import chatBotReducer from '@features/ChatBot/slices/ChatBotSlice';
 import shopReducer from '@features/User/slices/ShopSlice';
 import shopReviewReducer from '@features/Shop/slices/ShopReviewSlice';
+import chatReducer from '@features/Messenger/slices/ChatSlice';
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
@@ -18,6 +19,7 @@ export const store = configureStore({
     chat: chatBotReducer,
     shop: shopReducer,
     shopReview: shopReviewReducer,
+    messageChat: chatReducer,
   }
 });
 

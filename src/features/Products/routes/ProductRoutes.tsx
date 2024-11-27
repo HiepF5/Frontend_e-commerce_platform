@@ -1,7 +1,8 @@
-import { Suspense } from 'react'
+import { Children, Suspense } from 'react'
 import { useRoutes } from 'react-router-dom'
 import LayoutPage from '@layouts/LayoutPage'
 import ProductsList from '../pages/ProductsList'
+import ProductDetail from '../pages/ProductDetail'
 const ProductRoutes = (): JSX.Element => {
   const routes = [
     {
@@ -10,7 +11,15 @@ const ProductRoutes = (): JSX.Element => {
       children: [
         {
           path: 'product-list',
-          element: <ProductsList />
+          element: <ProductsList category={''} />
+        },
+        {
+          path: 'product-detail/:productId',
+          element: <ProductDetail />
+        },
+        {
+          path: ':category',
+          element: <ProductsList category={':category'} />
         }
       ]
     }

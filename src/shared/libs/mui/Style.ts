@@ -1,7 +1,9 @@
 import { styled } from '@mui/system'
 import {
+  Avatar,
   Box,
   Card,
+  ListItemButton,
 } from '@mui/material'
 export const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
@@ -47,4 +49,27 @@ export const InfoItem = styled(Box)(({ theme }) => ({
 export const IconWrapper = styled(Box)(({ theme }) => ({
   marginRight: theme.spacing(2),
   color: theme.palette.primary.main
+}))
+export const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
+  borderRadius: theme.shape.borderRadius,
+  marginBottom: theme.spacing(1),
+  transition: 'background-color 0.2s',
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover
+  },
+  '&.Mui-selected': {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    '& .MuiAvatar-root': {
+      border: `2px solid ${theme.palette.primary.contrastText}`
+    },
+    '& .MuiTypography-root': {
+      color: theme.palette.primary.contrastText
+    }
+  }
+}))
+
+export const StyledAvatar = styled(Avatar)(({ theme }) => ({
+  width: 56,
+  height: 56
 }))

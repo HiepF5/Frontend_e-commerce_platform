@@ -9,8 +9,9 @@ const ShopMenu: React.FC = () => {
  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
    setValue(newValue)
    if (newValue === 6) {
+    const shopCode = 'SH00000001';
      // Assuming the "Review Shop" tab is the 7th tab (index 6)
-     navigate('/shop/review-shop')
+     navigate(`/shop/review-shop/${shopCode}`)
    }
  }
 

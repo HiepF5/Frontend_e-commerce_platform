@@ -20,7 +20,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 }) => {
   return (
     <Link
-      to={`/product/${product.productsId}`}
+      to={`/products/product-detail/${product.productsId}`}
       onClick={() => window.scrollTo(0, 0)}
     >
       <div className='group relative'>

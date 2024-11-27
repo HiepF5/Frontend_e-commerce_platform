@@ -50,7 +50,7 @@ const Navbar = () => {
           <div>
             <a href='#' className='font-bold text-2xl sm:text-3xl flex gap-2'>
               <img src={Logo} alt='Logo' className='w-10 uppercase' />
-              Shopsy
+              ELECTROHUB
             </a>
           </div>
           {/* search bar */}
@@ -163,7 +163,7 @@ const Navbar = () => {
                   <Typography>{user?.full_name}</Typography>
                 </Box>
                 <button
-                  onClick={() => navigate('/messenger')}
+                  onClick={() => navigate('/messenger/chat')}
                   className='bg-gradient-to-r from-orange-400
           to-lime-400 transition-all duration-200
           text-white py-1 px-4 rounded-full flex 

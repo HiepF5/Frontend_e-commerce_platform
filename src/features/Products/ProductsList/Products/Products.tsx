@@ -3,17 +3,45 @@ import { useEffect } from 'react'
 import ProductItem from '../ProductItem/ProductItem'
 
 export default function Products() {
-  // Sample fake data
   const products = [
-    { productsId: 1, name: 'iPhone 13', price: 999 },
-    { productsId: 2, name: 'Samsung Galaxy S21', price: 899 },
-    { productsId: 3, name: 'OnePlus 9 Pro', price: 969 },
-    { productsId: 4, name: 'Google Pixel 6', price: 799 },
-    { productsId: 5, name: 'Xiaomi Mi 11', price: 749 }
+    {
+      productsId: 1,
+      name: 'iPhone 13',
+      price: 999,
+      image:
+        'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2012%20Pro%20Max/1.jpg?raw=true'
+    },
+    {
+      productsId: 2,
+      name: 'Samsung Galaxy S21',
+      price: 899,
+      image:
+        'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2012%20Pro%20Max/2.jpg?raw=true'
+    },
+    {
+      productsId: 3,
+      name: 'OnePlus 9 Pro',
+      price: 969,
+      image:
+        'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2012%20Pro%20Max/3.jpg?raw=true'
+    },
+    {
+      productsId: 4,
+      name: 'Google Pixel 6',
+      price: 799,
+      image:
+        'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2012%20Pro%20Max/4.jpg?raw=true'
+    },
+    {
+      productsId: 5,
+      name: 'Xiaomi Mi 11',
+      price: 749,
+      image:
+        'https://github.com/HiepF5/Db_Ecommercer/blob/main/SamSung/Samsung%20Galaxy%20S24%20Ultra/1.jpg?raw=true'
+    }
   ]
   const [searchTerm, setSearchTerm] = useState('')
 
-  // Xử lý sự kiện thay đổi của ô tìm kiếm
   const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(event.target.value)
   }
@@ -52,7 +80,7 @@ export default function Products() {
               <ProductItem product={
                 {
                   productsId: product.productsId,
-                  image: 'https://via.placeholder.com/300',
+                  image: product.image,
                   productsName: product.name,
                   brand: 'Apple',
                   price: product.price

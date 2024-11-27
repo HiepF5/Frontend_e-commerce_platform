@@ -3,6 +3,9 @@ export interface ILoginResponse {
   access_token: string
   refresh_token: string
   token_type: string
+  user_code: string
+  shop_code: string
+  gender: string
   full_name: string
   image_url: string
   date_of_birth: string

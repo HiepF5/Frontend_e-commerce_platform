@@ -14,9 +14,9 @@ const ShopRoutes = (): JSX.Element => {
           element: <ShopHomePage />,
           children: [
             {
-              path: 'review-shop',
-              element: <ShopReviews />,           
-            },
+              path: 'review-shop/:shopId',
+              element: <ShopReviews />
+            }
           ]
         }
       ]

@@ -1,10 +1,14 @@
-import React from 'react'
 import Sidebar from '../ProductsList/Sidebar/Sidebar'
 import Introduction from '../ProductsList/Introduction/Introduction'
 import BuyBestPrice from '../ProductsList/BuyBestPrice/BuyBestPrice'
 
 
-const ProductsList = () => {
+interface ProductsListProps {
+  category: string;
+}
+
+const ProductsList: React.FC<ProductsListProps> = ({ category }) => {
+  console.log(category)
   return (
     <div>
       <Sidebar />
