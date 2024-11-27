@@ -28,7 +28,7 @@ export const fetchChatStoryOwner = async (
     const form_data = new FormData()
     form_data.append('chat_id', data.chat_id.toString())
     form_data.append('page_number', data.page_number.toString())
-    form_data.append('page_number', data.page_size.toString())
+    form_data.append('page_size', data.page_size.toString())
     const response = await axios.post(
       'http://localhost:9000/api/owner/get-chat',
       form_data,
@@ -47,7 +47,6 @@ export const fetchChatStoryOwner = async (
 export const fetchChatListCustomer = async (
   data: IChatListRequest
 ): Promise<IBaseResponse<IChatListResponse>> => {
-  debugger;
   try {
     const response = await axios.post(
       'http://localhost:9000/api/customer/message-chat',
@@ -66,7 +65,7 @@ export const fetchChatStoryCustomer = async (
     const form_data = new FormData()
     form_data.append('chat_id', data.chat_id.toString())
     form_data.append('page_number', data.page_number.toString())
-    form_data.append('page_number', data.page_size.toString())
+    form_data.append('page_size', data.page_size.toString())
     const response = await axios.post(
       'http://localhost:9000/api/customer/get-chat',
       form_data,

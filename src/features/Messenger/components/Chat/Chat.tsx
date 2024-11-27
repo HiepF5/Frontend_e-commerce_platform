@@ -1,15 +1,24 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Box, Paper, Typography, TextField, Button } from '@mui/material'
+import React, { useEffect, useState, useRef } from 'react'
+import {
+  Box,
+  Paper,
+  Typography,
+  TextField,
+  Button,
+  CircularProgress,
+  IconButton
+} from '@mui/material'
 import { styled } from '@mui/system'
-import { useAppDispatch, useAppSelector } from '@store/hook'
-import { getChatStoryCustomer, getChatStoryOwner } from '../../slices/ChatSlice'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
 import ChatService from '../../service/ChatService'
+import { useAppDispatch, useAppSelector } from '@store/hook'
+import {
+  getChatStoryCustomer,
+  getChatStoryOwner,
+  addMessageToChatStory
+} from '../../slices/ChatSlice'
 
-interface MessageBubbleProps {
-  owner: boolean;
-}
-
-const MessageBubble = styled(Box)<MessageBubbleProps>(({ theme, owner }) => ({
+const MessageBubble = styled(Box)<{ owner: boolean }>(({ theme, owner }) => ({
   display: 'inline-block',
   padding: theme.spacing(1.5),
   borderRadius: theme.spacing(2),
@@ -24,90 +33,99 @@ const MessageBubble = styled(Box)<MessageBubbleProps>(({ theme, owner }) => ({
 
 const Chat: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { currentChat } = useAppSelector(
+  const { currentChat, loading, chatStory, error } = useAppSelector(
     (state) => state.messageChat
   )
-  const user = localStorage.getItem('user')
-    ? JSON.parse(localStorage.getItem('user') || '{}')
-    : null
-  const [input, setInput] = useState<string>('')
-  const notificationSound = useRef(new Audio('/src/assets/mp3/mess.mp3'))
-  const messageBoxRef = useRef<HTMLDivElement>(null)
+  const [input, setInput] = useState('')
+  const [sending, setSending] = useState(false)
+  const [connected, setConnected] = useState(false)
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+  const messageBoxRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
-    const onMessageReceived = (message: any) => {
-      if (message.type === 'SENT') {
-        notificationSound.current.play()
-        dispatch(addMessage(message))
-      }
-    }
+    if (currentChat) {
+      // Fetch chat history based on user role
+      const fetchChatHistory = user.role.includes('CHUCUAHANG')
+        ? getChatStoryOwner
+        : getChatStoryCustomer
+      dispatch(
+        fetchChatHistory({
+          chat_id: currentChat.chat_id,
+          page_number: 1,
+          page_size: 10
+        })
+      )
 
-    if (user?.access_token) {
+      // Establish WebSocket connection
       ChatService.connectWebSocket(
         user.access_token,
         user.shop_code,
-        onMessageReceived,
-        (error) => console.error(error)
+        (message) => {
+          dispatch(addMessageToChatStory(message))
+          setConnected(true)
+        },
+        (error) => {
+          console.error('WebSocket connection failed:', error)
+          setConnected(false)
+        }
       )
     }
+
     return () => {
       ChatService.disconnectWebSocket()
     }
-  }, [user, dispatch])
+  }, [currentChat, dispatch, user])
 
-  useEffect(() => {
-    if (messageBoxRef.current) {
-      messageBoxRef.current.scrollTop = messageBoxRef.current.scrollHeight
-    }
-  }, [messages])
-
-  const sendMessage = () => {
-    if (input.trim() && currentChat) {
-      const messageSent = {
-        body: {
-          chatId: currentChat.chat_id,
-          shopCode: user.shop_code,
-          userCode: user.user_code,
-          replyTo: null,
-          content: input.trim(),
-          imageUrl: null
-        },
-        senderCode: user.user_code,
-        createdAt: new Date().toISOString(),
-        type: 'SENT'
-      }
-
-      ChatService.sendMessage(
-        `/app/chat.sendCustomer/${user.user_code}`,
-        messageSent
+  const sendMessage = async () => {
+    if (!input.trim() || !currentChat || !connected) {
+      console.error(
+        'Cannot send message. Either not connected or input is empty.'
       )
-      dispatch(addMessage(messageSent))
-      setInput('')
+      return
     }
+
+    setSending(true)
+
+    const messageSent = {
+      body: {
+        chatId: currentChat.chat_id,
+        shopCode: user.shop_code,
+        userCode: user.user_code,
+        content: input.trim()
+      },
+      senderCode: user.user_code,
+      createdAt: new Date().toISOString(),
+      type: 'SENT'
+    }
+
+    const success = ChatService.sendMessage(
+      `/app/chat.sendCustomer/${user.user_code}`,
+      messageSent
+    )
+
+    if (success) {
+      setInput('')
+    } else {
+      alert('Failed to send message. Reconnecting...')
+      setConnected(false)
+    }
+
+    setSending(false)
   }
 
-  useEffect(() => {
-    if (user && user.role.includes('CHUCUAHANG')) {
-      dispatch(
-        getChatStoryOwner({
-          chat_id: currentChat?.chat_id ?? 0,
-          page_number: 1,
-          page_size: 10
-        })
-      )
-    } else {
-      dispatch(
-        getChatStoryCustomer({
-          chat_id: currentChat?.chat_id ?? 0,
-          page_number: 1,
-          page_size: 10
-        })
-      )
-    }
-  }, [dispatch])
+  const formatTime = (timestamp: string) =>
+    new Date(timestamp).toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
 
   return (
-    <Box sx={{ height: 'calc(100vh - 100px)', display: 'flex', flexDirection: 'column' }}>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {!connected && (
+        <Typography variant='body2' color='error' align='center'>
+          WebSocket is not connected. Please check your connection.
+        </Typography>
+      )}
       <Paper
         elevation={2}
         sx={{
@@ -120,22 +138,34 @@ const Chat: React.FC = () => {
         }}
         ref={messageBoxRef}
       >
-        {messages.map((msg, i) => (
-          <Box
-            key={i}
-            sx={{
-              display: 'flex',
-              justifyContent: msg.isOwn ? 'flex-end' : 'flex-start'
-            }}
-          >
-            <MessageBubble owner={msg.isOwn}>
-              <Typography>{msg.content}</Typography>
-              <Typography variant='caption' sx={{ opacity: 0.7 }}>
-                {new Date(msg.createdAt).toLocaleTimeString()}
-              </Typography>
-            </MessageBubble>
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+            <CircularProgress />
           </Box>
-        ))}
+        ) : error ? (
+          <Typography color='error'>{error}</Typography>
+        ) : chatStory?.list_message?.length ? (
+          chatStory.list_message.map((msg: any, i: number) => (
+            <Box
+              key={i}
+              sx={{
+                display: 'flex',
+                justifyContent: msg.isOwn ? 'flex-end' : 'flex-start'
+              }}
+            >
+              <MessageBubble owner={msg.isOwn}>
+                <Typography>{msg.content}</Typography>
+                <Typography variant='caption' sx={{ opacity: 0.7 }}>
+                  {formatTime(msg.createdAt)}
+                </Typography>
+              </MessageBubble>
+            </Box>
+          ))
+        ) : (
+          <Typography variant='body2' color='text.secondary' align='center'>
+            No messages yet.
+          </Typography>
+        )}
       </Paper>
 
       <Box
@@ -152,12 +182,19 @@ const Chat: React.FC = () => {
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder='Type a message...'
-          onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
-          sx={{ flex: 1 }}
+          onKeyPress={(e) => e.key === 'Enter' && !sending && sendMessage()}
         />
-        <Button variant='contained' color='primary' onClick={sendMessage}>
-          Send
+        <Button
+          variant='contained'
+          color='primary'
+          onClick={sendMessage}
+          disabled={!input.trim() || sending || !connected}
+        >
+          {sending ? 'Sending...' : 'Send'}
         </Button>
+        <IconButton>
+          <MoreVertIcon />
+        </IconButton>
       </Box>
     </Box>
   )

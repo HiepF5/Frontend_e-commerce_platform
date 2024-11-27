@@ -62,7 +62,7 @@ const ChatBot: React.FC = () => {
   }
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    debugger
+     
     if (event.target.files && event.target.files.length > 0) {
       setSelectedFile(event.target.files[0])
     } else {

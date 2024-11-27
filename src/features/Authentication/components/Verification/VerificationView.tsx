@@ -10,7 +10,6 @@ const VerificationView = () => {
   const [code, setCode] = useState('')
   const emailRegister = JSON.parse(localStorage.getItem('emailRegister') || 'null')
   const handleSubmit = async () => {
-    debugger;
     try {
       const result = await dispatch(
         verifycation({ email: emailRegister, verify_code: code })

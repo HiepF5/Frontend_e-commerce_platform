@@ -19,7 +19,7 @@ const initialState: ShopReviewState = {
 export const fetchReviews = createAsyncThunk(
   'shopReview/fetchReviews',
   async (shopData: IGetReviewByPageRequest) => {
-    debugger;
+     ;
     const response: IBaseResponse<IReview[]> =
       await getReviewByPageApi(shopData)
     const rating = shopData.rating;

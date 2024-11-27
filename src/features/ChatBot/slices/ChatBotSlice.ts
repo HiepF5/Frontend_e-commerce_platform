@@ -36,7 +36,6 @@ export const fetchChatImageResponse = createAsyncThunk(
  
   'chat/fetchChatImageResponse',
   async (data: IChatImageRequest) => {
-     debugger;
     const response: IBaseResponse<IChatImageResponse> = await chatImageApi(data);
     return response.data.candidates[0].content.parts[0].text; // Adjust based on actual response structure
   }

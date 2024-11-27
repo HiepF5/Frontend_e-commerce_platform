@@ -7,7 +7,6 @@ import { ICreateReviewRequest, IGetReviewByPageRequest, IReview } from '~/types/
 
 export const getReviewByPageApi = async (shopData: IGetReviewByPageRequest): Promise<IBaseResponse<IReview[]>> => {
   try {
-    debugger;
     const response = await axios.post<IBaseResponse<IReview[]>>(
       API_ENDPOINTS_SHOPREVIEW.ApiGetReviewByPage,
       shopData

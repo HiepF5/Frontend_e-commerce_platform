@@ -27,6 +27,7 @@ interface AuthState {
     gender: string
     date_of_birth: string
     phone_number: string
+    access_token: string
   } | null
   accessToken: string | null
   status: boolean
@@ -145,6 +146,7 @@ const authSlice = createSlice({
           shop_code: action.payload.data.shop_code,
           date_of_birth: action.payload.data.date_of_birth,
           phone_number: action.payload.data.phone_number,
+          access_token: action.payload.data.access_token
         }
         state.accessToken = action.payload.data.access_token
         state.code = action.payload.code as number
