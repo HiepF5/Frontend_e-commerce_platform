@@ -1,49 +1,47 @@
 import React from 'react'
-import Img1 from '@assets/shirt/shirt.png'
-import Img2 from '@assets/shirt/shirt2.png'
-import Img3 from '@assets/shirt/shirt3.png'
+import Img1 from '@assets/Images/Toprating/1.png'
+import Img2 from '@assets/Images/Toprating/2.png'
+import Img3 from '@assets/Images/Toprating/3.png'
+import Img4 from '@assets/Images/Toprating/4.png'
 import { FaStar } from 'react-icons/fa'
 const ProductsData = [
   {
     id: 1,
     img: Img1,
-    title: 'Casual Wear',
-    description:
-      'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    title: 'Iphone 16 pro 128GB',
+    description: 'Sang trọng, mạnh mẽ và đẳng cấp'
   },
   {
     id: 2,
     img: Img2,
-    title: 'Printed shirt',
-    description:
-      'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    title: 'Iphone 16 pro 128GB',
+    description: 'Sang trọng, mạnh mẽ và đẳng cấp'
   },
   {
     id: 3,
-    img: Img3,
-    title: 'Women shirt',
-    description:
-      'lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    img: Img4,
+    title: 'Iphone 16 pro 128GB',
+    description: 'Sang trọng, mạnh mẽ và đẳng cấp'
   }
 ]
 interface TopProductsProps {
-  handleOrderPopup: () => void;
+  handleRedirectToProduct: () => void;
 }
 
-const TopProducts: React.FC<TopProductsProps> = ({ handleOrderPopup }) => {
+const TopProducts: React.FC<TopProductsProps> = ({ handleRedirectToProduct }) => {
   return (
-    <div>
+    <div className='dark:bg-gray-950 dark:text-white duration-200 p-4'>
       <div className='container'>
         {/* Header section  */}
-        <div className='text-left mb-24'>
+        <div className='text-left mb-24 flex flex-col items-center'>
           <p data-aos='fade-up' className='text-sm text-primary'>
-            Top Rated Products for you
+            Những sản phẩm đánh giá cao
           </p>
           <h1 data-aos='fade-up' className='text-3xl font-bold'>
-            Best Products
+            Top sản phẩm
           </h1>
           <p data-aos='fade-up' className='text-xs'>
-            Lorem ipsum dolor sit amet consectetur, adipisicing elit. Sit asperiores modi Sit asperiores modi
+            Những sản phẩm đang được ưa chuộng nhất
           </p>
         </div>
         {/* Body section  */}
@@ -82,7 +80,7 @@ const TopProducts: React.FC<TopProductsProps> = ({ handleOrderPopup }) => {
                   {data.description}
                 </p>
                 <button
-                  onClick={handleOrderPopup}
+                  onClick={handleRedirectToProduct}
                   className='bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary'
                 >
                   Order Now

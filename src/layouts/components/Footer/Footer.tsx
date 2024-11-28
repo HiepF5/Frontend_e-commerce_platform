@@ -49,8 +49,7 @@ const Footer = () => {
               ELECTROHUB
             </h1>
             <p>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Cum in
-              beatae ea recusandae blanditiis veritatis.
+              Sàn bàn giao dịch điện tử hàng đầu về điện thoại di động, máy tính xách tay, máy ảnh, máy quay phim, máy tính
             </p>
           </div>
 

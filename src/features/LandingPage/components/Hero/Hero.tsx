@@ -1,35 +1,35 @@
 import React from 'react'
-import Image1 from '@assets/hero/women.png'
-import Image2 from '@assets/hero/shopping.png'
-import Image3 from '@assets/hero/sale.png'
+import Image1 from '@assets/Images/Hero/sale_blackfriday.png'
+import Image2 from '@assets/Images/Hero/sale_daikiosan.png'
+import Image3 from '@assets/Images/Hero/sale_iphone.png'
 import Slider from 'react-slick'
 const ImageList = [
   {
     id: 1,
     img: Image1,
-    title: "Upto 50% off on all Men's Wear",
+    title: "Black Friday Sale upto 50% Off",
     description:
-      'lorem His Life will forever be Changed dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+      'Giá sốc hàng ngày giảm giá đến 50% cho tất cả các sản phẩm. Đừng bỏ lỡ cơ hội mua sắm lớn nhất trong năm.'
   },
   {
     id: 2,
     img: Image2,
-    title: "30% off on all Women's Wear",
+    title: "Máy lọc nước chính hãng giảm 50% giá",
     description:
-      "Who's there lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
+      "Chọn lọc đỉnh chất - Bố là đỉnh chót. Máy lọc nước từ các thương hiệu nổi tiếng. Sản phẩm chất lượng, giá cả hợp lý."
   },
   {
     id: 3,
     img: Image3,
-    title: '70% off on all Products Sale',
-    description: 'consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+    title: 'IPhone 13 Pro Max giảm giá sốc',
+    description: 'Mua ngay iPhone 13 Pro Max giảm giá sốc. Số lượng có hạn, nhanh tay kẻo lỡ.'
   }
 ]
 interface HeroProps {
-  handleOrderPopup: () => void;
+  handleRedirectToProduct: () => void
 }
 
-const Hero: React.FC<HeroProps> = ({ handleOrderPopup }) => {
+const Hero: React.FC<HeroProps> = ({ handleRedirectToProduct }) => {
   var settings = {
     dots: true,
     infinite: true,
@@ -68,12 +68,21 @@ const Hero: React.FC<HeroProps> = ({ handleOrderPopup }) => {
                   >
                     {data.title}
                   </h1>
-                  <p data-aos='fade-up' data-aos-duration='500' data-aos-delay='100' className='text-sm'>
+                  <p
+                    data-aos='fade-up'
+                    data-aos-duration='500'
+                    data-aos-delay='100'
+                    className='text-sm'
+                  >
                     {data.description}
                   </p>
-                  <div data-aos='fade-up' data-aos-duration='500' data-aos-delay='300'>
+                  <div
+                    data-aos='fade-up'
+                    data-aos-duration='500'
+                    data-aos-delay='300'
+                  >
                     <button
-                      onClick={handleOrderPopup}
+                      onClick={handleRedirectToProduct}
                       className='bg-gradient-to-r from-primary
                to-secondary hover:scale-105 
                duration-200 text-white 

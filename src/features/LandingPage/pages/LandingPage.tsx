@@ -7,15 +7,14 @@ import TopProducts from '../components/TopProducts/TopProducts';
 import Banner from '../components/Banner/Banner';
 import Subscribe from '../components/Subscribe/Subscribe';
 import Testimonials from '../components/Testimonials/Testimonials';
-import Popup from '../components/Popup/Popup';
 import Navbar from '../../../layouts/components/Navbar/Navbar';
 import Footer from '../../../layouts/components/Footer/Footer';
 import ChatBot from '@features/ChatBot/components/ChatBot';
+import { useNavigate } from 'react-router-dom';
 const LandingPage = () => {
-  const [orderPopup, setOrderPopup] = useState(false)
-
-  const handleOrderPopup = () => {
-    setOrderPopup(!orderPopup)
+  const navigate = useNavigate()
+  const handleRedirectToProduct = () => {
+    navigate('/products/product-list')
   }
   useEffect(() => {
     AOS.init({
@@ -29,15 +28,14 @@ const LandingPage = () => {
   return (
     <div>
       <Navbar />
-      <Hero handleOrderPopup={handleOrderPopup} />
+      <Hero handleRedirectToProduct={handleRedirectToProduct} />
       <Products />
-      <TopProducts handleOrderPopup={handleOrderPopup} />
+      <TopProducts handleRedirectToProduct={handleRedirectToProduct} />
       <Banner />
       <Subscribe />
       <Testimonials />
       <Footer />
       <ChatBot />
-      <Popup orderPopup={orderPopup} setOrderPopup={setOrderPopup} />
     </div>
   )
 }
