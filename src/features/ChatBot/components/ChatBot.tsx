@@ -39,11 +39,11 @@ const ChatBot: React.FC = () => {
           file: selectedFile
         }
         try {
-          await dispatch(
+          dispatch(
             addUserMessage({
               text: input,
               isUser: true,
-              fileUrl: fileUrl // Lưu fileUrl vào tin nhắn
+              fileUrl: fileUrl
             })
           )
           await dispatch(fetchChatImageResponse(requestData))
@@ -51,7 +51,7 @@ const ChatBot: React.FC = () => {
           console.error('Error sending file:', error)
         }
       } else {
-        await dispatch(addUserMessage({ text: input, isUser: true }))
+        dispatch(addUserMessage({ text: input, isUser: true }))
         await dispatch(fetchChatResponse(input))
       }
 
@@ -66,13 +66,13 @@ const ChatBot: React.FC = () => {
     if (event.target.files && event.target.files.length > 0) {
       setSelectedFile(event.target.files[0])
     } else {
-      setSelectedFile(null) // Reset nếu không có file nào được chọn
+      setSelectedFile(null) 
     }
   }
 
   const handleFileButtonClick = () => {
     if (fileInputRef.current) {
-      fileInputRef.current.click() // Kích hoạt click vào input file
+      fileInputRef.current.click()
     }
   }
 
@@ -171,12 +171,9 @@ const ChatBot: React.FC = () => {
                 }}
               >
                 {/* Displaying text */}
-                <Typography
-                  variant='body2'
-                  sx={{ whiteSpace: 'pre-wrap', wordBreak: 'break-word' }}
-                >
+                <ReactMarkdown>
                   {message.text}
-                </Typography>
+                </ReactMarkdown>
 
                 {/* Render file content based on file type */}
                 {message.fileUrl &&
