@@ -23,6 +23,11 @@ export const Menu = [
     id: 5,
     name: 'Điện thoại và phụ kiện',
     link: '/products/phones'
+  },
+  {
+    id: 6,
+    name: 'Bản tin',
+    link: '/threads/home'
   }
 ]
 

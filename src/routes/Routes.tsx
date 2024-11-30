@@ -14,6 +14,7 @@ const ProductRoutes = lazy(() => import('../features/Products/routes/ProductRout
 const ShopRoutes = lazy(() => import('../features/Shop/routes/ShopRoutes'))
 const ChatRoutes = lazy(() => import('../features/Messenger/routes/ChatRoutes'))
 const CartRoutes = lazy(() => import('../features/Cart/routes/CartRoutes'))
+const ThreadsRoutes = lazy(() => import('../features/Threads/routes/ThreadsRoutes'))
 
 const MainRoutes = (): JSX.Element => {
   return (
@@ -26,6 +27,7 @@ const MainRoutes = (): JSX.Element => {
           <Route path='/shop/*' element={<ShopRoutes />} />
           <Route path='/user/*' element={<UserRoutes />} />
           <Route path='/messenger/*' element={<ChatRoutes />} />
+          <Route path='/threads/*' element={<ThreadsRoutes />} />
           <Route path='/cart/*' element={<CartRoutes />} />
           <Route element={<AuthenticatedGuard />}>
             <Route path='/admin/*' element={<AdminRoutes />} />
