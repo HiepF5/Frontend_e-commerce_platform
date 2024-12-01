@@ -1,33 +1,18 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Container,
-  Card,
-  CardHeader,
-  CardContent,
-  CardActions,
-  Avatar,
-  Typography,
-  IconButton,
-  Badge,
-  Fab,
-  Chip
-} from '@mui/material'
+import { Container, Box, Fab, IconButton, Badge } from '@mui/material'
 import {
   Add,
   Close,
   Notifications as NotificationsIcon
 } from '@mui/icons-material'
-import InfiniteScroll from 'react-infinite-scroll-component'
 import { LeftSidebar } from './left-sidebar'
 import { RightSidebar } from './right-sidebar'
 import { PostModal } from './post-modal'
 import { UserProfile } from './user-profile'
 import { Notifications } from './notifications'
 import { SearchBar } from './search-bar'
-import { Post, Reaction, Comment } from '../types/threads.interface'
+import { Post } from '../types/threads.interface'
 import PostForm from './post-form'
-import { ReactionBar } from './reaction-bar'
-import { CommentSection } from './comment-section'
 
 export default function ThreadForMePage() {
   const [posts, setPosts] = useState<Post[]>([])
@@ -37,7 +22,6 @@ export default function ThreadForMePage() {
   const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [notifications, setNotifications] = useState<any[]>([])
-  const [hasMore, setHasMore] = useState(true)
 
   useEffect(() => {
     // Simulating initial post fetch
@@ -71,7 +55,6 @@ export default function ThreadForMePage() {
       }))
 
     setPosts([...posts, ...newPosts])
-    setHasMore(posts.length + newPosts.length < 50) // Limit to 50 posts for this example
   }
 
   const handlePostClick = (post: Post) => {
@@ -81,155 +64,33 @@ export default function ThreadForMePage() {
     }
   }
 
-  const handleReact = (postId: string, reactionType: Reaction['type']) => {
-    setPosts(
-      posts.map((post) => {
-        if (post.id === postId) {
-          const existingReaction = post.reactions.find(
-            (r) => r.type === reactionType
-          )
-          if (existingReaction) {
-            return {
-              ...post,
-              reactions: post.reactions.map((r) =>
-                r.type === reactionType ? { ...r, count: r.count + 1 } : r
-              )
-            }
-          } else {
-            return {
-              ...post,
-              reactions: [...post.reactions, { type: reactionType, count: 1 }]
-            }
-          }
-        }
-        return post
-      })
-    )
-
-    // Simulating a new notification
-    const newNotification = {
-      id: Date.now().toString(),
-      type: 'reaction',
-      user: 'Someone',
-      avatar: '/placeholder.svg',
-      content: `reacted with ${reactionType} to your post`,
-      timestamp: 'Just now'
-    }
-    setNotifications([newNotification, ...notifications])
-  }
-
-  const handleAddComment = (
-    postId: string,
-    content: string,
-    parentId?: string
-  ) => {
-    setPosts(
-      posts.map((post) => {
-        if (post.id === postId) {
-          const newComment: Comment = {
-            id: Date.now().toString(),
-            author: 'Current User',
-            avatar: '/placeholder.svg',
-            content,
-            timestamp: 'Just now',
-            replies: []
-          }
-          if (parentId) {
-            return {
-              ...post,
-              comments: post.comments.map((comment) =>
-                comment.id === parentId
-                  ? { ...comment, replies: [...comment.replies, newComment] }
-                  : comment
-              )
-            }
-          } else {
-            return { ...post, comments: [...post.comments, newComment] }
-          }
-        }
-        return post
-      })
-    )
-  }
-
-  const handleUpdateComment = (
-    postId: string,
-    commentId: string,
-    content: string
-  ) => {
-    setPosts(
-      posts.map((post) => {
-        if (post.id === postId) {
-          return {
-            ...post,
-            comments: post.comments.map((comment) =>
-              comment.id === commentId
-                ? { ...comment, content }
-                : {
-                    ...comment,
-                    replies: comment.replies.map((reply) =>
-                      reply.id === commentId ? { ...reply, content } : reply
-                    )
-                  }
-            )
-          }
-        }
-        return post
-      })
-    )
-  }
-
-  const handleDeleteComment = (postId: string, commentId: string) => {
-    setPosts(
-      posts.map((post) => {
-        if (post.id === postId) {
-          return {
-            ...post,
-            comments: post.comments.filter((comment) => {
-              if (comment.id === commentId) {
-                return false
-              }
-              comment.replies = comment.replies.filter(
-                (reply) => reply.id !== commentId
-              )
-              return true
-            })
-          }
-        }
-        return post
-      })
-    )
-  }
-
-  const handleHashtagClick = (hashtag: string) => {
-    // In a real application, this would filter posts or navigate to a hashtag page
-    console.log(`Clicked hashtag: ${hashtag}`)
-  }
-
   return (
-    <div style={{ display: 'flex' }}>
+    <Box display='flex'>
       <LeftSidebar />
-
-      
+      <Container
+        maxWidth='md'
+        sx={{ py: 4, flex: 1, overflowY: 'auto', height: '100vh' }}
+      >
+        <SearchBar />
+        <UserProfile
+          username='Current User'
+          avatar='/placeholder.svg'
+          bio='This is a sample bio for the current user.'
+          followers={100}
+          following={50}
+          posts={posts.filter((post) => post.author === 'Current User')}
+        />
+      </Container>
       <RightSidebar
         trendingPosts={posts.slice(0, 3)}
         viewedPosts={viewedPosts.slice(0, 3)}
         onPostClick={handlePostClick}
       />
       <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />
-      <UserProfile
-        username='Current User'
-        avatar='/placeholder.svg'
-        bio='This is a sample bio for the current user.'
-        followers={100}
-        following={50}
-        posts={posts.filter((post) => post.author === 'Current User')}
-      />
-      <Notifications notifications={notifications} />
       <Fab
         color='primary'
         aria-label='add'
-        style={{ position: 'fixed', bottom: 16, right: 16 }}
+        sx={{ position: 'fixed', bottom: 16, right: 16 }}
         onClick={() => setIsCreatePostOpen(!isCreatePostOpen)}
       >
         {isCreatePostOpen ? <Close /> : <Add />}
@@ -237,13 +98,34 @@ export default function ThreadForMePage() {
       <IconButton
         color='primary'
         aria-label='notifications'
-        style={{ position: 'fixed', bottom: 16, left: 16 }}
+        sx={{ position: 'fixed', bottom: 16, left: 16 }}
         onClick={() => setIsNotificationsOpen(true)}
       >
         <Badge badgeContent={notifications.length} color='error'>
           <NotificationsIcon />
         </Badge>
       </IconButton>
-    </div>
+      {isCreatePostOpen && (
+        <PostForm
+          onSubmit={(newPost) => {
+            const post: Post = {
+              id: Date.now().toString(),
+              author: 'Current User',
+              avatar: '/placeholder.svg',
+              timestamp: 'Just now',
+              comments: [],
+              ...newPost
+            }
+            setPosts([post, ...posts])
+            setIsCreatePostOpen(false)
+          }}
+          currentUser={{
+            name: 'Current User',
+            avatar: '/placeholder.svg'
+          }}
+        />
+      )}
+      {isNotificationsOpen && <Notifications notifications={notifications} />}
+    </Box>
   )
 }

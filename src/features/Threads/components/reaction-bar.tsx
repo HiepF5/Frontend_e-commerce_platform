@@ -12,7 +12,8 @@ import { Reaction } from '../types/threads.interface'
 
 interface ReactionBarProps {
   reactions: Reaction[]
-  onReact: (type: Reaction['type']) => void
+
+  onReact: (type: Reaction['type'], e: React.MouseEvent) => void
 }
 
 export function ReactionBar({ reactions, onReact }: ReactionBarProps) {
@@ -36,7 +37,7 @@ export function ReactionBar({ reactions, onReact }: ReactionBarProps) {
         {Object.entries(reactionIcons).map(([type, Icon]) => (
           <IconButton
             key={type}
-            onClick={() => onReact(type as Reaction['type'])}
+            onClick={(e) => onReact(type as Reaction['type'], e)}
             color={
               getReactionCount(type as Reaction['type']) > 0
                 ? 'primary'

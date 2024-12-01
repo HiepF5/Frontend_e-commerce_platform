@@ -7,28 +7,48 @@ import {
   CardActions,
   Avatar,
   Typography,
-  Chip
+  Chip,
+  Button,
+  Tooltip,
+  IconButton
 } from '@mui/material'
+import { Favorite, ChatBubbleOutline, Share } from '@mui/icons-material'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { LeftSidebar } from './left-sidebar'
 import { RightSidebar } from './right-sidebar'
 import { PostModal } from './post-modal'
 import { SearchBar } from './search-bar'
 import { Post, Reaction, Comment } from '../types/threads.interface'
-import PostForm from './post-form'
 import { ReactionBar } from './reaction-bar'
 import { CommentSection } from './comment-section'
 import { useNavigate } from 'react-router-dom'
+import { PostDialog } from './post-dialog'
+import { PostTrigger } from './post-trigger'
+import { useThreadActions } from '../hooks/useThreadActions'
+import { PostActions } from './threads-action'
 
 export default function ThreadPage() {
   const [posts, setPosts] = useState<Post[]>([])
   const [selectedPost, setSelectedPost] = useState<Post | null>(null)
-  const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
   const [viewedPosts, setViewedPosts] = useState<Post[]>([])
+  const [isPostDialogOpen, setIsPostDialogOpen] = useState(false)
   const [notifications, setNotifications] = useState<any[]>([])
   const [hasMore, setHasMore] = useState(true)
-  const navigate = useNavigate()  
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [hoveredPostId, setHoveredPostId] = useState<number | null>(null)
+  const navigate = useNavigate()
+  const handlePopoverOpen = (
+    event: React.MouseEvent<HTMLElement>,
+    postId: number
+  ) => {
+    setAnchorEl(event.currentTarget)
+    setHoveredPostId(postId)
+  }
 
+  const handlePopoverClose = () => {
+    setAnchorEl(null)
+    setHoveredPostId(null)
+  }
   useEffect(() => {
     fetchMorePosts()
   }, [])
@@ -59,7 +79,7 @@ export default function ThreadPage() {
       }))
 
     setPosts([...posts, ...newPosts])
-    setHasMore(posts.length + newPosts.length < 50) 
+    setHasMore(posts.length + newPosts.length < 50)
   }
 
   const handlePostClick = (post: Post) => {
@@ -69,10 +89,10 @@ export default function ThreadPage() {
     }
   }
 
-  const handleReact = (postId: string, reactionType: Reaction['type']) => {
+  const handleReact = (postId: number, reactionType: Reaction['type']) => {
     setPosts(
       posts.map((post) => {
-        if (post.id === postId) {
+        if (+post.id === postId) {
           const existingReaction = post.reactions.find(
             (r) => r.type === reactionType
           )
@@ -94,7 +114,6 @@ export default function ThreadPage() {
       })
     )
 
-    // Simulating a new notification
     const newNotification = {
       id: Date.now().toString(),
       type: 'reaction',
@@ -107,13 +126,13 @@ export default function ThreadPage() {
   }
 
   const handleAddComment = (
-    postId: string,
+    postId: number,
     content: string,
     parentId?: string
   ) => {
     setPosts(
       posts.map((post) => {
-        if (post.id === postId) {
+        if (+post.id === postId) {
           const newComment: Comment = {
             id: Date.now().toString(),
             author: 'Current User',
@@ -141,13 +160,13 @@ export default function ThreadPage() {
   }
 
   const handleUpdateComment = (
-    postId: string,
+    postId: number,
     commentId: string,
     content: string
   ) => {
     setPosts(
       posts.map((post) => {
-        if (post.id === postId) {
+        if (+post.id === postId) {
           return {
             ...post,
             comments: post.comments.map((comment) =>
@@ -167,10 +186,10 @@ export default function ThreadPage() {
     )
   }
 
-  const handleDeleteComment = (postId: string, commentId: string) => {
+  const handleDeleteComment = (postId: number, commentId: string) => {
     setPosts(
       posts.map((post) => {
-        if (post.id === postId) {
+        if (+post.id === postId) {
           return {
             ...post,
             comments: post.comments.filter((comment) => {
@@ -192,11 +211,15 @@ export default function ThreadPage() {
     navigate('/threads/me')
   }
 
-
   const handleHashtagClick = (hashtag: string) => {
-    // In a real application, this would filter posts or navigate to a hashtag page
     console.log(`Clicked hashtag: ${hashtag}`)
   }
+  const {
+    handleCreateThread,
+    handleUpdateThread,
+    handleDeleteThread,
+    handleShareThread
+  } = useThreadActions(setPosts)
 
   return (
     <div style={{ display: 'flex' }}>
@@ -206,26 +229,22 @@ export default function ThreadPage() {
         sx={{ py: 4, flex: 1, overflowY: 'auto', height: '100vh' }}
       >
         <SearchBar />
-        {isCreatePostOpen && (
-          <PostForm
-            onSubmit={(newPost) => {
-              const post: Post = {
-                id: Date.now().toString(),
-                author: 'Current User',
-                avatar: '/placeholder.svg',
-                timestamp: 'Vừa xong',
-                comments: [],
-                ...newPost
-              }
-              setPosts([post, ...posts])
-              setIsCreatePostOpen(false)
-            }}
-            currentUser={{
-              name: 'Current User',
-              avatar: '/placeholder.svg'
-            }}
-          />
-        )}
+        <PostTrigger
+          onOpenPostForm={() => setIsPostDialogOpen(true)}
+          currentUser={{
+            name: 'Current User',
+            avatar: '/placeholder.svg'
+          }}
+        />
+        <PostDialog
+          open={isPostDialogOpen}
+          onClose={() => setIsPostDialogOpen(false)}
+          currentUser={{
+            name: 'Current User',
+            avatar: '/placeholder.svg'
+          }}
+          onSubmit={handleCreateThread}
+        />
         <InfiniteScroll
           dataLength={posts.length}
           next={fetchMorePosts}
@@ -234,16 +253,34 @@ export default function ThreadPage() {
           endMessage={<p>No more posts to load.</p>}
         >
           {posts.map((post) => (
-            <Card key={post.id} sx={{ mb: 2 }}>
+            <Card
+              key={post.id}
+              sx={{ mb: 2 }}
+              onClick={(e) => {
+                e.stopPropagation()
+                handlePostClick(post)
+              }}
+            >
               <CardHeader
                 avatar={
                   <Avatar
                     src={post.avatar}
-                    onClick={() => handleProfile(true)}
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      handleProfile(true)
+                    }}
                   />
                 }
                 title={post.author}
                 subheader={post.timestamp}
+                action={
+                  <PostActions
+                    postId={post.id}
+                    onUpdate={handleUpdateThread}
+                    onDelete={handleDeleteThread}
+                    onShare={handleShareThread}
+                  />
+                }
               />
               <CardContent>
                 <Typography variant='body1'>{post.content}</Typography>
@@ -275,21 +312,43 @@ export default function ThreadPage() {
               <CardActions disableSpacing>
                 <ReactionBar
                   reactions={post.reactions}
-                  onReact={(type) => handleReact(post.id, type)}
+                  onReact={(type: Reaction['type'], e: React.MouseEvent) => {
+                    e.stopPropagation()
+                    handleReact(+post.id, type)
+                  }}
                 />
+                <Tooltip title='Like'>
+                  <IconButton
+                    onMouseEnter={(event) => {
+                      event.stopPropagation()
+                      handlePopoverOpen(event, +post.id)
+                    }}
+                    onMouseLeave={handlePopoverClose}
+                  >
+                    <Favorite />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title='Comment'>
+                  <IconButton
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      handlePostClick(post)
+                    }}
+                  >
+                    <ChatBubbleOutline />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title='Share'>
+                  <IconButton
+                    onClick={(event) => {
+                      event.stopPropagation()
+                      handlePostClick(post)
+                    }}
+                  >
+                    <Share />
+                  </IconButton>
+                </Tooltip>
               </CardActions>
-              <CommentSection
-                comments={post.comments}
-                onAddComment={(content, parentId) =>
-                  handleAddComment(post.id, content, parentId)
-                }
-                onUpdateComment={(commentId, content) =>
-                  handleUpdateComment(post.id, commentId, content)
-                }
-                onDeleteComment={(commentId) =>
-                  handleDeleteComment(post.id, commentId)
-                }
-              />
             </Card>
           ))}
         </InfiniteScroll>
@@ -299,8 +358,14 @@ export default function ThreadPage() {
         viewedPosts={viewedPosts.slice(0, 3)}
         onPostClick={handlePostClick}
       />
-      <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />
-    
+      <PostModal
+        post={selectedPost}
+        onClose={() => setSelectedPost(null)}
+        onReact={handleReact}
+        onAddComment={handleAddComment}
+        onUpdateComment={handleUpdateComment}
+        onDeleteComment={handleDeleteComment}
+      />
     </div>
   )
 }

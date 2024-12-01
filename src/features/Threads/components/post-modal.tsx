@@ -1,23 +1,38 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   Avatar,
   Typography,
-  Button
+  Button,
+  IconButton,
+  Tooltip,
+  Box
 } from '@mui/material'
 import { Favorite, ChatBubbleOutline, Share } from '@mui/icons-material'
-import { Post } from '../types/threads.interface'
+import { Post, Reaction } from '../types/threads.interface'
+import { CommentSection } from './comment-section'
 
 interface PostModalProps {
   post: Post | null
   onClose: () => void
+  onReact: (postId: number, reactionType: Reaction['type']) => void
+  onAddComment: (postId: number, content: string, parentId?: string) => void
+  onUpdateComment: (postId: number, commentId: string, content: string) => void
+  onDeleteComment: (postId: number, commentId: string) => void
 }
 
-export function PostModal({ post, onClose }: PostModalProps) {
+export function PostModal({
+  post,
+  onClose,
+  onReact,
+  onAddComment,
+  onUpdateComment,
+  onDeleteComment
+}: PostModalProps) {
   if (!post) return null
-
+  const [isCommentSectionOpen, setIsCommentSectionOpen] = useState(false)
   return (
     <Dialog open={!!post} onClose={onClose} maxWidth='sm' fullWidth>
       <DialogTitle>Bài viết</DialogTitle>
@@ -47,17 +62,39 @@ export function PostModal({ post, onClose }: PostModalProps) {
             style={{ width: '100%', borderRadius: '4px', marginBottom: '16px' }}
           />
         )}
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-          <Button startIcon={<Favorite />} color='primary'>
-            {post.reactions.length}
-          </Button>
-          <Button startIcon={<ChatBubbleOutline />} color='primary'>
-            {post.comments.length}
-          </Button>
-          <Button startIcon={<Share />} color='primary'>
-            Chia sẻ
-          </Button>
-        </div>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+          <Tooltip title='React'>
+            <IconButton onClick={() => onReact(+post.id, 'like')}>
+              <Favorite color='primary' />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Comment'>
+            <IconButton
+              onClick={() => setIsCommentSectionOpen(!isCommentSectionOpen)}
+            >
+              <ChatBubbleOutline color='primary' />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Share'>
+            <IconButton>
+              <Share color='primary' />
+            </IconButton>
+          </Tooltip>
+        </Box>
+        {isCommentSectionOpen && (
+          <CommentSection
+            comments={post.comments}
+            onAddComment={(content, parentId) =>
+              onAddComment(+post.id, content, parentId)
+            }
+            onUpdateComment={(commentId, content) =>
+              onUpdateComment(+post.id, commentId, content)
+            }
+            onDeleteComment={(commentId) =>
+              onDeleteComment(+post.id, commentId)
+            }
+          />
+        )}
       </DialogContent>
     </Dialog>
   )

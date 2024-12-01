@@ -30,13 +30,7 @@ interface PostFormProps {
   onSubmit: (
     post: Omit<
       Post,
-      | 'id'
-      | 'author'
-      | 'avatar'
-      | 'timestamp'
-      | 'likes'
-      | 'isLiked'
-      | 'comments'
+      'id' | 'author' | 'avatar' | 'timestamp' | 'reactions' | 'comments'
     >
   ) => void
   currentUser: {
@@ -61,6 +55,14 @@ export default function PostForm({ onSubmit, currentUser }: PostFormProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    console.log({
+      postRole,
+      visibility,
+      content,
+      location,
+      hashTags,
+      image: image || undefined,
+    })
     onSubmit({
       postRole,
       visibility,
@@ -68,7 +70,6 @@ export default function PostForm({ onSubmit, currentUser }: PostFormProps) {
       location,
       hashTags,
       image: image || undefined,
-      reactions: []
     })
     setContent('')
     setLocation('')
