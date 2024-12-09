@@ -32,7 +32,7 @@ export function PostModal({
   onDeleteComment
 }: PostModalProps) {
   if (!post) return null
-  const [isCommentSectionOpen, setIsCommentSectionOpen] = useState(false)
+  const [isCommentSectionOpen, setIsCommentSectionOpen] = useState(true)
   return (
     <Dialog open={!!post} onClose={onClose} maxWidth='sm' fullWidth>
       <DialogTitle>Bài viết</DialogTitle>
