@@ -22,7 +22,6 @@ import { IChatImageRequest } from '~/types/gemini.interface'
 const ChatBot: React.FC = () => {
   const dispatch = useAppDispatch()
   const { messages, loading } = useAppSelector((state) => state.chat)
-  console.log(messages)
   const [input, setInput] = useState('')
   const [isOpen, setIsOpen] = useState(false)
   const [selectedFile, setSelectedFile] = useState<File | null>(null)

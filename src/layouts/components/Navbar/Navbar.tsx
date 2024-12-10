@@ -163,7 +163,7 @@ const Navbar = () => {
                   <Typography>{user?.full_name}</Typography>
                 </Box>
                 <button
-                  onClick={() => navigate('/messenger/chat')}
+                  onClick={() => navigate('/messenger-user/chat')}
                   className='bg-gradient-to-r from-orange-400
           to-lime-400 transition-all duration-200
           text-white py-1 px-4 rounded-full flex 

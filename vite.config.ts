@@ -11,6 +11,9 @@ export default defineConfig({
   css: {
     devSourcemap: true
   },
+  define: {
+    'process.env': process.env,
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

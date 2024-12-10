@@ -13,6 +13,7 @@ import {
   Tab
 } from '@mui/material'
 import banner from '@assets/img/banner_mens.png'
+import { useNavigate } from 'react-router-dom'
 
 interface ShopInfo {
   name: string
@@ -30,6 +31,7 @@ interface ShopHeaderProps {
 }
 
 const ShopHeader: React.FC<ShopHeaderProps> = ({ shopInfo }) => {
+  const navigate = useNavigate()
   return (
     <Box>
       {/* Banner Shop */}
@@ -73,7 +75,12 @@ const ShopHeader: React.FC<ShopHeaderProps> = ({ shopInfo }) => {
         </Box>
         <Box ml='auto'>
           <Button variant='outlined'>Theo Dõi</Button>
-          <Button variant='contained' color='primary' sx={{ ml: 2 }}>
+          <Button
+            variant='contained'
+            color='primary'
+            sx={{ ml: 2 }}
+            onClick={() => navigate('/messenger/chat')}
+          >
             Chat
           </Button>
         </Box>
