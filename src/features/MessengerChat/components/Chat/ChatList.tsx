@@ -15,7 +15,7 @@ import {
   useFetchChatListCustomerQuery
 } from '../../service/chatMessage'
 import { IChatItem, IChatListResponse } from '~/types/message-chat.interface'
-import { StyledAvatar, StyledListItemButton } from '@shared/libs/mui/Style'
+import { OnlineBadge, StyledAvatar, StyledListItemButton } from '@shared/libs/mui/Style'
 
 const ChatList: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -25,20 +25,15 @@ const ChatList: React.FC = () => {
   const {
     data: chatList,
     isLoading,
-    error
-  } = user.role.includes('CHUCUAHANG')
-    ? useFetchChatListOwnerQuery({
+    error,
+    refetch: refetchChatList
+  } = useFetchChatListOwnerQuery({
         shopCode: null,
         userCode: null,
         pageNumber: 1,
         pageSize: 10
       })
-    : useFetchChatListCustomerQuery({
-        shopCode: null,
-        userCode: null,
-        pageNumber: 1,
-        pageSize: 10
-      })
+    
 
 
  const convertChatList = (chatList: IChatItem[] | undefined): IChatItem[] => {
@@ -47,6 +42,10 @@ const ChatList: React.FC = () => {
      ...chat,
      story_avatar: chat.story_avatar || 'https://via.placeholder.com/150'
    }))
+ }
+ const handleSelectChat = (chat: IChatItem) => {
+   dispatch(setCurrentChat(chat))
+   refetchChatList()
  }
 
  const chatListData = convertChatList(chatList?.data?.data)
@@ -60,16 +59,34 @@ const ChatList: React.FC = () => {
         chatListData.map((chat: IChatItem, index: number) => (
           <StyledListItemButton
             key={index}
-            onClick={() => dispatch(setCurrentChat(chat))}
+            onClick={() => handleSelectChat(chat)}
             selected={currentChat?.chat_id === chat.chat_id}
           >
             <ListItemAvatar className='pr-4'>
-              <StyledAvatar src={chat.story_avatar} />
+              <OnlineBadge
+                overlap='circular'
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                variant='dot'
+                sx={{
+                  '& .MuiBadge-dot': {
+                    backgroundColor: chat.online ? '#44b700' : '#9e9e9e', // Xanh lá khi online, xám khi offline
+                     width: '12px', // Tăng kích thước dấu chấm
+        height: '12px', // Tăng kích thước dấu chấm
+        borderRadius: '50%', // Giữ hình dạng tròn
+        border: '2px solid white', // Đường viền dấu chấm
+                  }
+                }}
+              >
+                <StyledAvatar src={chat.story_avatar} />
+              </OnlineBadge>
             </ListItemAvatar>
             <ListItemText
               primary={
                 <Typography variant='subtitle1' fontWeight='bold' noWrap>
-                  {chat.story_name}
+                  {chat.story_name}{' '}
+                  {chat.unread_message_count > 0
+                    ? `(${chat.unread_message_count})`
+                    : ''}
                 </Typography>
               }
               secondary={
@@ -82,7 +99,7 @@ const ChatList: React.FC = () => {
                     display: 'block'
                   }}
                 >
-                  {chat.last_message}
+                  {chat.last_message} {chat.send_last_at}
                 </Typography>
               }
             />

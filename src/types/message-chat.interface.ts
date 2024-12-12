@@ -46,6 +46,7 @@ export interface IChatDetail {
 }
 export interface IChatItem {
   chat_id: number;
+  online: boolean;
   user_code: string;
   shop_code: string;
   story_avatar: string;

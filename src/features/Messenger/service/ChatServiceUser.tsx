@@ -6,7 +6,7 @@ class ChatServiceUser {
   private static reconnectTimeout: NodeJS.Timeout | null = null
   private static maxReconnectAttempts = 5
   private static reconnectAttempts = 0
-
+  private static notificationSound = new Audio('/src/assets/mp3/mess.mp3');
   static connectWebSocket(
     token: string,
     user_code: string,
@@ -33,6 +33,9 @@ class ChatServiceUser {
           (messageOutput) => {
             const messageResponse = JSON.parse(messageOutput.body)
             onMessage(messageResponse)
+            if (messageResponse.type === "SENT") {
+              this.notificationSound.play();
+            }
           }
         )
         onConnect()

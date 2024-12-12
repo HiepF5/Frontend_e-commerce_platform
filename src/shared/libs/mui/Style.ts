@@ -5,6 +5,7 @@ import {
   Card,
   ListItemButton,
 } from '@mui/material'
+import { Badge } from '@mui/material';
 export const StyledCard = styled(Card)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -73,3 +74,9 @@ export const StyledAvatar = styled(Avatar)(({ theme }) => ({
   width: 56,
   height: 56
 }))
+export const OnlineBadge = styled(Badge)(({ theme }) => ({
+  '& .MuiBadge-dot': {
+    backgroundColor: theme.palette.grey[500], // Màu xám mặc định
+    border: `2px solid ${theme.palette.background.paper}`, // Đường viền cho dấu chấm
+  },
+}));

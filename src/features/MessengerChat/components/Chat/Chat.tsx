@@ -13,16 +13,17 @@ import {
 import { styled } from '@mui/system'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import SendIcon from '@mui/icons-material/Send'
-import {
-  useFetchChatStoryOwnerQuery
-} from '../../service/chatMessage'
+import { useFetchChatListOwnerQuery, useFetchChatStoryOwnerQuery } from '../../service/chatMessage'
 import { useAppDispatch, useAppSelector } from '@store/hook'
 import {
   addMessageToChatStory,
   setChatStory,
-  handleWebSocketMessage
+  handleWebSocketMessage,
+  addMessageAndSetChatStory
 } from '../../slices/ChatSlice'
+import AttachFileIcon from '@mui/icons-material/AttachFile'
 import ChatService from '../../service/ChatService'
+import { dateMapper } from '@shared/utils/dateMapper'
 
 const MessageBubble = styled(Box)<{ owner: boolean }>(({ theme, owner }) => ({
   display: 'inline-block',
@@ -39,25 +40,32 @@ const MessageBubble = styled(Box)<{ owner: boolean }>(({ theme, owner }) => ({
 
 const Chat: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { currentChat, chatStory } = useAppSelector((state) => state.chatApi)
+  const { chatStory } = useAppSelector((state) => state.chatApi)
+  const currentChat = useAppSelector((state) => state.chatApi.currentChat)
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
   const [connected, setConnected] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const user = JSON.parse(localStorage.getItem('user') || '{}')
   const messageBoxRef = useRef<HTMLDivElement | null>(null)
+  const { refetch: refetchChatList } = useFetchChatListOwnerQuery({
+    shopCode: null,
+    userCode: null,
+    pageNumber: 1,
+    pageSize: 10
+  })
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   const {
     data: fetchedChatStory,
     isLoading,
     error: fetchError,
     refetch: refetchChatStoryOwner
-  } =  useFetchChatStoryOwnerQuery({
-        chat_id: currentChat?.chat_id || 0,
-        page_number: 1,
-        page_size: 10
-      })
-   
+  } = useFetchChatStoryOwnerQuery({
+    chat_id: currentChat?.chat_id || 0,
+    page_number: 1,
+    page_size: 10
+  })
 
   useEffect(() => {
     if (fetchedChatStory) {
@@ -69,10 +77,27 @@ const Chat: React.FC = () => {
     (message: any) => {
       dispatch(handleWebSocketMessage(message))
       refetchChatStoryOwner()
+      refetchChatList()
+      // dispatch(addMessageAndSetChatStory(message))
+      // console.log(chatStory)
+      // if (chatStory) {
+      //   dispatch(setChatStory({ ...chatStory, list_message: [...chatStory.list_message, message] }))
+      // }
       console.log('Received message:', message)
     },
-    [dispatch]
+    [dispatch, refetchChatList]
   )
+  const sendFile = async (file: File) => {
+    setSelectedImage(null)
+    const reader = new FileReader()
+    reader.onload = async (e) => {
+      const base64Image = e.target?.result as string
+      setSelectedImage(base64Image) // Set preview
+      console.log('Base64 Image:', base64Image)
+    }
+    reader.readAsDataURL(file)
+  }
+
 
   const connectWebSocket = useCallback(() => {
     if (currentChat) {
@@ -99,7 +124,7 @@ const Chat: React.FC = () => {
   }, [connectWebSocket])
 
   const sendMessage = async () => {
-    if (!input.trim() || !currentChat || !connected) {
+    if ((!input.trim() && !selectedImage) || !currentChat || !connected) {
       setError(
         'Cannot send message. Please check your connection and try again.'
       )
@@ -115,10 +140,10 @@ const Chat: React.FC = () => {
         userCode: user.user_code,
         replyTo: null,
         content: input.trim(),
-        imageUrl: null
+        imageUrl: selectedImage || null
       },
       senderCode: user.user_code,
-      createdAt: new Date().toISOString(),
+      createdAt: dateMapper(),
       type: 'SENT'
     }
 
@@ -129,6 +154,8 @@ const Chat: React.FC = () => {
       )
 
       if (success) {
+        refetchChatList()
+        setSelectedImage(null)
         setInput('')
         dispatch(addMessageToChatStory(message))
         if (user.role.includes('CHUCUAHANG')) {
@@ -136,8 +163,7 @@ const Chat: React.FC = () => {
           if (updatedChatStoryOwner.data) {
             dispatch(setChatStory(updatedChatStoryOwner.data.data))
           }
-        } 
-        
+        }
       } else {
         throw new Error('Failed to send message')
       }
@@ -176,7 +202,6 @@ const Chat: React.FC = () => {
     if (!success) {
       console.error('Failed to send seen message. WebSocket is not connected.')
     }
-   
   }, [connected, currentChat, user.shop_code, user.user_code])
 
   useEffect(() => {
@@ -185,12 +210,6 @@ const Chat: React.FC = () => {
     }
     seenMessage()
   }, [chatStory, seenMessage])
-
-  const formatTime = (timestamp: string) =>
-    new Date(timestamp).toLocaleTimeString([], {
-      hour: '2-digit',
-      minute: '2-digit'
-    })
 
   if (isLoading) return <CircularProgress />
   if (fetchError)
@@ -211,24 +230,40 @@ const Chat: React.FC = () => {
         ref={messageBoxRef}
       >
         {chatStory?.list_message?.length ? (
-          chatStory.list_message.map((msg: any, i: number) => {{ 
-            return (
-              <Box
-                key={i}
-                sx={{
-                  display: 'flex',
-                  justifyContent: msg.is_shop_sender ? 'flex-end' : 'flex-start'
-                }}
-              >
-                <MessageBubble owner={msg.is_shop_sender}>
-                  <Typography>{msg.content}</Typography>
-                  <Typography variant='caption' sx={{ opacity: 0.7 }}>
-                    {formatTime(msg.createdAt)}
-                  </Typography>
-                </MessageBubble>
-              </Box>
-            )
-           }})
+          chatStory.list_message.map((msg: any, i: number) => {
+            {
+              return (
+                <Box
+                  key={i}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: msg.is_shop_sender
+                      ? 'flex-end'
+                      : 'flex-start'
+                  }}
+                >
+                  <MessageBubble owner={msg.is_shop_sender}>
+                    {msg.image_Url && (
+                      <img
+                        src={msg.image_Url}
+                        alt='Sent'
+                        style={{
+                          maxHeight: 150,
+                          maxWidth: '100%',
+                          objectFit: 'contain',
+                          marginBottom: 8
+                        }}
+                      />
+                    )}
+                    <Typography>{msg.content}</Typography>
+                    <Typography variant='caption' sx={{ opacity: 0.7 }}>
+                      {msg.created_at}
+                    </Typography>
+                  </MessageBubble>
+                </Box>
+              )
+            }
+          })
         ) : (
           <Typography variant='body2' color='text.secondary' align='center'>
             No messages yet.
@@ -247,9 +282,61 @@ const Chat: React.FC = () => {
           display: 'flex',
           alignItems: 'center',
           gap: 1,
-          backgroundColor: 'background.paper'
+          backgroundColor: 'background.paper',
+          position: 'relative'
         }}
       >
+        <label htmlFor='file-input'>
+          <IconButton component='span'>
+            <AttachFileIcon />
+          </IconButton>
+        </label>
+        {selectedImage && (
+          <Box
+            sx={{
+              position: 'absolute',
+              top: -60,
+              left: 10,
+              display: 'flex',
+              alignItems: 'center',
+              backgroundColor: 'background.paper',
+              padding: 1,
+              borderRadius: 1,
+              boxShadow: 3,
+              zIndex: 10
+            }}
+          >
+            <img
+              src={selectedImage}
+              alt='Preview'
+              style={{
+                maxHeight: 50,
+                maxWidth: 50,
+                objectFit: 'contain',
+                marginRight: 10
+              }}
+            />
+            <IconButton
+              size='small'
+              color='secondary'
+              onClick={() => setSelectedImage(null)}
+            >
+              X
+            </IconButton>
+          </Box>
+        )}
+
+        <input
+          accept='image/*'
+          style={{ display: 'none' }}
+          id='file-input'
+          type='file'
+          onChange={(e) => {
+            if (e.target.files && e.target.files[0]) {
+              sendFile(e.target.files[0])
+            }
+          }}
+        />
         <TextField
           fullWidth
           value={input}
@@ -262,7 +349,7 @@ const Chat: React.FC = () => {
           variant='contained'
           color='primary'
           endIcon={<SendIcon />}
-          disabled={!input.trim() || sending || !connected}
+          disabled={(!input.trim() && !selectedImage) || sending || !connected}
         >
           {sending ? 'Sending...' : 'Send'}
         </Button>

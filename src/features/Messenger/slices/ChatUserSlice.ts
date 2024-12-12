@@ -1,5 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { IChatItem, IChatDetail } from '~/types/message-chat.interface'
+import { dateMapper } from '@shared/utils/dateMapper'
+import {
+  IChatItem,
+  IChatDetail,
+  IMessage
+} from '~/types/message-chat.interface'
 
 interface ChatState {
   currentChat: IChatItem | null
@@ -24,12 +29,32 @@ const chatUserSlice = createSlice({
     setChatStory: (state, action: PayloadAction<IChatDetail>) => {
       state.chatStory = action.payload
     },
+
     addMessageToChatStory: (state, action: PayloadAction<any>) => {
       if (state.chatStory) {
         state.chatStory = {
           ...state.chatStory, // Tạo object mới
           list_message: [...state.chatStory.list_message, action.payload] // Tạo mảng mới
         }
+      }
+    },
+    addMessageAndSetChatStory: (state, action: PayloadAction<any>) => {
+      if (state.chatStory) {
+        // Chuyển đổi dữ liệu thành định dạng IMessage
+        const message: IMessage = {
+          id: Date.now(), // hoặc sử dụng id từ action.payload nếu có
+          is_shop_sender:
+          action.payload.shopCode === state.currentChat?.shop_code, // ví dụ so sánh shopCode
+          reply_to: action.payload.replyTo || 0, // nếu có replyTo thì dùng, nếu không thì mặc định 0
+          reply_message: action.payload.replyTo ? action.payload.content : null, // nếu có replyTo thì lấy nội dung reply
+          content: action.payload.body.content,
+          image_Url: action.payload.imageUrl || null, // Nếu có imageUrl thì lấy, nếu không thì null
+          is_read: false, // mặc định là chưa đọc
+          created_at: dateMapper()// thời gian tạo tin nhắn
+        }
+
+        // Thêm tin nhắn vào list_message
+        state.chatStory.list_message.push(message)
       }
     },
 
@@ -69,6 +94,7 @@ export const {
   setCurrentChat,
   setChatStory,
   addMessageToChatStory,
-  handleWebSocketMessage
+  handleWebSocketMessage,
+  addMessageAndSetChatStory
 } = chatUserSlice.actions
 export default chatUserSlice.reducer
