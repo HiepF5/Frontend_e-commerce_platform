@@ -1,26 +1,71 @@
-import React from 'react'
+'use client'
 
-function DescriptionBox() {
-  return (
-    <div className='mx-[120px] my-24 container'>
-      <div className='flex'>
-        <div className='flex items-center justify-center text-xl font-semibold w-1/2 h-16 border border-gray-300'>
-          Description
-        </div>
-        <div className='flex items-center justify-center text-xl w-1/2 h-16 border border-gray-300 bg-gray-100 text-gray-500'>
-          Review (122)
-        </div>
-      </div>
-      <div className='border border-gray-300 mt-4 p-6 pb-4'>
-        <p className='mb-4'>
-          An e-commerce website is an online platform the customers can use to produce products that are optimized for
-          customers and customers of different sizes and dimensions in different countries and regions. Lorem ipsum
-          dolor sit amet, consectetur adipiscing elit. Donec.
-        </p>
-        <p>E-commerce website is an online platform the customers can use to produce products that are optimized</p>
-      </div>
-    </div>
-  )
+import {
+  Box,
+  Container,
+  Typography,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow
+} from '@mui/material'
+
+interface DescriptionBoxProps {
+  product: {
+    specs: {
+      chip: string
+      screenSize: string
+      battery: string
+    }
+    brand: string
+  }
 }
 
-export default DescriptionBox
+export default function DescriptionBox({ product }: DescriptionBoxProps) {
+  return (
+    <Container maxWidth='lg' sx={{ py: 4 }}>
+      <Typography variant='h5' gutterBottom fontWeight='bold'>
+        Thông số kỹ thuật
+      </Typography>
+      <Box
+        sx={{
+          bgcolor: 'background.paper',
+          borderRadius: 1,
+          overflow: 'hidden'
+        }}
+      >
+        <Table>
+          <TableBody>
+            <TableRow>
+              <TableCell
+                component='th'
+                sx={{ bgcolor: 'grey.50', width: '30%' }}
+              >
+                Thương hiệu
+              </TableCell>
+              <TableCell>{product.brand}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component='th' sx={{ bgcolor: 'grey.50' }}>
+                Chip
+              </TableCell>
+              <TableCell>{product.specs.chip}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component='th' sx={{ bgcolor: 'grey.50' }}>
+                Kích thước màn hình
+              </TableCell>
+              <TableCell>{product.specs.screenSize}</TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell component='th' sx={{ bgcolor: 'grey.50' }}>
+                Thời lượng pin
+              </TableCell>
+              <TableCell>{product.specs.battery}</TableCell>
+            </TableRow>
+          </TableBody>
+        </Table>
+      </Box>
+    </Container>
+  )
+}

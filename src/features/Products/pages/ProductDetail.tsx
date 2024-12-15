@@ -1,38 +1,224 @@
 import Breadcrum from '../ProductDetail/Breadcrum/Breadcrum'
-import ProductDisplay from '../ProductDetail/ProductDisplay/ProductDisplay'
 import DescriptionBox from '../ProductDetail/DescriptionBox/DescriptionBox'
+import ShopProducts from '../ProductDetail/ProductCard'
+import ProductComparison from '../ProductDetail/ProductComparison'
+import ProductDisplay from '../ProductDetail/ProductDisplay/ProductDisplay'
+import ProductFeatures from '../ProductDetail/ProductFeatures'
+import ProductSpecs from '../ProductDetail/ProductSpecs'
+import RecentlyViewed from '../ProductDetail/RecentlyViewed'
 import RelatedProducts from '../ProductDetail/RelatedProducts/RelatedProducts'
-import Navbar from '@layouts/components/Navbar/Navbar'
-import Footer from '@layouts/components/Footer/Footer'
+import Reviews from '../ProductDetail/Reviews'
+import ReviewToCustomer from '../ProductDetail/ReviewToCustomer'
+import SellerProfile from '../ProductDetail/SellerProfile'
+
 
 function ProductDetail() {
  const product = {
-   id: 1,
-   name: ' Product',
-   description: 'This is a  product description.',
-   price: 99.99,
-   brand: ' Brand',
-   imageUrl:
-     'https://github.com/HiepF5/Db_Ecommercer/blob/main/SamSung/Samsung%20Galaxy%20A23/4.jpg?raw=true',
-   image:
-     'https://github.com/HiepF5/Db_Ecommercer/blob/main/SamSung/Samsung%20Galaxy%20A23/1.jpg?raw=true',
-   image2:
-     'https://github.com/HiepF5/Db_Ecommercer/blob/main/SamSung/Samsung%20Galaxy%20A23/2.jpg?raw=true',
-   image3:
-     'https://github.com/HiepF5/Db_Ecommercer/blob/main/SamSung/Samsung%20Galaxy%20A23/3.jpg?raw=true',
-   image4:
-     'https://github.com/HiepF5/Db_Ecommercer/blob/main/SamSung/Samsung%20Galaxy%20A23/5.jpg?raw=true',
-   additionalProperty1: 'value1',
-   additionalProperty2: 'value2',
-   productsName: ' Product Name',
-   sold: 100
+   name: 'iPhone 16 Pro 128GB',
+   rating: 4.6,
+   reviews: 72,
+   ratings: 12,
+   price: 28390000,
+   originalPrice: 28990000,
+   sku: '00911084',
+   specs: {
+     chip: 'Apple A18 Pro',
+     screenSize: '6.3 inch',
+     battery: '27.2h',
+     performance: ['Hiệu năng tốt', 'Hiệu năng rất tốt', 'Hiệu năng vượt trội']
+   },
+   colors: [
+     { name: 'Titan Sạ Mạc', value: 'titan-natural' },
+     { name: 'Titan Trắng', value: 'titan-white' },
+     { name: 'Titan Tự nhiên', value: 'titan-natural' },
+     { name: 'Titan Đen', value: 'titan-black' }
+   ],
+   storage: [
+     { size: '128 GB', price: 28390000 },
+     { size: '256 GB', price: 31390000 },
+     { size: '512 GB', price: 37390000 },
+     { size: '1 TB', price: 43390000 }
+   ],
+   brand: 'Apple',
  }
+const sellerStats = {
+  rating: '9.6k',
+  responseRate: '100%',
+  responseTime: 'trong vài phút',
+  followers: '3.7k',
+  lastSeen: '3 Phút Trước',
+  products: 46
+}
+
+const productSpecs = {
+  sku: '9476',
+  material: 'Nhựa ABS, Nhôm',
+  origin: 'Nước ngoài'
+}
+
+const categories = [
+  'Shopee',
+  'Máy Tính & Laptop',
+  'Phụ Kiện Máy Tính',
+  'Bàn Laptop'
+]
+const shopProducts = [
+  {
+    id: '1',
+    name: 'Miếng lót chuột, bàn di chuột anime One Piece',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 18000,
+    originalPrice: 34000,
+    discount: 47,
+    sold: 118,
+    isFavorite: true,
+    hasVideo: true
+  },
+  {
+    id: '2',
+    name: 'Giá kê đỡ điện thoại, máy tính bảng',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 15000,
+    originalPrice: 24000,
+    discount: 37,
+    sold: 193,
+    isFavorite: true,
+    tags: ['Rẻ Vô Địch']
+  },
+  {
+    id: '3',
+    name: 'Miếng Lót Chuột Bằng Xốp e-DRA',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 24000,
+    originalPrice: 38000,
+    discount: 32,
+    sold: 195,
+    isFavorite: true,
+    tags: ['Rẻ Vô Địch']
+  },
+  {
+    id: '4',
+    name: 'Giá đỡ điện thoại máy tính bảng đa năng',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 33000,
+    originalPrice: 49000,
+    discount: 32,
+    sold: 98,
+    isFavorite: true,
+    hasVideo: true,
+    tags: ['Rẻ Vô Địch']
+  },
+  {
+    id: '5',
+    name: 'Bộ Dụng Cụ Vệ Sinh Laptop, Điện Thoại',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 56000,
+    originalPrice: 74000,
+    discount: 24,
+    sold: 166,
+    isFavorite: true,
+    hasVideo: true
+  },
+  {
+    id: '6',
+    name: 'Chuột Bluetooth Không Dây Sạc Pin',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 40000,
+    originalPrice: 65000,
+    discount: 38,
+    sold: 183,
+    isFavorite: true
+  }
+]
+
+const recommendedProducts = [
+  {
+    id: '1',
+    name: 'Giá đỡ LAPTOP, MACBOOK nhôm cao cấp',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 64000,
+    originalPrice: 89000,
+    discount: 28,
+    sold: 157,
+    isFavorite: true,
+    tags: ['Rẻ Vô Địch', 'Giảm 45k']
+  },
+  {
+    id: '2',
+    name: 'Giá đỡ máy tính xách tay Giá đỡ Laptop',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 28000,
+    originalPrice: 35000,
+    discount: 20,
+    sold: 112,
+    isFavorite: true,
+    hasVideo: true
+  },
+  {
+    id: '3',
+    name: 'Giá đỡ Laptop, Macbook, Máy Tính Bảng',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 129000,
+    originalPrice: 199000,
+    discount: 35,
+    sold: 96,
+    isFavorite: true,
+    tags: ['Rẻ Vô Địch', 'Giảm 70k']
+  },
+  {
+    id: '4',
+    name: '[Choice] Giá đỡ máy tính Pahada',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 57000,
+    originalPrice: 88000,
+    discount: 35,
+    sold: 3200,
+    tags: ['Choice']
+  },
+  {
+    id: '5',
+    name: 'Giá đỡ laptop, macbook, máy tính bảng',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 50000,
+    originalPrice: 81000,
+    discount: 38,
+    sold: 17000,
+    isFavorite: true,
+    hasVideo: true,
+    tags: ['Rẻ Vô Địch']
+  },
+  {
+    id: '6',
+    name: 'Giá đỡ Laptop, Macbook, Ipad bằng nhôm',
+    image: '/placeholder.svg?height=200&width=200',
+    price: 56000,
+    originalPrice: 125000,
+    discount: 55,
+    sold: 10000,
+    tags: ['Rẻ Vô Địch']
+  }
+]
+
+
   return (
     <div>
       <Breadcrum product={product} />
       <ProductDisplay product={product} />
-      <DescriptionBox />
-      {/* <RelatedProducts /> */}
+      <DescriptionBox product={product} />
+      <div className='max-w-7xl mx-auto p-4 space-y-4'>
+        <SellerProfile name='deerlu05.vn' stats={sellerStats} />
+        <ProductSpecs specs={productSpecs} categories={categories} />
+      </div>
+      <RelatedProducts />
+      <ProductComparison />
+      <Reviews />
+      <ReviewToCustomer />
+      <RecentlyViewed />
+      <ShopProducts
+        shopProducts={shopProducts}
+        recommendedProducts={recommendedProducts}
+      />
+      <ProductFeatures />
     </div>
   )
 }

@@ -1,64 +1,51 @@
-import React, { useState } from 'react'
-import { useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
+
 import ProductItem from '../ProductItem/ProductItem'
+import { IProduct } from '~/types/products.interface'
+import { useGetListProductQuery } from '../../api/productApi'
 
 export default function Products() {
-  const products = [
-    {
-      productsId: 1,
-      name: 'iPhone 13',
-      price: 999,
-      image:
-        'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2012%20Pro%20Max/1.jpg?raw=true'
-    },
-    {
-      productsId: 2,
-      name: 'Samsung Galaxy S21',
-      price: 899,
-      image:
-        'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2012%20Pro%20Max/2.jpg?raw=true'
-    },
-    {
-      productsId: 3,
-      name: 'OnePlus 9 Pro',
-      price: 969,
-      image:
-        'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2012%20Pro%20Max/3.jpg?raw=true'
-    },
-    {
-      productsId: 4,
-      name: 'Google Pixel 6',
-      price: 799,
-      image:
-        'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2012%20Pro%20Max/4.jpg?raw=true'
-    },
-    {
-      productsId: 5,
-      name: 'Xiaomi Mi 11',
-      price: 749,
-      image:
-        'https://github.com/HiepF5/Db_Ecommercer/blob/main/SamSung/Samsung%20Galaxy%20S24%20Ultra/1.jpg?raw=true'
+  const [pageNumber, setPageNumber] = useState(1)
+  const [products, setProducts] = useState<IProduct[]>([])
+  const [hasMore, setHasMore] = useState(true)
+
+  const { data, isFetching, isError } = useGetListProductQuery({
+    pageNumber,
+    pageSize: 40
+  })
+
+  useEffect(() => {
+    if (data && data.data) {
+      setProducts((prevProducts) => [...prevProducts, ...(Array.isArray(data.data) ? data.data : [])])
+      if (data.data.length === 0) {
+        setHasMore(false)
+      }
     }
-  ]
-  const [searchTerm, setSearchTerm] = useState('')
+  }, [data])
 
-  const handleSearchTermChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value)
-  }
+  const loadMore = useCallback(() => {
+    if (!isFetching && hasMore) {
+      setPageNumber((prevPageNumber) => prevPageNumber + 1)
+    }
+  }, [isFetching, hasMore])
 
-  // Lọc danh sách sản phẩm dựa trên categoryNow và giá trị tìm kiếm
-  const categoryNow = ''; // Define categoryNow variable
-  const filteredProducts = products
-    .filter((product: { productsId: number; name: string; price: number; brand?: string }) => {
-      const matchesCategory = !categoryNow || product.brand === categoryNow;
-      return matchesCategory;
-    })
-    .filter((product: { productsId: number; name: string; price: number; brand?: string }) => {
-      const matchesSearchTerm = product.name
-        .toLowerCase()
-        .includes(searchTerm.toLowerCase())
-      return matchesSearchTerm
-    })
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          loadMore()
+        }
+      },
+      { threshold: 1.0 }
+    )
+
+    const target = document.querySelector('#load-more-trigger')
+    if (target) observer.observe(target)
+
+    return () => {
+      if (target) observer.unobserve(target)
+    }
+  }, [loadMore, hasMore])
 
   return (
     <div className='bg-white'>
@@ -66,30 +53,26 @@ export default function Products() {
         <h2 className='text-2xl font-bold tracking-tight text-gray-900'>
           Danh sách điện thoại
         </h2>
-        {/* Ô tìm kiếm */}
-        <input
-          type='text'
-          placeholder='Tìm kiếm sản phẩm...'
-          value={searchTerm}
-          onChange={handleSearchTermChange}
-          className='mt-4 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500'
-        />
         <div className='mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-          {filteredProducts.map((product) => (
-            <div key={product.productsId}>
-              <ProductItem product={
-                {
-                  productsId: product.productsId,
-                  image: product.image,
-                  productsName: product.name,
-                  brand: 'Apple',
-                  price: product.price
-                }
-                  
-              } />
+          {products.map((product) => (
+            <div key={product.productId}>
+              <ProductItem
+                product={{
+                  productId: product.productId,
+                  image: product.imageUrl || '',
+                  productName: product.productTitle,
+                  brand: `Brand ID: ${product.brandId}`,
+                  price: product.minPrice
+                }}
+              />
             </div>
           ))}
         </div>
+
+        {hasMore && <div id='load-more-trigger' className='h-10'></div>}
+        {isFetching && <p>Đang tải thêm sản phẩm...</p>}
+        {isError && <p>Đã xảy ra lỗi khi tải sản phẩm.</p>}
+        {!hasMore && <p>Không còn sản phẩm nào để hiển thị.</p>}
       </div>
     </div>
   )

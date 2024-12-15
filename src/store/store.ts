@@ -14,6 +14,7 @@ import chatReducer from '@features/MessengerChat/slices/ChatSlice'
 import { chatMessage } from '@features/MessengerChat/service/chatMessage'
 import chatUserReducer from '@features/Messenger/slices/ChatUserSlice'
 import { chatMessageUser } from '@features/Messenger/service/chatMessageUser'
+import { productApi } from '@features/Products/api/productApi'
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
@@ -29,9 +30,15 @@ export const store = configureStore({
     [threadsApi.reducerPath]: threadsApi.reducer,
     [chatMessage.reducerPath]: chatMessage.reducer,
     [chatMessageUser.reducerPath]: chatMessageUser.reducer,
+    [productApi.reducerPath]: productApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(threadsApi.middleware,chatMessage.middleware,chatMessageUser.middleware),
+    getDefaultMiddleware().concat(
+      threadsApi.middleware,
+      chatMessage.middleware,
+      chatMessageUser.middleware,
+      productApi.middleware
+    )
 })
 setupListeners(store.dispatch)
 

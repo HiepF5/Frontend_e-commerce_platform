@@ -1,105 +1,185 @@
-import React from 'react'
-import starIcon from '@assets/img/star_icon.png'
-import starDullIcon from '@assets/img/star_dull_icon.png'
-import { useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
+'use client'
+
+import * as React from 'react'
+import {
+  Box,
+  Button,
+  Chip,
+  Container,
+  Grid,
+  Rating,
+  Typography,
+  ToggleButton,
+  ToggleButtonGroup
+} from '@mui/material'
+
 interface Product {
-  image: string;
-  image2: string;
-  image3: string;
-  image4: string;
-  productsName: string;
+  name: string;
+  rating: number;
+  ratings: number;
+  reviews: number;
   price: number;
-  sold: number;
+  originalPrice: number;
+  storage: { size: string }[];
+  colors: { value: string; name: string }[];
+  specs: {
+    chip: string;
+    screenSize: string;
+    battery: string;
+  };
 }
 
-function ProductDisplay({ product }: { product: Product }) {
-  const navigate = useNavigate()
-  const addToCart = () => {
-    console.log('add to cart')
+export default function ProductDisplay({ product }: { product: Product }) {
+  const [selectedColor, setSelectedColor] = React.useState(
+    product.colors[0].value
+  )
+  const [selectedStorage, setSelectedStorage] = React.useState('128 GB')
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'decimal',
+      maximumFractionDigits: 0
+    }).format(price)
   }
-  const handleAddToCart = () => {
-    const result = addToCart()
-    console.log(result)
-    if (1) {
-      toast.error('Bạn cần đăng nhập để mua hàng')
-      navigate('/login')
-    }
-  }
+
   return (
-    <div className='container flex items-center justify-between mx-[170px]'>
-      <div className='flex gap-[17px]'>
-        <div className='flex flex-col gap-[16px]'>
-          <img src={product.image} alt='' className='h-[100px]' />
-          <img src={product.image2} alt='' className='h-[100px]' />
-          <img src={product.image3} alt='' className='h-[100px]' />
-          <img src={product.image4} alt='' className='h-[100px]' />
-        </div>
-        <div className=''>
-          <img src={product.image} alt='' className='w-[400px] h-[400px]' />
-        </div>
-      </div>
-      <div className='ml-[70px] flex flex-col gap-4'>
-        <h1 className='text-gray-900 text-4xl font-semibold'>
-          {product.productsName}
-        </h1>
-        <div className='flex gap-1 items-center mt-[13px]'>
-          <img src={starIcon} alt='' className='w-5 h-5' />
-          <img src={starIcon} alt='' className='w-5 h-5' />
-          <img src={starIcon} alt='' className='w-5 h-5' />
-          <img src={starIcon} alt='' className='w-5 h-5' />
-          <img src={starDullIcon} alt='' className='w-5 h-5' />
-          <p className='text-gray-700 text-sm'>(122)</p>
-        </div>
-        <div className='flex gap-8 my-[20px]'>
-          <div className='text-gray-500 line-through text-lg'>
-            ${product.price}
-          </div>
-          <div className='text-red-500 text-lg font-semibold'>
-            ${product.sold}
-          </div>
-        </div>
-        {/* <p className='text-gray-600 text-base'>
-          A lightweight, usually knitted, pullover shirt close-fitting and with a round neckline and short sleeves, worn
-          as an undershirt or outer garment.
-        </p> */}
-        <div>
-          <h1 className='text-gray-700 text-lg font-semibold my-[35px]'>
-            Select Size
-          </h1>
-          <div className='flex gap-5 '>
-            <div className='text-gray-700 font-semibold p-4 border border-gray-300 rounded cursor-pointer'>
-              ĐEN
-            </div>
-            <div className='text-gray-700 font-semibold p-4 border border-gray-300 rounded cursor-pointer'>
-              ĐỎ
-            </div>
-            <div className='text-gray-700 font-semibold p-4 border border-gray-300 rounded cursor-pointer'>
-              Xanh
-            </div>
-            <div className='text-gray-700 font-semibold p-4 border border-gray-300 rounded cursor-pointer'>
-              Titan
-            </div>
-            <div className='text-gray-700 font-semibold p-4 border border-gray-300 rounded cursor-pointer'>
-              Hồng
-            </div>
-          </div>
-        </div>
-        <button
-          onClick={handleAddToCart}
-          className='py-5 px-10 bg-red-500 text-white text-lg font-semibold rounded-lg'
-        >
-          ADD TO CART
-        </button>
-        {/* <p className='text-gray-700 text-base'>
-          <span className='font-semibold'>Category:</span> Women , T-Shirt, Crop Top
-        </p>
-        <p className='text-gray-700 text-base'>
-          <span>Tags:</span> Modern , Latest
-        </p> */}
-      </div>
-    </div>
+    <Container maxWidth='lg' sx={{ py: 4 }}>
+      <Grid container spacing={4}>
+        {/* Left side - Images */}
+        <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'flex', gap: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+              {[1, 2, 3, 4].map((i) => (
+                <Box
+                  key={i}
+                  component='img'
+                  src='/placeholder.svg?height=100&width=100'
+                  sx={{ width: 100, height: 100, objectFit: 'cover' }}
+                />
+              ))}
+            </Box>
+            <Box
+              component='img'
+              src='/placeholder.svg?height=400&width=400'
+              sx={{ width: 400, height: 400, objectFit: 'cover' }}
+            />
+          </Box>
+        </Grid>
+
+        {/* Right side - Product details */}
+        <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+            <Typography variant='h4' component='h1' fontWeight='bold'>
+              {product.name}
+            </Typography>
+
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Rating value={product.rating} precision={0.1} readOnly />
+              <Typography color='text.secondary'>
+                {product.ratings} đánh giá | {product.reviews} bình luận
+              </Typography>
+            </Box>
+
+            <Box>
+              <Typography
+                variant='h5'
+                color='error'
+                fontWeight='bold'
+                component='span'
+              >
+                {formatPrice(product.price)}₫
+              </Typography>
+              <Typography
+                variant='body1'
+                color='text.secondary'
+                sx={{ textDecoration: 'line-through', ml: 2 }}
+                component='span'
+              >
+                {formatPrice(product.originalPrice)}₫
+              </Typography>
+              <Chip label='2%' size='small' color='error' sx={{ ml: 1 }} />
+            </Box>
+
+            <Box>
+              <Typography variant='h6' gutterBottom>
+                Dung lượng
+              </Typography>
+              <ToggleButtonGroup
+                value={selectedStorage}
+                exclusive
+                onChange={(e, value) => setSelectedStorage(value)}
+                sx={{ mb: 3 }}
+              >
+                {product.storage.map((option) => (
+                  <ToggleButton
+                    key={option.size}
+                    value={option.size}
+                    sx={{ px: 3, py: 1 }}
+                  >
+                    {option.size}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+            </Box>
+
+            <Box>
+              <Typography variant='h6' gutterBottom>
+                Màu sắc
+              </Typography>
+              <ToggleButtonGroup
+                value={selectedColor}
+                exclusive
+                onChange={(e, value) => setSelectedColor(value)}
+              >
+                {product.colors.map((color) => (
+                  <ToggleButton
+                    key={color.value}
+                    value={color.value}
+                    sx={{ px: 3, py: 1 }}
+                  >
+                    {color.name}
+                  </ToggleButton>
+                ))}
+              </ToggleButtonGroup>
+            </Box>
+
+            <Box sx={{ mt: 2 }}>
+              <Typography variant='h6' gutterBottom>
+                Thông số nổi bật
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                <Box>
+                  <Typography variant='subtitle1' fontWeight='bold'>
+                    Chip
+                  </Typography>
+                  <Typography>{product.specs.chip}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant='subtitle1' fontWeight='bold'>
+                    Kích thước màn hình
+                  </Typography>
+                  <Typography>{product.specs.screenSize}</Typography>
+                </Box>
+                <Box>
+                  <Typography variant='subtitle1' fontWeight='bold'>
+                    Thời lượng pin
+                  </Typography>
+                  <Typography>{product.specs.battery}</Typography>
+                </Box>
+              </Box>
+            </Box>
+
+            <Button
+              variant='contained'
+              color='error'
+              size='large'
+              sx={{ mt: 3 }}
+            >
+              MUA NGAY
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+    </Container>
   )
 }
-
-export default ProductDisplay

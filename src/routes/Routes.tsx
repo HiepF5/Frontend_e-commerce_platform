@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom'
 import AuthenticatedGuard from '../guards/AuthenticatedGuard'
 import LandingPage from '../features/LandingPage/pages/LandingPage'
+
 // eslint-disable-next-line @typescript-eslint/promise-function-async
 const AdminRoutes = lazy(() => import('../features/Admin/routes/AdminRoutes'))
 const AuthRoutes = lazy(() => import('../features/Authentication/routes/AuthRoutes'))
@@ -17,6 +18,13 @@ const ChatRoutes = lazy(
 )
 const ChatRoutesUser = lazy(
   () => import('../features/Messenger/routes/ChatRoutesUser')
+)
+const CheckoutRoutes = lazy(
+  () => 
+    import('../features/Checkout/routes/CheckoutRoutes')
+)
+const OrderRoutes = lazy(
+  () => import('../features/Order/routes/OrderRoutes')
 )
 const CartRoutes = lazy(() => import('../features/Cart/routes/CartRoutes'))
 const ThreadsRoutes = lazy(() => import('../features/Threads/routes/ThreadsRoutes'))
@@ -34,7 +42,10 @@ const MainRoutes = (): JSX.Element => {
           <Route path='/messenger/*' element={<ChatRoutes />} />
           <Route path='/messenger-user/*' element={<ChatRoutesUser />} />
           <Route path='/threads/*' element={<ThreadsRoutes />} />
+
           <Route path='/cart/*' element={<CartRoutes />} />
+          <Route path='/checkout/*' element={<CheckoutRoutes />} />
+          <Route path='/order/*' element={<OrderRoutes />} />
           <Route element={<AuthenticatedGuard />}>
             <Route path='/admin/*' element={<AdminRoutes />} />
           </Route>

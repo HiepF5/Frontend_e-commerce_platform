@@ -2,9 +2,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 interface Product {
-  productsId: number
+  productId: number
   image: string
-  productsName: string
+  productName: string
   brand: string
   price: number
 }
@@ -20,7 +20,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 }) => {
   return (
     <Link
-      to={`/products/product-detail/${product.productsId}`}
+      to={`/products/product-detail/${product.productId}`}
       onClick={() => window.scrollTo(0, 0)}
     >
       <div className='group relative'>
@@ -35,7 +35,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           <div>
             <h3 className='text-sm text-gray-700'>
               <span aria-hidden='true' className='absolute inset-0' />
-              {product.productsName}
+              {product.productName}
             </h3>
             <p className='mt-1 text-sm text-gray-500'>{product.brand}</p>
           </div>
