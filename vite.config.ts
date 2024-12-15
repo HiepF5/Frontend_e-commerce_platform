@@ -6,7 +6,10 @@ import { defineConfig } from 'vite'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000
+    port: 3000,
+    watch: {
+      usePolling: true
+    }
   },
   css: {
     devSourcemap: true
@@ -36,5 +39,8 @@ export default defineConfig({
       '@features': path.resolve(__dirname, './src/features'),
       '@shared': path.resolve(__dirname, './src/shared'),
     }
+  },
+  optimizeDeps: {
+    include: ['react-datepicker']
   }
 })

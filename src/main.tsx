@@ -12,6 +12,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { Provider } from 'react-redux'
 import { store } from './store/store'
 import { ToastContainer } from 'react-toastify'
+import './styles/datepicker.css'
 
 if (typeof global === 'undefined') {
   ;;(window as any).global = window

@@ -28,6 +28,7 @@ const OrderRoutes = lazy(
 )
 const CartRoutes = lazy(() => import('../features/Cart/routes/CartRoutes'))
 const ThreadsRoutes = lazy(() => import('../features/Threads/routes/ThreadsRoutes'))
+const ShopAdminRoutes = lazy(() => import('../features/ShopAdmin/routes/ShopAdminRoutes'))
 
 const MainRoutes = (): JSX.Element => {
   return (
@@ -48,6 +49,7 @@ const MainRoutes = (): JSX.Element => {
           <Route path='/order/*' element={<OrderRoutes />} />
           <Route element={<AuthenticatedGuard />}>
             <Route path='/admin/*' element={<AdminRoutes />} />
+            <Route path='/shop-admin/*' element={<ShopAdminRoutes />} />
           </Route>
         </Routes>
       </Suspense>
