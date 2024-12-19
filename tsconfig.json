@@ -30,6 +30,7 @@
       "@layouts/*": ["src/layouts/*"],
       "@config/*": ["src/config/*"],
       "@redux/*": ["src/redux/*"],
+      "@guards/*": ["src/guards/*"],
       "@store/*": ["src/store/*"],
       "@plugin/*": ["src/plugin/*"],
       "@api/*": ["src/api/*"],

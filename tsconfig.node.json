@@ -16,6 +16,7 @@
       "@layouts/*": ["src/layouts/*"],
       "@redux/*": ["src/redux/*"],
       "@store/*": ["src/store/*"],
+      "@guards/*": ["src/guards/*"],
       "@plugin/*": ["src/plugin/*"],
       "@api/*": ["src/api/*"],
       "@css/*": ["src/assets/css/*"],

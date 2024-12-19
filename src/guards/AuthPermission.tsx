@@ -1,7 +1,8 @@
-import { Navigate, useLocation } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-// src/guards/AuthenticatedGuard.tsx
-import Cookies from 'js-cookie';
+import { Navigate } from 'react-router-dom'
+import Cookies from 'js-cookie'
+import { toast } from 'react-toastify'
+import React from 'react'
+
 interface User {
   full_name: string
   email: string
@@ -20,52 +21,54 @@ interface AuthPermissionProps {
   allowedRoles?: string[]
 }
 
-export const AuthPermission = ({ children, allowedRoles }: AuthPermissionProps): JSX.Element => {
-  const location = useLocation()
-  const [user, setUser] = useState<User | null>(null)
-
-  useEffect(() => {
-    const userStr = localStorage.getItem('user')
-    if (userStr) {
-      try {
-        const userData = JSON.parse(userStr) as User
-        setUser(userData)
-      } catch (error) {
-        console.error('Failed to parse user data:', error)
-        localStorage.removeItem('user')
-      }
-    }
-  }, [])
+export const AuthPermission = ({
+  children,
+  allowedRoles
+}: AuthPermissionProps): JSX.Element => {
   const token = Cookies.get('accessToken')
 
-  if (token == null || token === '') {
-    debugger
+  if (!token) {
+    toast.error('Bạn cần đăng nhập để truy cập trang này')
     return <Navigate to='/auth/login' replace />
   }
 
-  // Check if user is authenticated
-  // if (!user?.access_token) {
-  //   return <Navigate to="/auth/login" state={{ from: location }} replace />
-  // }
+  const userStr = localStorage.getItem('user')
+  const user: User | null = userStr ? JSON.parse(userStr) : null
 
-  // Check if user has required roles
+  if (!user) {
+    toast.error('Thông tin người dùng không hợp lệ')
+    return <Navigate to='/auth/login' replace />
+  }
+
   if (allowedRoles && allowedRoles.length > 0) {
-    const hasRequiredRole = user?.role.some(role => allowedRoles.includes(role)) ?? false
+    const hasRequiredRole = user.role.some((role) =>
+      allowedRoles.includes(role)
+    )
+
     if (!hasRequiredRole) {
-      // Redirect based on user's highest role
-      if (user?.role.includes('CHUCUAHANG')) {
-        return <Navigate to="/shop-admin" replace />
-      } else if (user?.role.includes('KHACHHANG')) {
-        return <Navigate to="/" replace />
+      if (user.role.includes('CHUCUAHANG')) {
+        toast.warning('Bạn cần là chủ cửa hàng để truy cập trang này')
+        return <Navigate to='/shop-admin' replace />
+      } else if (user.role.includes('KHACHHANG')) {
+        toast.warning('Bạn cần là khách hàng để truy cập trang này')
+        return <Navigate to='/' replace />
+      } else if (user.role.includes('ADMIN')) {
+        toast.warning('Bạn cần là admin để truy cập trang này')
+        return <Navigate to='/' replace />
+      } else if (user.role.includes('ROOT')) {
+        toast.warning('Bạn cần là root để truy cập trang này')
+        return <Navigate to='/' replace />
       }
-      return <Navigate to="/" replace />
+
+      toast.warning('Bạn không có quyền truy cập trang này')
+      return <Navigate to='/' replace />
     }
   }
 
-  // For shop owner routes, check if shop_code exists
-  if (allowedRoles?.includes('CHUCUAHANG') && !user?.shop_code) {
-    return <Navigate to="/" replace />
+  if (allowedRoles?.includes('CHUCUAHANG') && !user.shop_code) {
+    toast.warning('Bạn cần có cửa hàng để truy cập trang này')
+    return <Navigate to='/' replace />
   }
 
   return children
-} 
+}

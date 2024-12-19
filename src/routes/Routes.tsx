@@ -22,7 +22,6 @@ const OrderRoutes = lazy(() => import('../features/Order/routes/OrderRoutes'))
 const CartRoutes = lazy(() => import('../features/Cart/routes/CartRoutes'))
 const ThreadsRoutes = lazy(() => import('../features/Threads/routes/ThreadsRoutes'))
 const ShopAdminRoutes = lazy(() => import('../features/ShopAdmin/routes/ShopAdminRoutes'))
-const VoucherRoutes = lazy(() => import('../features/Voucher/routes/VoucherRoutes'))
 
 const MainRoutes = (): JSX.Element => {
   return (
@@ -34,31 +33,40 @@ const MainRoutes = (): JSX.Element => {
           <Route path='/' element={<LandingPage />} />
           <Route path='/products/*' element={<ProductRoutes />} />
           <Route path='/shop/*' element={<ShopRoutes />} />
-          <Route path='/user/*' element={<UserRoutes />} />
+
           <Route path='/messenger/*' element={<ChatRoutes />} />
           <Route path='/messenger-user/*' element={<ChatRoutesUser />} />
           <Route path='/threads/*' element={<ThreadsRoutes />} />
           <Route path='/cart/*' element={<CartRoutes />} />
           <Route path='/checkout/*' element={<CheckoutRoutes />} />
           <Route path='/order/*' element={<OrderRoutes />} />
-          
+
           {/* Protected routes */}
-          <Route >
-            <Route path='/admin/*' element={
-              // <AuthPermission allowedRoles={['ADMIN']}>
-                <AdminRoutes />
-              // </AuthPermission>
-            } />
-            <Route path='/shop-admin/*' element={
-              // <AuthPermission allowedRoles={['CHUCUAHANG']}>
-                <ShopAdminRoutes />
-              // </AuthPermission>
-            } />
-            <Route path='/*' element={
-              <Suspense fallback={<div>Loading...</div>}>
-                <VoucherRoutes />
-              </Suspense>
-            } />
+          <Route>
+            <Route
+              path='/admin/*'
+              element={
+                <AuthPermission allowedRoles={['ADMIN']}>
+                  <AdminRoutes />
+                </AuthPermission>
+              }
+            />
+            <Route
+              path='/shop-admin/*'
+              element={
+                <AuthPermission allowedRoles={['CHUCUAHANG']}>
+                  <ShopAdminRoutes />
+                </AuthPermission>
+              }
+            />
+            <Route
+              path='/user/*'
+              element={
+                <AuthPermission allowedRoles={['KHACHHANG']}>
+                  <UserRoutes />
+                </AuthPermission>
+              }
+            />
           </Route>
         </Routes>
       </Suspense>

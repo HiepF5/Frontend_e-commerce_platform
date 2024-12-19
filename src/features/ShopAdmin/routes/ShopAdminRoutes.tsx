@@ -13,20 +13,13 @@ const ShopAdminRoutes = (): JSX.Element => {
     <Routes>
       <Route element={<ShopAdminLayout />}>
         <Route index element={<ShopDashboard />} />
-        <Route path="products" element={<ShopProducts />} />
-        <Route path="orders" element={<ShopOrders />} />
-        <Route path="analytics" element={<ShopAnalytics />} />
-        <Route
-                path="vouchers"
-                element={
-                  // <AuthPermission allowedRoles={['CHUCUAHANG']}>
-                    <OwnerVoucherPage />
-                  // </AuthPermission>
-                }
-              />
+        <Route path='products' element={<ShopProducts />} />
+        <Route path='orders' element={<ShopOrders />} />
+        <Route path='analytics' element={<ShopAnalytics />} />
+        <Route path='vouchers' element={<OwnerVoucherPage />} />
       </Route>
     </Routes>
   )
 }
 
-export default ShopAdminRoutes 
+export default ShopAdminRoutes

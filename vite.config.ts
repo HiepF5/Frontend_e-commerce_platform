@@ -28,6 +28,7 @@ export default defineConfig({
       '@layouts': path.resolve(__dirname, './src/layouts'),
       '@config': path.resolve(__dirname, './src/config'),
       '@redux': path.resolve(__dirname, './src/redux'),
+      '@guards': path.resolve(__dirname, './src/guards'),
       '@store': path.resolve(__dirname, './src/store'),
       '@plugin': path.resolve(__dirname, './src/plugin'),
       '@api': path.resolve(__dirname, './src/api'),

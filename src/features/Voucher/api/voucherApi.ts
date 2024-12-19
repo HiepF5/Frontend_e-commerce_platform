@@ -7,7 +7,8 @@ import {
   VoucherUpdateRequest,
   VoucherStatusRequest,
   VoucherCheckRequest,
-  PaginationResponse
+  PaginationResponse,
+  GetCustomerVouchersParams
 } from '../types/voucher'
 import { IBaseResponse } from '~/types/base.interface'
 
@@ -134,16 +135,15 @@ export const voucherApi = createApi({
     }),
 
     // Customer endpoints
-    getCustomerVouchers: builder.query<
-      PaginationResponse<Voucher>,
-      { pageNumber: number; pageSize: number }
-    >({
-      query: (params) => ({
+    getCustomerVouchers: builder.query<IBaseResponse<PaginationResponse<Voucher>>, GetCustomerVouchersParams>({
+      query: (params) => {
+        return {
         url: '/customer/voucher',
         method: 'GET',
-        params
-      }),
-      providesTags: ['Voucher']
+        params,  
+      }
+    },
+      providesTags: ['Voucher'],
     }),
 
     checkSystemVoucher: builder.query<Voucher, void>({

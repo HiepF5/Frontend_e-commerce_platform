@@ -1,20 +1,22 @@
 import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import { AuthPermission } from '~/guards/AuthPermission'
+import LayoutUser from '@features/User/components/LayoutUser'
+import { AuthPermission } from '@guards/AuthPermission'
 
 const CustomerVoucherPage = lazy(() => import('../pages/customer/CustomerVoucherPage'))
 
 const VoucherRoutes = (): JSX.Element => {
   return (
     <Routes>
-      <Route
-        path="/vouchers"
-        element={
-          // <AuthPermission allowedRoles={['KHACHHANG']}>
+      {/* <Route path="/vouchers" >
+        <Route
+          element={
+            <AuthPermission allowedRoles={['KHACHHANG']}>
             <CustomerVoucherPage />
-          // </AuthPermission>
-        }
-      />
+             </AuthPermission>
+          }
+        />
+      </Route> */}
     </Routes>
   )
 }

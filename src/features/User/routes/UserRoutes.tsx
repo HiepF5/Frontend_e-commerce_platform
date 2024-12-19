@@ -7,6 +7,8 @@ import ChangePasswordPage from '../page/ChangePasswordPage'
 import AddressPage from '../page/AddressPage'
 import SubcribeShopPage from '../page/SubcribeShopPage'
 import ManageShopPage from '../page/ManageShopPage'
+import CustomerVoucherPage from '@features/Voucher/pages/customer/CustomerVoucherPage'
+import { AuthPermission } from '@guards/AuthPermission'
 
 const UserRoutes = (): JSX.Element => {
   const routes = [
@@ -42,6 +44,13 @@ const UserRoutes = (): JSX.Element => {
               path: 'manage-shop',
               element: <ManageShopPage />
             },
+            {
+              path: 'vouchers',
+              element: 
+                <AuthPermission allowedRoles={['KHACHHANG']}>
+                          <CustomerVoucherPage />
+                </AuthPermission>
+            }
           ]
         }
       ]

@@ -34,7 +34,7 @@ export const VoucherCard = ({ voucher, onUse }: VoucherCardProps): JSX.Element =
       return `${voucher.discountValue}% off up to ₫${voucher.maxDiscountValue?.toLocaleString()}`
     }
     
-    return `₫${voucher.discountValue.toLocaleString()} off`
+    return `₫${(voucher.discountValue ?? 0).toLocaleString()} off`
   }
 
   const getStatusColor = () => {

@@ -85,3 +85,8 @@ export interface PaginationResponse<T> {
   pageNumber: number
   pageSize: number
 } 
+export interface GetCustomerVouchersParams {
+  type : VoucherType
+  page_number: number;
+  page_size: number;
+}

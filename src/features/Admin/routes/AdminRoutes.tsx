@@ -13,15 +13,10 @@ const AdminRoutes = (): JSX.Element => {
     <Routes>
       <Route element={<AdminLayout />}>
         <Route index element={<Dashboard />} />
-        <Route path="users" element={<UserManagement />} />
-        <Route path="products" element={<ProductManagement />} />
-        <Route path="orders" element={<OrderManagement />} />
-        <Route path="vouchers"element={
-                  // <AuthPermission allowedRoles={['ADMIN']}>
-                    <AdminVoucherPage />
-                  // </AuthPermission>
-                }
-              />
+        <Route path='users' element={<UserManagement />} />
+        <Route path='products' element={<ProductManagement />} />
+        <Route path='orders' element={<OrderManagement />} />
+        <Route path='vouchers' element={<AdminVoucherPage />} />
       </Route>
     </Routes>
   )
