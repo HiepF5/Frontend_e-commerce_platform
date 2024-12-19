@@ -40,11 +40,11 @@ const defaultFilters = {
   sort: null
 }
 interface VoucherManagementProps {
-  useListAdminDashboardMutation: any
+  useGetDashboardMutation: any
   role: UserRole
 }
 export const VoucherManagement = ({
-  useListAdminDashboardMutation,
+  useGetDashboardMutation,
   role
 }: VoucherManagementProps) => {
   const [page, setPage] = useState(1)
@@ -55,16 +55,16 @@ export const VoucherManagement = ({
     ? JSON.parse(localStorage.getItem('user') || '{}')
     : null
   const [filters, setFilters] = useState<{ search?: string }>({})
-  const [listAdminDashboard, { data, isLoading }, ] = useListAdminDashboardMutation()
+  const [listDashboard, { data, isLoading }] = useGetDashboardMutation()
   useEffect(() => {
-    listAdminDashboard({
+    listDashboard({
       pageNumber: page,
       pageSize: 10,
       voucherCode: search || null,
       ...defaultFilters,
       ...filters
     })
-  }, [listAdminDashboard, page, search, filters])
+  }, [listDashboard, page, search, filters])
   const paginationData = {
     totalAmount: data?.data?.totalAmount || 0,
     totalPage: data?.data?.totalPage || 0,
@@ -112,7 +112,7 @@ export const VoucherManagement = ({
   const [changeStatus] = mutations.statusMutation()
 
   const refreshDashboard = async () => {
-    await listAdminDashboard({
+    await listDashboard({
       pageNumber: page,
       pageSize: 10,
       voucherCode: search || null,

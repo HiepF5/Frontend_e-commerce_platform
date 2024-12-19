@@ -4,7 +4,7 @@ import { VoucherManagement } from '../../components/VoucherManagement'
 const AdminVoucherPage = (): JSX.Element => {
   return (
     <VoucherManagement
-      useListAdminDashboardMutation={useListAdminDashboardMutation}
+      useGetDashboardMutation={useListAdminDashboardMutation}
       role='QUANLY'
     />
   )

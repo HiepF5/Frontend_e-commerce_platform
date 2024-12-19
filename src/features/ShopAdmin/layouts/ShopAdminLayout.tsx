@@ -1,7 +1,6 @@
 import { Box, CssBaseline, Drawer, AppBar, Toolbar, Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import { Dashboard, Inventory, LocalShipping, Analytics, LocalOffer } from '@mui/icons-material'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { PATHS } from '@/config/constants/paths'
 
 const drawerWidth = 240
 
@@ -16,7 +15,7 @@ const ShopAdminLayout = (): JSX.Element => {
     {
       text: 'Vouchers',
       icon: <LocalOffer />,
-      path: PATHS.VOUCHER.OWNER
+      path: '/shop-admin/vouchers'
     }
   ]
 

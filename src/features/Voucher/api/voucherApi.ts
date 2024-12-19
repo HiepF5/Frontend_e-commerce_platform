@@ -17,19 +17,25 @@ export const voucherApi = createApi({
   tagTypes: ['Voucher'],
   endpoints: (builder) => ({
     // Admin endpoints
-    listAdminDashboard: builder.mutation<IBaseResponse<PaginationResponse<Voucher>>, VoucherDashboardRequest>({
+    listAdminDashboard: builder.mutation<
+      IBaseResponse<PaginationResponse<Voucher>>,
+      VoucherDashboardRequest
+    >({
       query: (data) => ({
         url: '/admin/voucher/dashboard',
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        data,
+        data
       }),
-      invalidatesTags: ['Voucher'],
+      invalidatesTags: ['Voucher']
     }),
 
-    createAdminVoucher: builder.mutation<IBaseResponse<Voucher>, VoucherCreateRequest>({
+    createAdminVoucher: builder.mutation<
+      IBaseResponse<Voucher>,
+      VoucherCreateRequest
+    >({
       query: (data) => ({
         url: '/admin/voucher',
         method: 'POST',
@@ -38,69 +44,92 @@ export const voucherApi = createApi({
       invalidatesTags: ['Voucher']
     }),
 
-    updateAdminVoucher: builder.mutation<IBaseResponse<Voucher>, VoucherUpdateRequest>({
+    updateAdminVoucher: builder.mutation<
+      IBaseResponse<Voucher>,
+      VoucherUpdateRequest
+    >({
       query: (data) => ({
         url: '/admin/voucher',
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         data
       }),
       invalidatesTags: ['Voucher']
     }),
 
-    changeAdminVoucherStatus: builder.mutation<IBaseResponse<Voucher>, VoucherStatusRequest>({
+    changeAdminVoucherStatus: builder.mutation<
+      IBaseResponse<Voucher>,
+      VoucherStatusRequest
+    >({
       query: ({ voucherCode, status }) => {
-        const formData = new FormData();
-        formData.append('voucher_code', voucherCode);
-        formData.append('status', status);
+        const formData = new FormData()
+        formData.append('voucher_code', voucherCode)
+        formData.append('status', status)
         return {
-            url: '/admin/voucher/status',
-            method: 'PUT',
-            data: formData
-          };
+          url: '/admin/voucher/status',
+          method: 'PUT',
+          data: formData
+        }
       },
       invalidatesTags: ['Voucher']
     }),
 
     // Owner endpoints
-    listOwnerDashboard: builder.query<
-      PaginationResponse<Voucher>,
+    listOwnerDashboard: builder.mutation<
+      IBaseResponse<PaginationResponse<Voucher>>,
       VoucherDashboardRequest
     >({
-      query: (params) => ({
+      query: (data) => ({
         url: '/owner/voucher/dashboard',
-        method: 'GET',
-        params
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        data
       }),
-      providesTags: ['Voucher']
+      invalidatesTags: ['Voucher']
     }),
 
-    createOwnerVoucher: builder.mutation<void, VoucherCreateRequest>({
+    createOwnerVoucher: builder.mutation<
+      IBaseResponse<Voucher>,
+      VoucherCreateRequest
+    >({
       query: (data) => ({
         url: '/owner/voucher',
         method: 'POST',
-        body: data
+        data
       }),
       invalidatesTags: ['Voucher']
     }),
 
-    updateOwnerVoucher: builder.mutation<void, VoucherUpdateRequest>({
+    updateOwnerVoucher: builder.mutation<
+      IBaseResponse<Voucher>,
+      VoucherUpdateRequest
+    >({
       query: (data) => ({
         url: '/owner/voucher',
         method: 'PUT',
-        body: data
+        data
       }),
       invalidatesTags: ['Voucher']
     }),
 
-    changeOwnerVoucherStatus: builder.mutation<void, VoucherStatusRequest>({
-      query: ({ voucherCode, status }) => ({
-        url: '/owner/voucher/status',
-        method: 'PUT',
-        body: { voucherCode, status }
-      }),
+    changeOwnerVoucherStatus: builder.mutation<
+      IBaseResponse<Voucher>,
+      VoucherStatusRequest
+    >({
+      query: ({ voucherCode, status }) => {
+        const formData = new FormData()
+        formData.append('voucher_code', voucherCode)
+        formData.append('status', status)
+        return {
+          url: '/owner/voucher/status',
+          method: 'PUT',
+          data: formData
+        }
+      },
       invalidatesTags: ['Voucher']
     }),
 
@@ -147,7 +176,7 @@ export const {
   useCreateAdminVoucherMutation,
   useUpdateAdminVoucherMutation,
   useChangeAdminVoucherStatusMutation,
-  useListOwnerDashboardQuery,
+  useListOwnerDashboardMutation,
   useCreateOwnerVoucherMutation,
   useUpdateOwnerVoucherMutation,
   useChangeOwnerVoucherStatusMutation,
