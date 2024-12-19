@@ -2,7 +2,6 @@ import { lazy } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { AuthPermission } from '~/guards/AuthPermission'
 
-const AdminVoucherPage = lazy(() => import('../pages/admin/AdminVoucherPage'))
 const OwnerVoucherPage = lazy(() => import('../pages/owner/OwnerVoucherPage'))
 const CustomerVoucherPage = lazy(() => import('../pages/customer/CustomerVoucherPage'))
 

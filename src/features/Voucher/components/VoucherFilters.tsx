@@ -30,18 +30,19 @@ export const VoucherFilters = ({
 }: VoucherFiltersProps) => {
   const [expanded, setExpanded] = useState(false)
   const [filters, setFilters] = useState({
-    search: '',
-    status: '',
-    startDate: null as Date | null,
-    endDate: null as Date | null,
-    type: '',
-    discountType: ''
+    voucherCode: null as string | null,
+    status: null as string | null,
+    startSt: null as Date | null,
+    startEd: null as Date | null,
+    type: null as string | null,
+    discountType: null as string | null
   })
 
   const handleFilterChange = (field: string, value: any) => {
+    const newValue = value === '' ? null : value
     const newFilters = {
       ...filters,
-      [field]: value
+      [field]: newValue
     }
     setFilters(newFilters)
     onFilterChange?.(newFilters)
@@ -50,12 +51,12 @@ export const VoucherFilters = ({
 
   const handleReset = () => {
     setFilters({
-      search: '',
-      status: '',
-      startDate: null,
-      endDate: null,
-      type: '',
-      discountType: ''
+      voucherCode: null,
+      status: null,
+      startSt: null,
+      startEd: null,
+      type: null,
+      discountType: null
     })
     onFilterChange?.({})
     onPageChange(1)
@@ -66,11 +67,11 @@ export const VoucherFilters = ({
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           <FilterIcon />
-          <Typography variant="h6">Filters</Typography>
+          <Typography variant='h6'>Filters</Typography>
         </Box>
         <Box>
           <Button
-            variant="outlined"
+            variant='outlined'
             onClick={() => setExpanded(!expanded)}
             startIcon={<FilterIcon />}
           >
@@ -87,10 +88,10 @@ export const VoucherFilters = ({
           <Grid item xs={12} md={4}>
             <TextField
               fullWidth
-              label="Search"
-              value={filters.search}
+              label='Search'
+              value={filters.voucherCode}
               onChange={(e) => {
-                handleFilterChange('search', e.target.value)
+                handleFilterChange('voucherCode', e.target.value)
                 onSearch(e.target.value)
               }}
             />
@@ -103,10 +104,12 @@ export const VoucherFilters = ({
                 value={filters.status}
                 onChange={(e) => handleFilterChange('status', e.target.value)}
               >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="ENABLE">Active</MenuItem>
-                <MenuItem value="DISABLE">Inactive</MenuItem>
-                <MenuItem value="EXPIRED">Expired</MenuItem>
+                <MenuItem value=''>All</MenuItem>
+                <MenuItem value='ENABLE'>ENABLE</MenuItem>
+                <MenuItem value='DISABLE'>DISABLE</MenuItem>
+                <MenuItem value='EXPIRED'>EXPIRED</MenuItem>
+                <MenuItem value='WAIT'>WAIT</MenuItem>
+                <MenuItem value='DELETED'>DELETED</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -118,9 +121,9 @@ export const VoucherFilters = ({
                 value={filters.type}
                 onChange={(e) => handleFilterChange('type', e.target.value)}
               >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="DISCOUNT">Discount</MenuItem>
-                <MenuItem value="SHIPPING">Shipping</MenuItem>
+                <MenuItem value=''>All</MenuItem>
+                <MenuItem value='DISCOUNT'>Discount</MenuItem>
+                <MenuItem value='SHIPPING'>Shipping</MenuItem>
               </Select>
             </FormControl>
           </Grid>
@@ -130,38 +133,36 @@ export const VoucherFilters = ({
               <InputLabel>Discount Type</InputLabel>
               <Select
                 value={filters.discountType}
-                onChange={(e) => handleFilterChange('discountType', e.target.value)}
+                onChange={(e) =>
+                  handleFilterChange('discountType', e.target.value)
+                }
               >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="PERCENT">Percentage</MenuItem>
-                <MenuItem value="AMOUNT">Fixed Amount</MenuItem>
+                <MenuItem value=''>All</MenuItem>
+                <MenuItem value='PERCENT'>Percentage</MenuItem>
+                <MenuItem value='AMOUNT'>Fixed Amount</MenuItem>
               </Select>
             </FormControl>
           </Grid>
 
           <Grid item xs={12} md={4}>
             <DatePicker
-              selected={filters.startDate}
+              selected={filters.startSt}
               onChange={(date) => handleFilterChange('startDate', date)}
-              placeholderText="Start Date"
-              dateFormat="yyyy-MM-dd"
+              placeholderText='Start Date'
+              dateFormat='yyyy-MM-dd'
               isClearable
-              customInput={
-                <TextField fullWidth label="Start Date" />
-              }
+              customInput={<TextField fullWidth label='Start Date' />}
             />
           </Grid>
 
           <Grid item xs={12} md={4}>
             <DatePicker
-              selected={filters.endDate}
+              selected={filters.startEd}
               onChange={(date) => handleFilterChange('endDate', date)}
-              placeholderText="End Date"
-              dateFormat="yyyy-MM-dd"
+              placeholderText='End Date'
+              dateFormat='yyyy-MM-dd'
               isClearable
-              customInput={
-                <TextField fullWidth label="End Date" />
-              }
+              customInput={<TextField fullWidth label='End Date' />}
             />
           </Grid>
         </Grid>

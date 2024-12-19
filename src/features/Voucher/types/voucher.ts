@@ -1,6 +1,6 @@
 export type VoucherType = 'DISCOUNT' | 'SHIPPING'
 export type DiscountType = 'PERCENT' | 'AMOUNT'
-export type VoucherStatus = 'ENABLE' | 'DISABLE' | 'EXPIRED'
+export type VoucherStatus = 'ENABLE' | 'DISABLE' | 'EXPIRED' |'WAIT' |'DELETED'
 
 export interface Voucher {
   id : number
@@ -10,7 +10,7 @@ export interface Voucher {
   title: string
   voucherCount: number
   remainingCount: number
-  discountValue: number
+  discountValue?: number
   maxDiscountValue?: number
   minTotalOrder: number
   shippingDiscount?: number
@@ -52,10 +52,19 @@ export interface VoucherCreateRequest {
 }
 
 export interface VoucherUpdateRequest {
+  type: VoucherType
+  discountType: DiscountType
   voucherCode: string
+  title: string
+  voucherCount: number
+  remainingCount: number
+  discountValue: number
+  maxDiscountValue?: number
+  minTotalOrder: number
+  shippingDiscount?: number
+  maxShippingDiscount?: number
   startedAt: string
   expiredAt: string
-  status: VoucherStatus
 }
 
 export interface VoucherStatusRequest {

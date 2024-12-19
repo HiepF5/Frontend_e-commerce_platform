@@ -17,47 +17,55 @@ export const voucherApi = createApi({
   tagTypes: ['Voucher'],
   endpoints: (builder) => ({
     // Admin endpoints
-    getAdminDashboard: builder.mutation<IBaseResponse<PaginationResponse<Voucher>>, VoucherDashboardRequest>({
+    listAdminDashboard: builder.mutation<IBaseResponse<PaginationResponse<Voucher>>, VoucherDashboardRequest>({
       query: (data) => ({
         url: '/admin/voucher/dashboard',
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: data,
+        data,
       }),
       invalidatesTags: ['Voucher'],
     }),
 
-    createAdminVoucher: builder.mutation<void, VoucherCreateRequest>({
+    createAdminVoucher: builder.mutation<IBaseResponse<Voucher>, VoucherCreateRequest>({
       query: (data) => ({
         url: '/admin/voucher',
         method: 'POST',
-        body: data
+        data
       }),
       invalidatesTags: ['Voucher']
     }),
 
-    updateAdminVoucher: builder.mutation<void, VoucherUpdateRequest>({
+    updateAdminVoucher: builder.mutation<IBaseResponse<Voucher>, VoucherUpdateRequest>({
       query: (data) => ({
         url: '/admin/voucher',
         method: 'PUT',
-        body: data
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        data
       }),
       invalidatesTags: ['Voucher']
     }),
 
-    changeAdminVoucherStatus: builder.mutation<void, VoucherStatusRequest>({
-      query: ({ voucherCode, status }) => ({
-        url: '/admin/voucher/status',
-        method: 'PUT',
-        body: { voucherCode, status }
-      }),
+    changeAdminVoucherStatus: builder.mutation<IBaseResponse<Voucher>, VoucherStatusRequest>({
+      query: ({ voucherCode, status }) => {
+        const formData = new FormData();
+        formData.append('voucher_code', voucherCode);
+        formData.append('status', status);
+        return {
+            url: '/admin/voucher/status',
+            method: 'PUT',
+            data: formData
+          };
+      },
       invalidatesTags: ['Voucher']
     }),
 
     // Owner endpoints
-    getOwnerDashboard: builder.query<
+    listOwnerDashboard: builder.query<
       PaginationResponse<Voucher>,
       VoucherDashboardRequest
     >({
@@ -135,11 +143,11 @@ export const voucherApi = createApi({
 })
 
 export const {
-  useGetAdminDashboardMutation,
+  useListAdminDashboardMutation,
   useCreateAdminVoucherMutation,
   useUpdateAdminVoucherMutation,
   useChangeAdminVoucherStatusMutation,
-  useGetOwnerDashboardQuery,
+  useListOwnerDashboardQuery,
   useCreateOwnerVoucherMutation,
   useUpdateOwnerVoucherMutation,
   useChangeOwnerVoucherStatusMutation,

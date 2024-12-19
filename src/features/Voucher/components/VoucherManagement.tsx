@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -12,10 +12,14 @@ import {
 import { Add as AddIcon } from '@mui/icons-material'
 import { VoucherTable } from './VoucherTable'
 import { VoucherForm } from './VoucherForm'
-import { useAppSelector } from '@store/hook'
 import { ROLES } from '@config/constants/roles'
 import type { UserRole } from '@config/constants/roles'
-import type { Voucher, VoucherCreateRequest, VoucherStatus } from '../types/voucher'
+import type {
+  Voucher,
+  VoucherCreateRequest,
+  VoucherStatus,
+  VoucherUpdateRequest
+} from '../types/voucher'
 import { VoucherFilters } from './VoucherFilters'
 import {
   useChangeAdminVoucherStatusMutation,
@@ -25,11 +29,6 @@ import {
   useUpdateAdminVoucherMutation,
   useUpdateOwnerVoucherMutation
 } from '../api/voucherApi'
-
-interface VoucherManagementProps {
-  useGetDashboardMutation: any
-  role: UserRole
-}
 const defaultFilters = {
   type: null,
   discountType: null,
@@ -40,41 +39,60 @@ const defaultFilters = {
   expiryEd: null,
   sort: null
 }
+interface VoucherManagementProps {
+  useListAdminDashboardMutation: any
+  role: UserRole
+}
 export const VoucherManagement = ({
-  useGetDashboardMutation,
+  useListAdminDashboardMutation,
   role
 }: VoucherManagementProps) => {
   const [page, setPage] = useState(1)
   const [search, setSearch] = useState('')
   const [formOpen, setFormOpen] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const { user } = useAppSelector((state) => state.auth)
-  const [filters, setFilters] = useState({})
-
-  const { data, isLoading } = useGetDashboardMutation({
-    pageNumber: page,
-    pageSize: 10,
-    voucherCode: search || null,
-    ...defaultFilters,
-    ...filters
-  })
-  const requestData = {
-    pageNumber: page,
-    pageSize: 10,
-    voucherCode: search || null,
-    ...defaultFilters,
-    ...filters
+  const user = localStorage.getItem('user')
+    ? JSON.parse(localStorage.getItem('user') || '{}')
+    : null
+  const [filters, setFilters] = useState<{ search?: string }>({})
+  const [listAdminDashboard, { data, isLoading }, ] = useListAdminDashboardMutation()
+  useEffect(() => {
+    listAdminDashboard({
+      pageNumber: page,
+      pageSize: 10,
+      voucherCode: search || null,
+      ...defaultFilters,
+      ...filters
+    })
+  }, [listAdminDashboard, page, search, filters])
+  const paginationData = {
+    totalAmount: data?.data?.totalAmount || 0,
+    totalPage: data?.data?.totalPage || 0,
+    pageNumber: data?.data?.pageNumber || 0,
+    pageSize: data?.data?.pageSize || 0
   }
+
+  // Dữ liệu bảng
+  const dataTable =
+    data?.data?.data.map((item: Voucher) => ({
+      id: item.id,
+      voucherCode: item.voucherCode,
+      title: item.title,
+      type: item.type,
+      discountType: item.discountType,
+      discountValue: item.discountValue,
+      maxDiscountValue: item.maxDiscountValue,
+      shippingDiscount : item.shippingDiscount,
+      maxShippingDiscount: item.maxShippingDiscount,
+      minTotalOrder: item.minTotalOrder,
+      startedAt: item.startedAt,
+      expiredAt: item.expiredAt,
+      status: item.status
+    })) || []
+    console.log(dataTable)
   if (error) {
     console.error('Error:', error)
   }
-
-  // Log dữ liệu trước khi gửi
-  console.log('Request Data:', requestData)
-
-  console.log(page)
-  console.log('Filters:', filters)
-  console.log(data)
 
   const mutations =
     role === ROLES.QUANLY
@@ -93,27 +111,51 @@ export const VoucherManagement = ({
   const [updateVoucher] = mutations.updateMutation()
   const [changeStatus] = mutations.statusMutation()
 
+  const refreshDashboard = async () => {
+    await listAdminDashboard({
+      pageNumber: page,
+      pageSize: 10,
+      voucherCode: search || null,
+      ...filters
+    })
+  }
+
   const handleCreateVoucher = async (formData: VoucherCreateRequest) => {
     try {
       await createVoucher(formData).unwrap()
       setFormOpen(false)
       setError(null)
+      await refreshDashboard()
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create voucher')
     }
   }
 
-  const handleUpdateStatus = async (
-    voucherCode: string,
-    status: VoucherStatus
-  ) => {
+  const handleStatusChange = async (voucherCode: string, status: VoucherStatus) => {
     try {
+      const formData = new FormData();
+      formData.append('voucher_code', voucherCode);
+      formData.append('status', status);
+
       await changeStatus({ voucherCode, status }).unwrap()
-      setError(null)
+      await refreshDashboard()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to update status')
+      setError(err instanceof Error ? err.message : 'Failed to change status')
     }
   }
+
+  const handleUpdateVoucher = async (data: VoucherUpdateRequest) => {
+    try {
+      await updateVoucher(data).unwrap()
+      setFormOpen(false)
+      setError(null)
+      await refreshDashboard()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to update voucher')
+    }
+  }
+
+  console.log(user)
 
   if (!user || (role === ROLES.CHUCUAHANG && !user.shop_code)) {
     return (
@@ -169,20 +211,28 @@ export const VoucherManagement = ({
       />
 
       <VoucherTable
-        vouchers={data?.content || []}
-        onStatusChange={handleUpdateStatus}
+        vouchers={dataTable}
+        onStatusChange={handleStatusChange}
         role={role}
-        page={0}
-        totalPages={0}
-        onPageChange={function (page: number): void {
-          throw new Error('Function not implemented.')
-        }}
-        onEdit={function (voucher: Voucher): void {
-          throw new Error('Function not implemented.')
-        }}
-        onDelete={function (voucherCode: string): void {
-          throw new Error('Function not implemented.')
-        }}
+        page={paginationData.pageNumber}
+        totalPages={paginationData.totalPage}
+        onPageChange={setPage}
+        onEdit={(voucher: Voucher) => handleUpdateVoucher({
+          voucherCode: voucher.voucherCode,
+          title: voucher.title,
+          type: voucher.type,
+          discountType: voucher.discountType,
+          discountValue: voucher.discountValue || 0,
+          maxDiscountValue: voucher.maxDiscountValue,
+          shippingDiscount: voucher.shippingDiscount,
+          maxShippingDiscount: voucher.maxShippingDiscount,
+          minTotalOrder: voucher.minTotalOrder,
+          startedAt: voucher.startedAt,
+          expiredAt: voucher.expiredAt,
+          voucherCount: 0,
+          remainingCount: 0
+        })}
+        onDelete={(voucher) => console.log('Delete voucher', voucher)}
       />
 
       <VoucherForm
