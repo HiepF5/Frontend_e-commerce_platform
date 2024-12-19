@@ -1,5 +1,5 @@
 import { Box, CssBaseline, Drawer, AppBar, Toolbar, Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
-import { Dashboard, People, ShoppingCart, LocalShipping } from '@mui/icons-material'
+import { Dashboard, People, ShoppingCart, LocalShipping, LocalOffer } from '@mui/icons-material'
 import { Outlet, useNavigate } from 'react-router-dom'
 
 const drawerWidth = 240
@@ -11,7 +11,8 @@ const AdminLayout = (): JSX.Element => {
     { text: 'Dashboard', icon: <Dashboard />, path: '/admin' },
     { text: 'Users', icon: <People />, path: '/admin/users' },
     { text: 'Products', icon: <ShoppingCart />, path: '/admin/products' },
-    { text: 'Orders', icon: <LocalShipping />, path: '/admin/orders' }
+    { text: 'Orders', icon: <LocalShipping />, path: '/admin/orders' },
+    { text: 'Vouchers', icon: <LocalOffer />, path: '/admin/vouchers' }
   ]
 
   return (

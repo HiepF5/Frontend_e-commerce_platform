@@ -8,7 +8,7 @@ const NavbarLogin = () => {
     <div className='container py-4 border-b-2 border-solid'>
       <div className='flex justify-around items-center'>
         <div className=''>
-          <img className='' src={Logo} alt='' />
+          {/* <img className='' src={Logo} alt='' /> */}
         </div>
 
         <div className='relative group hidden sm:block'>

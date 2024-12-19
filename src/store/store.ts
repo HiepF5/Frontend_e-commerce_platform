@@ -17,6 +17,7 @@ import { chatMessageUser } from '@features/Messenger/service/chatMessageUser'
 import { productApi } from '@features/Products/api/productApi'
 import { orderApi } from '../features/ShopAdmin/store/orderApi'
 import { analyticsApi } from '../features/ShopAdmin/store/analyticsApi'
+import { voucherApi } from '../features/Voucher/api/voucherApi'
 
 export const store = configureStore({
   reducer: {
@@ -36,6 +37,7 @@ export const store = configureStore({
     [productApi.reducerPath]: productApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [analyticsApi.reducerPath]: analyticsApi.reducer,
+    [voucherApi.reducerPath]: voucherApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -44,7 +46,8 @@ export const store = configureStore({
       chatMessageUser.middleware,
       productApi.middleware,
       orderApi.middleware,
-      analyticsApi.middleware
+      analyticsApi.middleware,
+      voucherApi.middleware
     )
 })
 setupListeners(store.dispatch)

@@ -16,13 +16,13 @@ interface ReviewImage {
 }
 
 const reviewImages: ReviewImage[] = [
-  { id: '1', url: '/placeholder.svg?height=100&width=100' },
-  { id: '2', url: '/placeholder.svg?height=100&width=100' },
-  { id: '3', url: '/placeholder.svg?height=100&width=100' },
-  { id: '4', url: '/placeholder.svg?height=100&width=100' },
-  { id: '5', url: '/placeholder.svg?height=100&width=100' },
-  { id: '6', url: '/placeholder.svg?height=100&width=100' },
-  { id: '7', url: '/placeholder.svg?height=100&width=100' }
+  { id: '1', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/1.jpg?raw=true' },
+  { id: '2', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true' },
+  { id: '3', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true' },
+  { id: '4', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true' },
+  { id: '5', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/5.jpg?raw=true' },
+  { id: '6', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/1.jpg?raw=true' },
+  { id: '7', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true' }
 ]
 
 export default function Reviews() {

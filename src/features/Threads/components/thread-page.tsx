@@ -61,7 +61,10 @@ export default function ThreadPage() {
         author: `User ${index}`,
         avatar: '/placeholder.svg',
         content: `This is post number ${posts.length + index + 1}`,
-        image: index % 2 === 0 ? '/placeholder.svg' : undefined,
+        image:
+          index % 2 === 0
+            ? 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQMylYQp1Y5ctCDu1dcP6quswN3FahbmX7Y4g&s'
+            : undefined,
         timestamp: 'Just now',
         reactions: [
           { type: 'like', count: Math.floor(Math.random() * 10) },

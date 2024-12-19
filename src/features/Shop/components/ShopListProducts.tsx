@@ -31,7 +31,8 @@ export const products: Product[] = [
     discount: '-44%',
     sold: '3,6k',
     rating: 4.8,
-    imgUrl: 'https://link-to-image1.com'
+    imgUrl:
+      'https://down-vn.img.susercontent.com/file/89261ae1ea32cb8fb5259585d4a60393'
   },
   {
     id: 2,
@@ -40,7 +41,8 @@ export const products: Product[] = [
     discount: '-30%',
     sold: '798',
     rating: 4.8,
-    imgUrl: 'https://link-to-image2.com'
+    imgUrl:
+      'https://quaviet365.vn/huc/fitting-350-350-100/20230810/day-deo-the-1-20230810153950851.jpg'
   }
   // thêm các sản phẩm khác
 ]

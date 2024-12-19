@@ -53,14 +53,14 @@ export default function ProductDisplay({ product }: { product: Product }) {
                 <Box
                   key={i}
                   component='img'
-                  src='/placeholder.svg?height=100&width=100'
+                  src='https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true'
                   sx={{ width: 100, height: 100, objectFit: 'cover' }}
                 />
               ))}
             </Box>
             <Box
               component='img'
-              src='/placeholder.svg?height=400&width=400'
+              src='https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true'
               sx={{ width: 400, height: 400, objectFit: 'cover' }}
             />
           </Box>
@@ -169,14 +169,24 @@ export default function ProductDisplay({ product }: { product: Product }) {
               </Box>
             </Box>
 
-            <Button
-              variant='contained'
-              color='error'
-              size='large'
-              sx={{ mt: 3 }}
-            >
-              MUA NGAY
-            </Button>
+            <div style={{ display: 'flex', gap: 2 }}>
+              <Button
+                variant='contained'
+                color='error'
+                size='large'
+                sx={{ mt: 3 }}
+              >
+                MUA NGAY
+              </Button>
+              <Button
+                variant='contained'
+                color='error'
+                size='large'
+                sx={{ mt: 3 }}
+              >
+                Thêm vào giỏ hàng
+              </Button>
+            </div>
           </Box>
         </Grid>
       </Grid>

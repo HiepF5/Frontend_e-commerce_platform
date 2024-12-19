@@ -48,3 +48,12 @@ export const MenuDropdownLinks = [
     link: '/products/top-rated'
   }
 ]
+
+export const PATHS = {
+  // ... other paths
+  VOUCHER: {
+    ADMIN: 'admin/vouchers',
+    OWNER: 'shop-admin/vouchers',
+    CUSTOMER: 'vouchers'
+  }
+} as const

@@ -6,6 +6,7 @@ const Dashboard = lazy(() => import('../pages/Dashboard'))
 const UserManagement = lazy(() => import('../pages/UserManagement'))
 const ProductManagement = lazy(() => import('../pages/ProductManagement'))
 const OrderManagement = lazy(() => import('../pages/OrderManagement'))
+import AdminVoucherPage from '@features/Voucher/pages/admin/AdminVoucherPage'
 
 const AdminRoutes = (): JSX.Element => {
   return (
@@ -15,6 +16,12 @@ const AdminRoutes = (): JSX.Element => {
         <Route path="users" element={<UserManagement />} />
         <Route path="products" element={<ProductManagement />} />
         <Route path="orders" element={<OrderManagement />} />
+        <Route path="vouchers"element={
+                  // <AuthPermission allowedRoles={['ADMIN']}>
+                    <AdminVoucherPage />
+                  // </AuthPermission>
+                }
+              />
       </Route>
     </Routes>
   )

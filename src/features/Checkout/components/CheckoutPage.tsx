@@ -81,7 +81,7 @@ export default function CheckoutPage() {
         <Grid container spacing={2}>
           <Grid item xs={2}>
             <img
-              src='/placeholder.svg'
+              src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScovp9IXbIMLfrSbItfft0WiaROGRpt32Tug&s'
               alt='Product'
               style={{ width: '100%', height: 'auto' }}
             />

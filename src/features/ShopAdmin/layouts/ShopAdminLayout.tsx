@@ -1,6 +1,7 @@
 import { Box, CssBaseline, Drawer, AppBar, Toolbar, Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
-import { Dashboard, Inventory, LocalShipping, Analytics } from '@mui/icons-material'
+import { Dashboard, Inventory, LocalShipping, Analytics, LocalOffer } from '@mui/icons-material'
 import { Outlet, useNavigate } from 'react-router-dom'
+import { PATHS } from '@/config/constants/paths'
 
 const drawerWidth = 240
 
@@ -11,7 +12,12 @@ const ShopAdminLayout = (): JSX.Element => {
     { text: 'Dashboard', icon: <Dashboard />, path: '/shop-admin' },
     { text: 'Products', icon: <Inventory />, path: '/shop-admin/products' },
     { text: 'Orders', icon: <LocalShipping />, path: '/shop-admin/orders' },
-    { text: 'Analytics', icon: <Analytics />, path: '/shop-admin/analytics' }
+    { text: 'Analytics', icon: <Analytics />, path: '/shop-admin/analytics' },
+    {
+      text: 'Vouchers',
+      icon: <LocalOffer />,
+      path: PATHS.VOUCHER.OWNER
+    }
   ]
 
   return (

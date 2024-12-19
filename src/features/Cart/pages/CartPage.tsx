@@ -19,7 +19,8 @@ const mockProducts = [
   {
     id: '1',
     name: 'Samsung Galaxy A06 4GB 128GB Đen SM-A065',
-    image: '/placeholder.svg?height=80&width=80',
+    image:
+      'https://cdn.tgdd.vn/Products/Images/42/328751/samsung-galaxy-a06-black-thumb-600x600.jpg',
     price: 3190000,
     originalPrice: 3490000,
     colors: [{ name: 'Đen', value: 'black' }],
@@ -47,7 +48,8 @@ const mockProducts = [
   {
     id: '2',
     name: 'Macbook Air 13 M2 2024 8CPU/8GPU/16GB/256GB Xám MC7U4SA/A',
-    image: '/placeholder.svg?height=80&width=80',
+    image:
+      'https://cdn2.fptshop.com.vn/unsafe/384x0/filters:quality(100)/macbook_air_13_m2_space_gray_1_838001a645.png',
     price: 24490000,
     originalPrice: 24990000,
     colors: [{ name: 'Xám', value: 'gray' }],
