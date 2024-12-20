@@ -3,6 +3,7 @@ import { useRoutes } from 'react-router-dom'
 import LayoutPage from '@layouts/LayoutPage'
 import ProductsList from '../pages/ProductsList'
 import ProductDetail from '../pages/ProductDetail'
+
 const ProductRoutes = (): JSX.Element => {
   const routes = [
     {

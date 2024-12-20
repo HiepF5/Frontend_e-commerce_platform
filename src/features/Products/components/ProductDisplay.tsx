@@ -1,45 +1,68 @@
-'use client'
-
 import * as React from 'react'
 import {
   Box,
   Button,
-  Chip,
   Container,
   Grid,
   Rating,
   Typography,
   ToggleButton,
-  ToggleButtonGroup
+  ToggleButtonGroup,
+  Divider,
+  IconButton
 } from '@mui/material'
+import { IProductData } from '../types/products.interface'
+import { ChevronLeft, ChevronRight } from '@mui/icons-material'
 
-interface Product {
-  name: string;
-  rating: number;
-  ratings: number;
-  reviews: number;
-  price: number;
-  originalPrice: number;
-  storage: { size: string }[];
-  colors: { value: string; name: string }[];
-  specs: {
-    chip: string;
-    screenSize: string;
-    battery: string;
-  };
+interface ProductDetailProps {
+  product?: IProductData
 }
 
-export default function ProductDisplay({ product }: { product: Product }) {
-  const [selectedColor, setSelectedColor] = React.useState(
-    product.colors[0].value
+export default function ProductDisplay({ product }: ProductDetailProps) {
+  if (!product) return null
+
+  const [selectedImage, setSelectedImage] = React.useState(0)
+  const [selectedVariant, setSelectedVariant] = React.useState<number | null>(
+    null
   )
-  const [selectedStorage, setSelectedStorage] = React.useState('128 GB')
+
+  // Add fake images to the product's image list
+  const fakeImages = [
+    'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
+    'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true',
+    'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true'
+  ]
+  const images = [...product.listImg, ...fakeImages]
+
+  // Group variants by attribute name
+  const variantGroups = product.productVariant.reduce(
+    (groups: any, variant) => {
+      variant.attribute.forEach((attr) => {
+        if (!groups[attr.name]) {
+          groups[attr.name] = []
+        }
+        if (!groups[attr.name].includes(attr.value)) {
+          groups[attr.name].push(attr.value)
+        }
+      })
+      return groups
+    },
+    {}
+  )
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
-      style: 'decimal',
-      maximumFractionDigits: 0
+      style: 'currency',
+      currency: 'VND'
     }).format(price)
+  }
+
+  const handlePrevImage = () => {
+    setSelectedImage((prev) => (prev === 0 ? images.length - 1 : prev - 1))
+  }
+
+  const handleNextImage = () => {
+    setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1))
   }
 
   return (
@@ -47,146 +70,206 @@ export default function ProductDisplay({ product }: { product: Product }) {
       <Grid container spacing={4}>
         {/* Left side - Images */}
         <Grid item xs={12} md={6}>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-              {[1, 2, 3, 4].map((i) => (
-                <Box
-                  key={i}
-                  component='img'
-                  src='https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true'
-                  sx={{ width: 100, height: 100, objectFit: 'cover' }}
-                />
-              ))}
-            </Box>
+          <Box sx={{ position: 'relative' }}>
+            {/* Main Image */}
             <Box
               component='img'
-              src='https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true'
-              sx={{ width: 400, height: 400, objectFit: 'cover' }}
+              src={images[selectedImage]}
+              alt={product.title}
+              sx={{
+                width: '100%',
+                height: 500,
+                objectFit: 'contain',
+                borderRadius: 2,
+                // bgcolor: '#f5f5f5'
+              }}
             />
+
+            {/* Navigation Arrows */}
+            <IconButton
+              sx={{
+                position: 'absolute',
+                left: 8,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                bgcolor: 'rgba(255,255,255,0.8)',
+                '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' }
+              }}
+              onClick={handlePrevImage}
+            >
+              <ChevronLeft />
+            </IconButton>
+            <IconButton
+              sx={{
+                position: 'absolute',
+                right: 8,
+                top: '50%',
+                transform: 'translateY(-50%)',
+                bgcolor: 'rgba(255,255,255,0.8)',
+                '&:hover': { bgcolor: 'rgba(255,255,255,0.9)' }
+              }}
+              onClick={handleNextImage}
+            >
+              <ChevronRight />
+            </IconButton>
+          </Box>
+
+          {/* Thumbnail Images */}
+          <Box
+            sx={{
+              display: 'flex',
+              gap: 1,
+              mt: 2,
+              flexWrap: 'wrap',
+              justifyContent: 'center'
+            }}
+          >
+            {images.map((img, index) => (
+              <Box
+                key={index}
+                component='img'
+                src={img}
+                alt={`product-${index}`}
+                onClick={() => setSelectedImage(index)}
+                sx={{
+                  width: 80,
+                  height: 80,
+                  objectFit: 'cover',
+                  cursor: 'pointer',
+                  borderRadius: 1,
+                  border:
+                    index === selectedImage
+                      ? '2px solid #ff4d4f'
+                      : '2px solid transparent',
+                  transition: 'all 0.2s',
+                  '&:hover': {
+                    transform: 'scale(1.05)',
+                    boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
+                  }
+                }}
+              />
+            ))}
           </Box>
         </Grid>
 
-        {/* Right side - Product details */}
+        {/* Right side - Product Info */}
         <Grid item xs={12} md={6}>
-          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
-            <Typography variant='h4' component='h1' fontWeight='bold'>
-              {product.name}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+            <Typography variant='h4' gutterBottom>
+              {product.title}
             </Typography>
 
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+            <Box
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 2,
+                bgcolor: '#f5f5f5',
+                p: 2,
+                borderRadius: 1
+              }}
+            >
               <Rating value={product.rating} precision={0.1} readOnly />
-              <Typography color='text.secondary'>
-                {product.ratings} đánh giá | {product.reviews} bình luận
+              <Typography>{product.countComments} đánh giá</Typography>
+              <Divider orientation='vertical' flexItem />
+              <Typography>{product.favoritesCount} đã thích</Typography>
+            </Box>
+
+            <Box
+              sx={{
+                bgcolor: '#fff8f8',
+                p: 2,
+                borderRadius: 1,
+                border: '1px solid #ffd6d6'
+              }}
+            >
+              <Typography variant='h5' color='error.main' gutterBottom>
+                {formatPrice(product.minPrice)}
+                {product.maxPrice > product.minPrice &&
+                  ` - ${formatPrice(product.maxPrice)}`}
               </Typography>
             </Box>
 
-            <Box>
-              <Typography
-                variant='h5'
-                color='error'
-                fontWeight='bold'
-                component='span'
-              >
-                {formatPrice(product.price)}₫
-              </Typography>
-              <Typography
-                variant='body1'
-                color='text.secondary'
-                sx={{ textDecoration: 'line-through', ml: 2 }}
-                component='span'
-              >
-                {formatPrice(product.originalPrice)}₫
-              </Typography>
-              <Chip label='2%' size='small' color='error' sx={{ ml: 1 }} />
-            </Box>
-
-            <Box>
-              <Typography variant='h6' gutterBottom>
-                Dung lượng
-              </Typography>
-              <ToggleButtonGroup
-                value={selectedStorage}
-                exclusive
-                onChange={(e, value) => setSelectedStorage(value)}
-                sx={{ mb: 3 }}
-              >
-                {product.storage.map((option) => (
-                  <ToggleButton
-                    key={option.size}
-                    value={option.size}
-                    sx={{ px: 3, py: 1 }}
-                  >
-                    {option.size}
-                  </ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-            </Box>
-
-            <Box>
-              <Typography variant='h6' gutterBottom>
-                Màu sắc
-              </Typography>
-              <ToggleButtonGroup
-                value={selectedColor}
-                exclusive
-                onChange={(e, value) => setSelectedColor(value)}
-              >
-                {product.colors.map((color) => (
-                  <ToggleButton
-                    key={color.value}
-                    value={color.value}
-                    sx={{ px: 3, py: 1 }}
-                  >
-                    {color.name}
-                  </ToggleButton>
-                ))}
-              </ToggleButtonGroup>
-            </Box>
-
-            <Box sx={{ mt: 2 }}>
-              <Typography variant='h6' gutterBottom>
-                Thông số nổi bật
-              </Typography>
-              <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                <Box>
-                  <Typography variant='subtitle1' fontWeight='bold'>
-                    Chip
-                  </Typography>
-                  <Typography>{product.specs.chip}</Typography>
-                </Box>
-                <Box>
-                  <Typography variant='subtitle1' fontWeight='bold'>
-                    Kích thước màn hình
-                  </Typography>
-                  <Typography>{product.specs.screenSize}</Typography>
-                </Box>
-                <Box>
-                  <Typography variant='subtitle1' fontWeight='bold'>
-                    Thời lượng pin
-                  </Typography>
-                  <Typography>{product.specs.battery}</Typography>
-                </Box>
+            {/* Variant Groups */}
+            {Object.entries(variantGroups).map(([attrName, values]) => (
+              <Box key={attrName}>
+                <Typography variant='subtitle1' gutterBottom>
+                  {attrName}
+                </Typography>
+                <ToggleButtonGroup
+                  value={selectedVariant}
+                  exclusive
+                  onChange={(_, value) => setSelectedVariant(value)}
+                  sx={{ flexWrap: 'wrap' }}
+                >
+                  {(values as string[]).map((value) => {
+                    const variant = product.productVariant.find((v) =>
+                      v.attribute.some((a) => a.value === value)
+                    )
+                    return (
+                      <ToggleButton
+                        key={value}
+                        value={variant?.variantId ?? ''}
+                        sx={{
+                          m: 0.5,
+                          border: '1px solid #ddd',
+                          '&.Mui-selected': {
+                            borderColor: 'primary.main',
+                            backgroundColor: 'primary.light'
+                          }
+                        }}
+                      >
+                        {value}
+                      </ToggleButton>
+                    )
+                  })}
+                </ToggleButtonGroup>
               </Box>
-            </Box>
+            ))}
 
-            <div style={{ display: 'flex', gap: 2 }}>
+            {/* Stock Info */}
+            {selectedVariant && (
+              <Box sx={{ display: 'flex', gap: 3 }}>
+                <Typography>
+                  Kho:{' '}
+                  {
+                    product.productVariant.find(
+                      (v) => v.variantId === selectedVariant
+                    )?.stockCount
+                  }
+                </Typography>
+                <Typography>
+                  Đã bán:{' '}
+                  {
+                    product.productVariant.find(
+                      (v) => v.variantId === selectedVariant
+                    )?.soldCount
+                  }
+                </Typography>
+              </Box>
+            )}
+
+            {/* Action Buttons */}
+            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
               <Button
                 variant='contained'
                 color='error'
                 size='large'
-                sx={{ mt: 3 }}
+                disabled={!selectedVariant}
+                sx={{ flex: 1 }}
               >
                 MUA NGAY
               </Button>
               <Button
-                variant='contained'
+                variant='outlined'
                 color='error'
                 size='large'
-                sx={{ mt: 3 }}
+                disabled={!selectedVariant}
+                sx={{ flex: 1 }}
               >
-                Thêm vào giỏ hàng
+                THÊM VÀO GIỎ
               </Button>
-            </div>
+            </Box>
           </Box>
         </Grid>
       </Grid>

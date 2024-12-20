@@ -10,37 +10,14 @@ import RelatedProducts from '../components/RelatedProducts'
 import Reviews from '../components/Reviews'
 import ReviewToCustomer from '../components/ReviewToCustomer'
 import SellerProfile from '../components/SellerProfile'
-
+import { useGetProductDetailQuery } from '../api/productApi'
+import { useParams } from 'react-router-dom'
+import { IProductData } from '../types/products.interface'
+import { useEffect, useState } from 'react'
 
 function ProductDetail() {
- const product = {
-   name: 'iPhone 16 Pro 128GB',
-   rating: 4.6,
-   reviews: 72,
-   ratings: 12,
-   price: 28390000,
-   originalPrice: 28990000,
-   sku: '00911084',
-   specs: {
-     chip: 'Apple A18 Pro',
-     screenSize: '6.3 inch',
-     battery: '27.2h',
-     performance: ['Hiệu năng tốt', 'Hiệu năng rất tốt', 'Hiệu năng vượt trội']
-   },
-   colors: [
-     { name: 'Titan Sạ Mạc', value: 'titan-natural' },
-     { name: 'Titan Trắng', value: 'titan-white' },
-     { name: 'Titan Tự nhiên', value: 'titan-natural' },
-     { name: 'Titan Đen', value: 'titan-black' }
-   ],
-   storage: [
-     { size: '128 GB', price: 28390000 },
-     { size: '256 GB', price: 31390000 },
-     { size: '512 GB', price: 37390000 },
-     { size: '1 TB', price: 43390000 }
-   ],
-   brand: 'Apple',
- }
+  
+
 const sellerStats = {
   rating: '9.6k',
   responseRate: '100%',
@@ -198,12 +175,54 @@ const recommendedProducts = [
     tags: ['Rẻ Vô Địch']
   }
 ]
+  const { productId } = useParams<{ productId: string }>() // Lấy productId từ URL
+  const { data, isFetching, isError } = useGetProductDetailQuery({
+    productId: Number(productId)
+  })
+  const [products, setProducts] = useState<IProductData>()
+  useEffect(() => {
+    if (data) {
+      setProducts(data.data)
+    }
+  }, [data, isFetching])
+  const product = {
+    name: 'iPhone 16 Pro 128GB',
+    rating: 4.6,
+    reviews: 72,
+    ratings: 12,
+    price: 28390000,
+    originalPrice: 28990000,
+    sku: '00911084',
+    specs: {
+      chip: 'Apple A18 Pro',
+      screenSize: '6.3 inch',
+      battery: '27.2h',
+      performance: ['Hiệu năng tốt', 'Hiệu năng rất tốt', 'Hiệu năng vượt trội']
+    },
+    colors: [
+      { name: 'Titan Sạ Mạc', value: 'titan-natural' },
+      { name: 'Titan Trắng', value: 'titan-white' },
+      { name: 'Titan Tự nhiên', value: 'titan-natural' },
+      { name: 'Titan Đen', value: 'titan-black' }
+    ],
+    storage: [
+      { size: '128 GB', price: 28390000 },
+      { size: '256 GB', price: 31390000 },
+      { size: '512 GB', price: 37390000 },
+      { size: '1 TB', price: 43390000 }
+    ],
+    brand: 'Apple'
+  }
 
+  
 
+  if (isFetching) return <p>Loading...</p>
+  if (isError) return <p>Error loading product detail.</p>
+  console.log(data)
   return (
     <div>
-      <Breadcrum product={product} />
-      <ProductDisplay product={product} />
+      <Breadcrum product={products} />
+      <ProductDisplay product={products} />
       <DescriptionBox product={product} />
       <div className='max-w-7xl mx-auto p-4 space-y-4'>
         <SellerProfile name='deerlu05.vn' stats={sellerStats} />
