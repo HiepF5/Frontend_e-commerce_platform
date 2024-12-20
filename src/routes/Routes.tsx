@@ -22,6 +22,7 @@ const OrderRoutes = lazy(() => import('../features/Order/routes/OrderRoutes'))
 const CartRoutes = lazy(() => import('../features/Cart/routes/CartRoutes'))
 const ThreadsRoutes = lazy(() => import('../features/Threads/routes/ThreadsRoutes'))
 const ShopAdminRoutes = lazy(() => import('../features/ShopAdmin/routes/ShopAdminRoutes'))
+const RootRoutes = lazy(() => import('../features/Root/routes/RootRoutes'))
 
 const MainRoutes = (): JSX.Element => {
   return (
@@ -68,6 +69,15 @@ const MainRoutes = (): JSX.Element => {
               }
             />
           </Route>
+
+          <Route
+            path="/root/*"
+            element={
+              <AuthPermission allowedRoles={['ROOT']}>
+                <RootRoutes />
+              </AuthPermission>
+            }
+          />
         </Routes>
       </Suspense>
     </Router>
