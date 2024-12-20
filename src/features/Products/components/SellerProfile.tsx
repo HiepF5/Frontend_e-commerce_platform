@@ -34,9 +34,11 @@ interface SellerStats {
 interface SellerProfileProps {
   name: string
   stats: SellerStats
+  shopCode?: string
 }
 
-export default function SellerProfile({ name, stats }: SellerProfileProps) {
+export default function SellerProfile({ name, stats, shopCode }: SellerProfileProps) {
+  console.log(shopCode)
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       <Card sx={{ p: 3, mb: 4 }}>
