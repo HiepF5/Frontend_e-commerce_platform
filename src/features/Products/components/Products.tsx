@@ -16,7 +16,10 @@ export default function Products() {
 
   useEffect(() => {
     if (data && data.data) {
-      setProducts((prevProducts) => [...prevProducts, ...(Array.isArray(data.data) ? data.data : [])])
+      setProducts((prevProducts) => [
+        ...prevProducts,
+        ...(Array.isArray(data.data) ? data.data : [])
+      ])
       if (data.data.length === 0) {
         setHasMore(false)
       }
@@ -61,9 +64,18 @@ export default function Products() {
                   productId: product.productId,
                   image: product.imageUrl || '',
                   productName: product.productTitle,
-                  brand: `Brand ID: ${product.brandId}`,
-                  price: product.minPrice
+                  brand: `Brand: ${product.brand}`,
+                  price: product.minPrice,
+                  hasVideo: true,
+                  isFavorite: true,
+                  isBestseller: true,
+                  fastShipping: true,
+                  rating: 4.5,
+                  likes: 1234,
+                  soldCount: 999,
+                  installment: true
                 }}
+                adjustPrice={300000}
               />
             </div>
           ))}

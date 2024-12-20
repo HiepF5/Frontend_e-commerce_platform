@@ -11,5 +11,18 @@ export interface IProduct {
   rating: number;
   soldCount: number;
   brandId: number;
-  categoryId: number | null;
+  category: string;
+  brand: string;
+  specs?: ProductSpecs
+  installment?: boolean
+  hasVideo?: boolean
+  isFavorite?: boolean
+  isBestseller?: boolean
+  fastShipping?: boolean
+  likes?: number
+}
+interface ProductSpecs {
+  chip?: string
+  battery?: string
+  camera?: string
 }
