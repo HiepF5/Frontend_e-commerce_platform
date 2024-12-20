@@ -99,7 +99,6 @@ export const getShopDetail = createAsyncThunk(
     }
   }
 );
-
 // Slice
 const ShopSlice = createSlice({
   name: 'shop',

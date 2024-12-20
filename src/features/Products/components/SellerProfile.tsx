@@ -1,16 +1,13 @@
-'use client'
-
+import React, { useEffect, useState } from 'react'
 import {
-  Avatar,
-  Box,
-  Button,
-  Card,
   Container,
-  Divider,
+  Card,
   Grid,
-  Link,
+  Avatar,
   Typography,
-  Breadcrumbs
+  Box,
+  CircularProgress,
+  Button
 } from '@mui/material'
 import {
   MessageCircle,
@@ -21,6 +18,9 @@ import {
   Star,
   Timer
 } from 'lucide-react'
+import { IShopDetails } from '~/types/shop.interface'
+import { followShopApi, getShopDetailApiByShopCode } from '@api/shopApi'
+import { toast } from 'react-toastify'
 
 interface SellerStats {
   rating: string
@@ -32,13 +32,67 @@ interface SellerStats {
 }
 
 interface SellerProfileProps {
-  name: string
   stats: SellerStats
   shopCode?: string
 }
 
-export default function SellerProfile({ name, stats, shopCode }: SellerProfileProps) {
-  console.log(shopCode)
+export default function SellerProfile({ stats, shopCode }: SellerProfileProps) {
+  const [shopDetails, setShopDetails] = useState<IShopDetails | null>(null)
+  const [loading, setLoading] = useState<boolean>(true)
+  const [error, setError] = useState<string | null>(null)
+  const [isFollowed, setIsFollowed] = useState<boolean>(false)
+  useEffect(() => {
+    if (shopCode) {
+      getShopDetailApiByShopCode(shopCode)
+        .then((response) => {
+          setShopDetails(response.data)
+          setIsFollowed(false) // Assuming the API returns this info
+          setLoading(false)
+        })
+        .catch((error) => {
+          setError('Failed to fetch shop details')
+          setLoading(false)
+        })
+    } else {
+      setLoading(false)
+    }
+  }, [shopCode])
+
+  const handleFollowClick = async () => {
+    if (shopCode) {
+      try {
+        await followShopApi({ shop_code: shopCode, is_follow: !isFollowed })
+        setIsFollowed(!isFollowed)
+
+        toast.success(
+          isFollowed
+            ? 'Unfollowed the shop successfully!'
+            : 'Followed the shop successfully!')
+      } catch (error) {
+        toast.error(
+          isFollowed
+            ? 'Failed to unfollow the shop.'
+            : 'Failed to follow the shop.')
+      }
+    }
+  }
+
+  if (loading) {
+    return (
+      <Container maxWidth='lg' sx={{ py: 4 }}>
+        <CircularProgress />
+      </Container>
+    )
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth='lg' sx={{ py: 4 }}>
+        <Typography color='error'>{error}</Typography>
+      </Container>
+    )
+  }
+
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       <Card sx={{ p: 3, mb: 4 }}>
@@ -46,83 +100,76 @@ export default function SellerProfile({ name, stats, shopCode }: SellerProfilePr
           <Grid item>
             <Avatar
               sx={{ width: 80, height: 80 }}
-              src='/placeholder.svg?height=80&width=80'
+              src={shopDetails?.shopLogo}
             />
           </Grid>
-
           <Grid item xs>
-            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 1 }}>
-              <Typography variant='h6'>{name}</Typography>
-              <Typography
-                variant='caption'
-                sx={{
-                  bgcolor: 'success.light',
-                  color: 'success.contrastText',
-                  px: 1,
-                  py: 0.5,
-                  borderRadius: 1
-                }}
-              >
-                <Clock className='w-4 h-4 inline-block mr-1' />
-                Online 3 Phút Trước
-              </Typography>
+            <Typography variant='h5'>{shopDetails?.shopName}</Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Store size={20} />
+              <Typography variant='body2'>{shopDetails?.address}</Typography>
             </Box>
-
-            <Box sx={{ display: 'flex', gap: 2 }}>
-              <Button
-                variant='contained'
-                color='error'
-                startIcon={<MessageCircle />}
-              >
-                Chat Ngay
-              </Button>
-              <Button variant='outlined' startIcon={<Store />}>
-                Xem Shop
-              </Button>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Clock size={20} />
+              <Typography variant='body2'>{stats.lastSeen}</Typography>
             </Box>
           </Grid>
-
-          <Divider orientation='vertical' flexItem sx={{ mx: 2 }} />
-
-          <Grid item xs={12} md={6}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                <Box>
-                  <Typography color='text.secondary' gutterBottom>
-                    Đánh Giá
-                  </Typography>
-                  <Typography variant='h6' color='error'>
-                    {stats.rating}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box>
-                  <Typography color='text.secondary' gutterBottom>
-                    Tỉ Lệ Phản Hồi
-                  </Typography>
-                  <Typography variant='h6' color='success.main'>
-                    {stats.responseRate}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box>
-                  <Typography color='text.secondary' gutterBottom>
-                    Thời Gian Phản Hồi
-                  </Typography>
-                  <Typography variant='h6'>{stats.responseTime}</Typography>
-                </Box>
-              </Grid>
-              <Grid item xs={6}>
-                <Box>
-                  <Typography color='text.secondary' gutterBottom>
-                    Người Theo Dõi
-                  </Typography>
-                  <Typography variant='h6'>{stats.followers}</Typography>
-                </Box>
-              </Grid>
-            </Grid>
+          <Grid item>
+            <Button
+              variant='contained'
+              color='primary'
+              sx={{ mr: 2 }}
+              onClick={handleFollowClick}
+            >
+              {isFollowed ? 'Unfollow' : 'Follow'}
+            </Button>
+            <Button variant='outlined' color='primary'>
+              Chat with Shop
+            </Button>
+          </Grid>
+        </Grid>
+      </Card>
+      <Card sx={{ p: 3 }}>
+        <Grid container spacing={2}>
+          <Grid item xs={6} md={4}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Star size={20} />
+              <Typography variant='body2'>
+                Rating: {shopDetails?.rating}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6} md={4}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <MessageCircle size={20} />
+              <Typography variant='body2'>
+                Response Rate: {stats.responseRate}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6} md={4}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Timer size={20} />
+              <Typography variant='body2'>
+                Response Time: {stats.responseTime}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6} md={4}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Users size={20} />
+              <Typography variant='body2'>
+                Followers: {shopDetails?.followCount}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={6} md={4}>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Store size={20} />
+              <Typography variant='body2'>
+                Products: {shopDetails?.productQuantity}
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
       </Card>

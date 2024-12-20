@@ -42,6 +42,7 @@ export const API_ENDPOINTS_SHOP = {
   ApiRestoreShop: 'owner/shop/restore',
   ApiLockShop: 'admin/shop/lock',
   ApiFollowShop: 'customer/shop/follow-shop',
+  ApiGetShopByShopCode: 'guest/shop/get-detail-by-code',
 };
 export const API_ENDPOINTS_SHOPREVIEW = {
   ApiGetReviewByPage: 'guest/shop/page-review',

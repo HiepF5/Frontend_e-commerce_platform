@@ -40,6 +40,21 @@ export const getShopDetailApi = async (): Promise<IBaseResponse<IShopDetails>> =
     throw error
   }
 }
+export const getShopDetailApiByShopCode = async (shopCode: string): Promise<IBaseResponse<IShopDetails>> => {
+  try {
+    const response = await axios.get<IBaseResponse<IShopDetails>>(
+      `${API_ENDPOINTS_SHOP.ApiGetShopByShopCode}`,
+      {
+        params: { shopCode },
+      }
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error in getShopDetailApi:', error)
+    throw error
+  }
+}
+
 export const updateShopDetailApi = async (data: IInfoShop): Promise<IBaseResponse<IShopDetails>> => {
   try {
     const response = await axios.put<IBaseResponse<IShopDetails>>(

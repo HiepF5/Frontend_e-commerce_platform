@@ -196,7 +196,6 @@ const recommendedProducts = [
       <DescriptionBox product={products} />
       <div className='max-w-7xl mx-auto p-4 space-y-4'>
         <SellerProfile
-          name='deerlu05.vn'
           stats={sellerStats}
           shopCode={products?.shopCode}
         />
