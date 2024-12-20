@@ -9,10 +9,11 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   Divider,
-  IconButton
+  IconButton,
+  Stack
 } from '@mui/material'
 import { IProductData } from '../types/products.interface'
-import { ChevronLeft, ChevronRight } from '@mui/icons-material'
+import { ChevronLeft, ChevronRight, MonetizationOn, ShoppingCart } from '@mui/icons-material'
 
 interface ProductDetailProps {
   product?: IProductData
@@ -80,7 +81,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                 width: '100%',
                 height: 500,
                 objectFit: 'contain',
-                borderRadius: 2,
+                borderRadius: 2
                 // bgcolor: '#f5f5f5'
               }}
             />
@@ -250,13 +251,19 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
             )}
 
             {/* Action Buttons */}
-            <Box sx={{ display: 'flex', gap: 2, mt: 2 }}>
+            <Stack direction='row' spacing={2} sx={{ mt: 2 }}>
               <Button
                 variant='contained'
                 color='error'
                 size='large'
                 disabled={!selectedVariant}
-                sx={{ flex: 1 }}
+                startIcon={<MonetizationOn />}
+                sx={{
+                  flex: 1,
+                  py: 1.5,
+                  borderRadius: 2,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                }}
               >
                 MUA NGAY
               </Button>
@@ -265,11 +272,17 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                 color='error'
                 size='large'
                 disabled={!selectedVariant}
-                sx={{ flex: 1 }}
+                startIcon={<ShoppingCart />}
+                sx={{
+                  flex: 1,
+                  py: 1.5,
+                  borderRadius: 2,
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                }}
               >
                 THÊM VÀO GIỎ
               </Button>
-            </Box>
+            </Stack>
           </Box>
         </Grid>
       </Grid>
