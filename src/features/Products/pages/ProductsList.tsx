@@ -1,6 +1,6 @@
-import Sidebar from '../ProductsList/Sidebar/Sidebar'
-import Introduction from '../ProductsList/Introduction/Introduction'
-import BuyBestPrice from '../ProductsList/BuyBestPrice/BuyBestPrice'
+import Sidebar from '../components/Sidebar'
+import Introduction from '../components/Introduction'
+import BuyBestPrice from '../components/BuyBestPrice';
 
 
 interface ProductsListProps {

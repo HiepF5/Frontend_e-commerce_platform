@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import TitleList from '@shared/components/TitleList/TitleList'
-import ProductItem from '../ProductItem/ProductItem'
+import ProductItem from './ProductItem'
 
 function BuyBestPrice() {
   const [featuredProducts, setFeaturedProducts] = useState([])

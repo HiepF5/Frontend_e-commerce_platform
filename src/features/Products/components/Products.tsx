@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react'
 
-import ProductItem from '../ProductItem/ProductItem'
+import ProductItem from './ProductItem'
 import { IProduct } from '~/types/products.interface'
-import { useGetListProductQuery } from '../../api/productApi'
+import { useGetListProductQuery } from '../api/productApi'
 
 export default function Products() {
   const [pageNumber, setPageNumber] = useState(1)

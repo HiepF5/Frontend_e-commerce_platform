@@ -1,12 +1,12 @@
 import React, { Fragment } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { FaChevronDown, FaThLarge } from 'react-icons/fa'
-import Products from '../Products/Products'
-import ColorFilter from './ColorFilter/ColorFilter'
-import SizeFilter from './SizeFilter/SizeFilter'
-import CategoryFilter from './CategoryFilter/CategoryFilter'
-import SubCategoriesList from './SubCategories/SubCategories'
-import SortOptionsList from './SortOptionsList/SortOptionsList'
+import Products from './Products'
+import ColorFilter from './Sidebar/ColorFilter'
+import SizeFilter from './Sidebar/SizeFilter'
+import CategoryFilter from './Sidebar/CategoryFilter'
+import SubCategoriesList from './Sidebar/SubCategories'
+import SortOptionsList from './Sidebar/SortOptionsList'
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
