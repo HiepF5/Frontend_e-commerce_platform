@@ -22,8 +22,15 @@ export const rootApi = createApi({
         }
       }),
       invalidatesTags: ['Users']
+    }),
+
+    createRoot: builder.query<IBaseResponse<void>, void>({
+      query: () => ({
+        url: '/guest/users/create-root',
+        method: 'GET'
+      })
     })
   })
 })
 
-export const { useChangeAdminMutation } = rootApi 
+export const { useChangeAdminMutation, useLazyCreateRootQuery } = rootApi 
