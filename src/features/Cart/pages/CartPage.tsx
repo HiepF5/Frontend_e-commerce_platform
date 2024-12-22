@@ -8,79 +8,76 @@ import {
   Checkbox,
   Box,
   Breadcrumbs,
-  Link
+  Link,
+  Alert,
+  CircularProgress,
+  Button
 } from '@mui/material'
-
 import { ChevronRight } from 'lucide-react'
 import CartItem from '../components/CartItems'
 import CartSummary from '../components/CartSummary'
-
-const mockProducts = [
-  {
-    id: '1',
-    name: 'Samsung Galaxy A06 4GB 128GB Đen SM-A065',
-    image:
-      'https://cdn.tgdd.vn/Products/Images/42/328751/samsung-galaxy-a06-black-thumb-600x600.jpg',
-    price: 3190000,
-    originalPrice: 3490000,
-    colors: [{ name: 'Đen', value: 'black' }],
-    warranties: [
-      {
-        id: 'w1',
-        name: 'Dịch vụ Samsung care plus 6 tháng đến thoại',
-        price: 239000,
-        originalPrice: 500000
-      },
-      {
-        id: 'w2',
-        name: 'Dịch vụ Samsung care plus 12 tháng đến thoại',
-        price: 367000,
-        originalPrice: 650000
-      },
-      {
-        id: 'w3',
-        name: 'Đặc quyền Bảo hành thêm 1 năm BTĐB (BT)',
-        price: 150000,
-        originalPrice: 300000
-      }
-    ]
-  },
-  {
-    id: '2',
-    name: 'Macbook Air 13 M2 2024 8CPU/8GPU/16GB/256GB Xám MC7U4SA/A',
-    image:
-      'https://cdn2.fptshop.com.vn/unsafe/384x0/filters:quality(100)/macbook_air_13_m2_space_gray_1_838001a645.png',
-    price: 24490000,
-    originalPrice: 24990000,
-    colors: [{ name: 'Xám', value: 'gray' }],
-    warranties: [
-      {
-        id: 'w4',
-        name: 'Đặc quyền Bảo hành 1 đổi 1 Macbook (BT)',
-        price: 1500000,
-        originalPrice: 2000000
-      },
-      {
-        id: 'w5',
-        name: 'Đặc quyền Bảo hành thêm 1 năm Macbook (BT)',
-        price: 800000,
-        originalPrice: 2400000
-      }
-    ]
-  }
-]
+import { useClearCartMutation, useGetCartCountQuery, useGetCartQuery, useRemoveFromCartMutation, useUpdateCartItemMutation } from '../api/cartApi'
+import { RemoveCircleTwoTone } from '@mui/icons-material'
 
 export default function CartPage() {
-  const [products, setProducts] = useState(mockProducts)
+  const [selectedItems, setSelectedItems] = useState<number[]>([])
+  const { data: cartData, isLoading, error } = useGetCartQuery()
+  const [updateCartItem] = useUpdateCartItemMutation()
+  const [removeFromCart] = useRemoveFromCartMutation()
+  const [clearCart] = useClearCartMutation()
+  const { data: countItem, isLoading: isCountLoading, error: countError } = useGetCartCountQuery()
+  console.log(cartData)
 
-  const subtotal = 28480000
-  const discount = 800000
-  const total = 27680000
-  const points = 6920
-
-  const handleRemoveItem = (productId: string) => {
-    setProducts(products.filter((p) => p.id !== productId))
+  const handleSelectAll = (checked: boolean) => {
+    if (checked) {
+      setSelectedItems(cartData?.data.map(item => item.variantId) || [])
+    } else {
+      setSelectedItems([])
+    }
   }
+
+  const handleSelectItem = (variantId: number, checked: boolean) => {
+    if (checked) {
+      setSelectedItems([...selectedItems, variantId])
+    } else {
+      setSelectedItems(selectedItems.filter(id => id !== variantId))
+    }
+  }
+
+  const handleQuantityChange = async (variantId: number, quantity: number) => {
+    try {
+      await updateCartItem({
+        item_id: variantId,
+        quantity
+      }).unwrap()
+    } catch (err) {
+      console.error('Failed to update quantity:', err)
+    }
+  }
+
+  const handleRemoveItem = async (variantId: number) => {
+    try {
+      await removeFromCart({
+        item_list: variantId.toString()
+      }).unwrap()
+    } catch (err) {
+      console.error('Failed to remove item:', err)
+    }
+  }
+  const handleClearCart = async () => {
+    try {
+      await clearCart().unwrap()
+    } catch (err) {
+      console.error('Failed to clear cart:', err)
+    }
+  }
+
+  if (isLoading) return <CircularProgress />
+  if (error) return <Alert severity="error">Failed to load cart</Alert>
+
+  const cartItems = cartData?.data || []
+  const total = 0
+  const itemCount =  countItem || 0
 
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
@@ -96,27 +93,50 @@ export default function CartPage() {
 
       <Grid container spacing={3}>
         <Grid item xs={12} md={8}>
-          <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Checkbox />
-            <Typography>Chọn tất cả ({products.length})</Typography>
+          <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between' }}>
+            <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
+              <Checkbox
+                checked={selectedItems.length === cartItems.length}
+                indeterminate={
+                  selectedItems.length > 0 &&
+                  selectedItems.length < cartItems.length
+                }
+                onChange={(e) => handleSelectAll(e.target.checked)}
+              />
+              <Typography>Chọn tất cả ({itemCount})</Typography>
+            </Box>
+            <Box>
+              <Button
+                startIcon={<RemoveCircleTwoTone />}
+                onClick={() => handleClearCart()}
+              >
+                Clear Cart
+              </Button>
+            </Box>
+          </Box>
+          <Box>
+            <Typography variant='h6'>Giỏ hàng ({itemCount})</Typography>
           </Box>
 
-          {products.map((product) => (
+          {cartItems.map((item) => (
             <CartItem
-              key={product.id}
-              product={product}
-              onQuantityChange={() => {}}
-              onRemove={() => handleRemoveItem(product.id)}
+              key={item.variantId}
+              item={item}
+              selected={selectedItems.includes(item.variantId)}
+              onSelect={(checked) => handleSelectItem(item.variantId, checked)}
+              onQuantityChange={(quantity) =>
+                handleQuantityChange(item.variantId, quantity)
+              }
+              onRemove={() => handleRemoveItem(item.variantId)}
             />
           ))}
         </Grid>
 
         <Grid item xs={12} md={4}>
           <CartSummary
-            subtotal={subtotal}
-            discount={discount}
+            selectedItems={selectedItems}
+            cartItems={cartItems}
             total={total}
-            points={points}
           />
         </Grid>
       </Grid>

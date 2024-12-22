@@ -9,7 +9,6 @@ import {
 import { FaSignInAlt } from 'react-icons/fa'
 import { FaUserCircle } from 'react-icons/fa'
 import DarkMode from './DarkMode'
-import { data } from 'autoprefixer'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '@store/hook'
 import { Avatar, Box, Typography } from '@mui/material'
@@ -17,6 +16,7 @@ import { logout } from '@features/Authentication/slices/authSlice'
 import { toast } from 'react-toastify'
 import { Menu, MenuDropdownLinks } from '@config/constants/paths'
 import Cookies from 'js-cookie'
+import { useGetCartCountQuery } from '@features/Cart/api/cartApi'
 
 const Navbar = () => {
   const navigate = useNavigate()
@@ -34,6 +34,7 @@ const Navbar = () => {
   const handleRegister = () => {
     navigate('/auth/signup')
   }
+  const { data: countItem, isLoading: isCountLoading, error: countError } = useGetCartCountQuery()
   const user = JSON.parse(localStorage.getItem('user') || 'null')
   return (
     <div
@@ -81,9 +82,10 @@ const Navbar = () => {
             {/* order button */}
             <button
               className='bg-gradient-to-r from-orange-400
-          to-lime-400 transition-all duration-200
-          text-white py-1 px-4 rounded-full flex 
-          items-center gap-3 group'
+            to-lime-400 transition-all duration-200
+            text-white py-1 px-4 rounded-full flex 
+            items-center gap-3 group relative'
+              onClick={() => navigate('/cart')}
             >
               <span
                 className='group-hover:block 
@@ -99,6 +101,13 @@ const Navbar = () => {
                cursor-pointer
              '
               />
+              <span
+                className='absolute -top-2 -right-2 bg-red-500
+              text-white rounded-full w-5 h-5 flex items-center
+              justify-center text-xs'
+              >
+                {countItem || 0}
+              </span>
             </button>
             {!user?.full_name ? (
               <>

@@ -21,6 +21,8 @@ import {
 import { IShopDetails } from '~/types/shop.interface'
 import { followShopApi, getShopDetailApiByShopCode } from '@api/shopApi'
 import { toast } from 'react-toastify'
+import { createChatWithShop } from '@api/chatMessageApi'
+import { useNavigate } from 'react-router-dom'
 
 interface SellerStats {
   rating: string
@@ -41,6 +43,7 @@ export default function SellerProfile({ stats, shopCode }: SellerProfileProps) {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
   const [isFollowed, setIsFollowed] = useState<boolean>(false)
+  const navigator = useNavigate()
   useEffect(() => {
     if (shopCode) {
       getShopDetailApiByShopCode(shopCode)
@@ -92,6 +95,24 @@ export default function SellerProfile({ stats, shopCode }: SellerProfileProps) {
       </Container>
     )
   }
+  const handleChatClick = async () => {
+    if (!shopCode) return
+    try {
+      const user = JSON.parse(localStorage.getItem('user') || '{}')
+      const response = await createChatWithShop({
+        user_code: user.user_code,
+        shop_code: shopCode
+      })
+
+      if (response.code === 200) {
+        toast.success('Chat created successfully!')
+        navigator('/messenger-user/chat') 
+      }
+    } catch (error) {
+      toast.error('Failed to create chat. Please try again.')
+      console.error('Error creating chat:', error)
+    }
+  }
 
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
@@ -123,7 +144,11 @@ export default function SellerProfile({ stats, shopCode }: SellerProfileProps) {
             >
               {isFollowed ? 'Unfollow' : 'Follow'}
             </Button>
-            <Button variant='outlined' color='primary'>
+            <Button
+              variant='outlined'
+              color='primary'
+              onClick={handleChatClick}
+            >
               Chat with Shop
             </Button>
           </Grid>

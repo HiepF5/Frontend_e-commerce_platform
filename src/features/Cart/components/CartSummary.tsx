@@ -5,75 +5,62 @@ import {
   Button,
   Paper,
   Typography,
-  Switch,
-  FormControlLabel,
   Divider
 } from '@mui/material'
-import { ChevronDown } from 'lucide-react'
 import { formatPrice } from '@shared/utils/formatPrice'
+import { CartItem } from '../types/cart.interface'
+import { useNavigate } from 'react-router-dom'
 
 interface CartSummaryProps {
-  subtotal: number
-  discount: number
+  selectedItems: number[]
+  cartItems: CartItem[]
   total: number
-  points: number
 }
 
 export default function CartSummary({
-  subtotal,
-  discount,
-  total,
-  points
+  selectedItems,
+  cartItems,
+  total
 }: CartSummaryProps) {
+  const selectedTotal = cartItems
+    .filter(item => selectedItems.includes(item.variantId))
+    .reduce((sum, item) => sum + item.totalAmount, 0)
+  const navigate = useNavigate()
+
   return (
     <Paper sx={{ p: 2 }}>
-      <Button variant='outlined' fullWidth sx={{ mb: 2 }}>
-        Quà tặng
-      </Button>
-
-      <FormControlLabel
-        control={<Switch />}
-        label={
-          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-            <Typography>Đổi: 0 điểm (~0đ)</Typography>
-          </Box>
-        }
-      />
-
-      <Typography variant='h6' gutterBottom sx={{ mt: 3 }}>
+      <Typography variant="h6" gutterBottom>
         Thông tin đơn hàng
       </Typography>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-        <Typography>Tổng tiền</Typography>
-        <Typography>{formatPrice(subtotal)}₫</Typography>
+        <Typography>Tổng tiền hàng</Typography>
+        <Typography>{formatPrice(total)}₫</Typography>
       </Box>
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-        <Typography>Tổng khuyến mãi</Typography>
-        <Typography color='error'>-{formatPrice(discount)}₫</Typography>
+        <Typography>Đã chọn</Typography>
+        <Typography color="error">{formatPrice(selectedTotal)}₫</Typography>
       </Box>
 
       <Divider sx={{ my: 2 }} />
 
-      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-        <Typography>Cần thanh toán</Typography>
-        <Typography color='error' variant='h6'>
-          {formatPrice(total)}₫
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
+        <Typography variant="h6">Cần thanh toán</Typography>
+        <Typography color="error" variant="h6">
+          {formatPrice(selectedTotal)}₫
         </Typography>
       </Box>
 
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 3 }}>
-        <Typography>Điểm thưởng</Typography>
-        <Typography color='warning.main'>+{points}</Typography>
-      </Box>
-
-      <Button variant='contained' color='error' fullWidth size='large'>
-        Xác nhận đơn
-      </Button>
-
-      <Button endIcon={<ChevronDown />} sx={{ mt: 2, color: 'primary.main' }}>
-        Xem chi tiết
+      <Button 
+        variant="contained" 
+        color="error" 
+        fullWidth 
+        size="large"
+        disabled={selectedItems.length === 0}
+        onClick={() => navigate('/checkout')}
+      >
+        Mua hàng ({selectedItems.length})
       </Button>
     </Paper>
   )

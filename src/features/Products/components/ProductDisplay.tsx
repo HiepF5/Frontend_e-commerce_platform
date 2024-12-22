@@ -14,6 +14,8 @@ import {
 } from '@mui/material'
 import { IProductData } from '../types/products.interface'
 import { ChevronLeft, ChevronRight, MonetizationOn, ShoppingCart } from '@mui/icons-material'
+import { useAddToCartMutation } from '@features/Cart/api/cartApi'
+import { useNavigate } from 'react-router-dom'
 
 interface ProductDetailProps {
   product?: IProductData
@@ -26,6 +28,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
   const [selectedVariant, setSelectedVariant] = React.useState<number | null>(
     null
   )
+  const [quantity, setQuantity] = React.useState(1)
 
   // Add fake images to the product's image list
   const fakeImages = [
@@ -50,6 +53,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
     },
     {}
   )
+  const navigate = useNavigate()
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', {
@@ -64,6 +68,49 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
 
   const handleNextImage = () => {
     setSelectedImage((prev) => (prev === images.length - 1 ? 0 : prev + 1))
+  }
+    const [addCartItem] = useAddToCartMutation()
+    const handleAddToCart = async () => {
+      if (selectedVariant) {
+        try {
+          await addCartItem({
+            item_id: selectedVariant,
+            quantity: quantity
+          }).unwrap()
+          setQuantity(0)
+
+        } catch (err) {
+          console.error('Failed to update quantity:', err)
+        }
+      }
+    }
+  const handleAddToCartAndRedirect = async () => {
+    if (selectedVariant) {
+      try {
+        await addCartItem({
+          item_id: selectedVariant,
+          quantity: 1
+        }).unwrap()
+        navigate('/cart')
+      } catch (err) {
+        console.error('Failed to update quantity:', err)
+      }
+    }
+  }
+
+  const handleIncrement = () => {
+    const stockCount = product.productVariant.find(
+      (v) => v.variantId === selectedVariant
+    )?.stockCount
+    if (stockCount !== undefined && quantity < stockCount) {
+      setQuantity(quantity + 1)
+    }
+  }
+
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1)
+    }
   }
 
   return (
@@ -250,6 +297,21 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
               </Box>
             )}
 
+            {/* Quantity Selector */}
+            {selectedVariant && (
+              <Box
+                sx={{ display: 'flex', alignItems: 'center', gap: 2, mt: 2 }}
+              >
+                <Button variant='outlined' onClick={handleDecrement}>
+                  -
+                </Button>
+                <Typography>{quantity}</Typography>
+                <Button variant='outlined' onClick={handleIncrement}>
+                  +
+                </Button>
+              </Box>
+            )}
+
             {/* Action Buttons */}
             <Stack direction='row' spacing={2} sx={{ mt: 2 }}>
               <Button
@@ -264,6 +326,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                   borderRadius: 2,
                   boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                 }}
+                onClick={handleAddToCartAndRedirect}
               >
                 MUA NGAY
               </Button>
@@ -279,6 +342,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                   borderRadius: 2,
                   boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
                 }}
+                onClick={handleAddToCart}
               >
                 THÊM VÀO GIỎ
               </Button>

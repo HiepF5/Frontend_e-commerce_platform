@@ -1,36 +1,21 @@
 import axios from '@shared/libs/axios/axiosInterceptor'
 import { IBaseResponse } from '~/types/base.interface'
 import {
-  IChatListResponse,
-  IChatListRequest,
-  IChatStoryRequest,
-  IChatDetail
+
+  IChatItem,
+  IChatCreateRequest
 } from '~/types/message-chat.interface'
 
-export const fetchChatListOwner = async (
-  data: IChatListRequest
-): Promise<IBaseResponse<IChatListResponse>> => {
-  try {
-    const response = await axios.post(
-      'http://localhost:9000/api/owner/message-chat',
-      data
-    )
-    return response.data
-  } catch (error) {
-    console.error('Error fetching chat story:', error)
-    throw error
-  }
-}
-export const fetchChatStoryOwner = async (
-  data: IChatStoryRequest
-): Promise<IBaseResponse<IChatDetail>> => {
+
+export const createChatWithCustomer = async (
+  data: IChatCreateRequest
+): Promise<IBaseResponse<IChatItem>> => {
   try {
     const form_data = new FormData()
-    form_data.append('chat_id', data.chat_id.toString())
-    form_data.append('page_number', data.page_number.toString())
-    form_data.append('page_size', data.page_size.toString())
+    form_data.append('user_code', data.user_code)
+    form_data.append('shop_code', data.shop_code)
     const response = await axios.post(
-      'http://localhost:9000/api/owner/get-chat',
+      'http://localhost:9000/api/customer/create-chat',
       form_data,
       {
         headers: {
@@ -44,30 +29,16 @@ export const fetchChatStoryOwner = async (
     throw error
   }
 }
-export const fetchChatListCustomer = async (
-  data: IChatListRequest
-): Promise<IBaseResponse<IChatListResponse>> => {
-  try {
-    const response = await axios.post(
-      'http://localhost:9000/api/customer/message-chat',
-      data,
-    )
-    return response.data
-  } catch (error) {
-    console.error('Error fetching chat story:', error)
-    throw error
-  }
-}
-export const fetchChatStoryCustomer = async (
-  data: IChatStoryRequest
-): Promise<IBaseResponse<IChatDetail>> => {
+
+export const createChatWithShop = async (
+  data: IChatCreateRequest
+): Promise<IBaseResponse<IChatItem>> => {
   try {
     const form_data = new FormData()
-    form_data.append('chat_id', data.chat_id.toString())
-    form_data.append('page_number', data.page_number.toString())
-    form_data.append('page_size', data.page_size.toString())
+    form_data.append('user_code', data.user_code)
+    form_data.append('shop_code', data.shop_code)
     const response = await axios.post(
-      'http://localhost:9000/api/customer/get-chat',
+      'http://localhost:9000/api/owner/create-chat',
       form_data,
       {
         headers: {
