@@ -1,4 +1,4 @@
-import { useCreateThreadMutation, useUpdateThreadMutation, useDeleteThreadMutation, useShareThreadMutation } from '../slices/ThreadsSlide';
+import { useCreateThreadMutation, useUpdateThreadMutation, useDeleteThreadMutation, useShareThreadMutation } from '../api/threadsApi';
 import { Post } from '../types/threads.interface';
 
 export const useThreadActions = (setPosts: React.Dispatch<React.SetStateAction<Post[]>>) => {
