@@ -7,6 +7,7 @@ class ChatService {
   private static maxReconnectAttempts = 5
   private static reconnectAttempts = 0
   private static notificationSound = new Audio('/src/assets/mp3/mess.mp3')
+
   static connectWebSocket(
     token: string,
     shopCode: string,
@@ -20,7 +21,7 @@ class ChatService {
       return
     }
 
-    const socket = new SockJS(`http://localhost:9000/ws?token=${token}`)
+    const socket = new SockJS(`${import.meta.env.VITE_WS_BASE_URL}?token=${token}`)
     this.stompClient = Stomp.over(socket)
 
     this.stompClient.connect(

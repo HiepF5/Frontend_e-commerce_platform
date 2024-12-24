@@ -1,11 +1,9 @@
 import axios from '@shared/libs/axios/axiosInterceptor'
 import { IBaseResponse } from '~/types/base.interface'
 import {
-
   IChatItem,
   IChatCreateRequest
 } from '~/types/message-chat.interface'
-
 
 export const createChatWithCustomer = async (
   data: IChatCreateRequest
@@ -15,7 +13,7 @@ export const createChatWithCustomer = async (
     form_data.append('user_code', data.user_code)
     form_data.append('shop_code', data.shop_code)
     const response = await axios.post(
-      'http://localhost:9000/api/customer/create-chat',
+      `/owner/create-chat`,
       form_data,
       {
         headers: {
@@ -38,7 +36,7 @@ export const createChatWithShop = async (
     form_data.append('user_code', data.user_code)
     form_data.append('shop_code', data.shop_code)
     const response = await axios.post(
-      'http://localhost:9000/api/owner/create-chat',
+      `/customer/create-chat`,
       form_data,
       {
         headers: {

@@ -1,10 +1,9 @@
 // src/shared/libs/axiosInstance.ts
 import axios, { AxiosInstance } from 'axios';
-import { environment } from '../../../config/environment';
 import Cookies from 'js-cookie';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: environment.apiEndpoint
+  baseURL: import.meta.env.VITE_API_URL,
 });
 
 axiosInstance.interceptors.request.use(
