@@ -30,8 +30,8 @@ export interface CheckoutSubmitRequest {
   discountVoucher: string | null
   shippingVoucher: string | null
   addressId: number
-  paymentMethod: PaymentMethod
-  shippingMethod: ShippingMethod
+  paymentMethod: PaymentMethod | string
+  shippingMethod: ShippingMethod | string
   items: CheckoutItem[]
   shopDiscounts: ShopDiscount[] | null
 }

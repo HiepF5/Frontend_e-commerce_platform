@@ -35,6 +35,8 @@ const Navbar = () => {
     navigate('/auth/signup')
   }
   const { data: countItem, isLoading: isCountLoading, error: countError } = useGetCartCountQuery()
+
+
   const user = JSON.parse(localStorage.getItem('user') || 'null')
   return (
     <div

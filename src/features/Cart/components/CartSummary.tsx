@@ -26,10 +26,19 @@ export default function CartSummary({
     .filter(item => selectedItems.includes(item.variantId))
     .reduce((sum, item) => sum + item.totalAmount, 0)
   const navigate = useNavigate()
+  const handleCheckout = () => {
+    const selectedCartItems = cartItems
+      .filter((item) => selectedItems.includes(item.variantId))
+      .map((item) => ({
+        variantId: item.variantId,
+        quantity: item.quantity
+      }))
+    navigate('/checkout', { state: { selectedCartItems } })
+  }
 
   return (
     <Paper sx={{ p: 2 }}>
-      <Typography variant="h6" gutterBottom>
+      <Typography variant='h6' gutterBottom>
         Thông tin đơn hàng
       </Typography>
 
@@ -40,25 +49,25 @@ export default function CartSummary({
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
         <Typography>Đã chọn</Typography>
-        <Typography color="error">{formatPrice(selectedTotal)}₫</Typography>
+        <Typography color='error'>{formatPrice(selectedTotal)}₫</Typography>
       </Box>
 
       <Divider sx={{ my: 2 }} />
 
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-        <Typography variant="h6">Cần thanh toán</Typography>
-        <Typography color="error" variant="h6">
+        <Typography variant='h6'>Cần thanh toán</Typography>
+        <Typography color='error' variant='h6'>
           {formatPrice(selectedTotal)}₫
         </Typography>
       </Box>
 
-      <Button 
-        variant="contained" 
-        color="error" 
-        fullWidth 
-        size="large"
+      <Button
+        variant='contained'
+        color='error'
+        fullWidth
+        size='large'
         disabled={selectedItems.length === 0}
-        onClick={() => navigate('/checkout')}
+        onClick={handleCheckout}
       >
         Mua hàng ({selectedItems.length})
       </Button>

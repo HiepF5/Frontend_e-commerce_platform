@@ -40,6 +40,7 @@ export interface IProductVariant {
     soldCount: number;
     stockCount: number;
     description: string;
+    sellPrice: number;
 }
 
 export interface IAttribute {

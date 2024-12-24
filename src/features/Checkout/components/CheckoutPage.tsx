@@ -1,36 +1,36 @@
-'use client'
-
-import { useState } from 'react'
+import { useState , useEffect } from 'react'
 import {
   Box,
   Container,
   Paper,
   Typography,
-  TextField,
+  Grid,
+  Divider,
   Radio,
   RadioGroup,
   FormControlLabel,
   Button,
-  Divider,
-  Grid,
+  Dialog,
+  TextField,
   Card,
-  CardContent,
-  Dialog
+  CardContent
 } from '@mui/material'
 import {
   LocationOn,
   LocalShipping,
   Payment,
+  Store,
   Receipt
 } from '@mui/icons-material'
-
+import { useLocation } from 'react-router-dom'
+import { useCheckoutPreviewMutation } from '../api/checkoutApi'
+import { formatCurrency } from '@shared/utils/formatPrice'
 interface VoucherType {
   code: string
   discount: string
   minSpend: string
   validTill: string
 }
-
 export default function CheckoutPage() {
   const [paymentMethod, setPaymentMethod] = useState('shopeePay')
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false)
@@ -52,77 +52,135 @@ export default function CheckoutPage() {
       validTill: '3 giờ'
     }
   ]
+  const location = useLocation()
+  const { selectedCartItems } = location.state || { selectedCartItems: [] }
+  const [checkoutPreview, { data: checkoutData }] = useCheckoutPreviewMutation()
+
+  useEffect(() => {
+    if (selectedCartItems.length > 0) {
+      checkoutPreview({
+        discountVoucher: null,
+        shippingVoucher: null,
+        addressId: 1,
+        paymentMethod: 'VNPAY',
+        shippingMethod: 'GHN',
+        items: selectedCartItems,
+        shopDiscounts: null
+      })
+    }
+  }, [selectedCartItems])
+
+  if (!checkoutData) return null
+
+  const { data } = checkoutData
 
   return (
-    <Container maxWidth='md' sx={{ py: 4 }}>
-      {/* Delivery Address */}
+    <Container maxWidth='lg' sx={{ py: 4 }}>
+      {/* Địa chỉ giao hàng */}
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <LocationOn color='primary' />
-          <Typography variant='h6' sx={{ ml: 1 }}>
-            Địa Chỉ Nhận Hàng
+          <LocationOn color='primary' sx={{ mr: 1 }} />
+          <Typography variant='h6'>Địa chỉ nhận hàng</Typography>
+        </Box>
+        <Box sx={{ ml: 4 }}>
+          <Typography>
+            <strong>{data.addressDto.full_name}</strong> |{' '}
+            {data.addressDto.phone_number}
+          </Typography>
+          <Typography color='text.secondary'>
+            {data.addressDto.house_name}, {data.addressDto.address},{' '}
+            {data.addressDto.ward_name}, {data.addressDto.district_name},{' '}
+            {data.addressDto.province_name}
           </Typography>
         </Box>
-        <Typography>
-          NGUYỄN CÔNG HIỆP (+84) 975251857
-          <br />
-          Số nhà 12A ngõ 4 ao sen Hà Đông, Phường Mộ Lao, Quận Hà Đông, Hà Nội
-        </Typography>
       </Paper>
 
-      {/* Product Details */}
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <LocalShipping color='primary' />
-          <Typography variant='h6' sx={{ ml: 1 }}>
-            Sản phẩm
-          </Typography>
-        </Box>
-        <Grid container spacing={2}>
-          <Grid item xs={2}>
-            <img
-              src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScovp9IXbIMLfrSbItfft0WiaROGRpt32Tug&s'
-              alt='Product'
-              style={{ width: '100%', height: 'auto' }}
-            />
-          </Grid>
-          <Grid item xs={10}>
+      {/* Danh sách đơn hàng theo shop */}
+      {data.shopBill.map((shop) => (
+        <Paper key={shop.shopCode} sx={{ p: 2, mb: 2 }}>
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Store color='primary' sx={{ mr: 1 }} />
+            <Typography variant='h6'>{shop.shopName}</Typography>
+          </Box>
+
+          {shop.listItem.map((item) => (
+            <Box
+              key={item.variantId}
+              sx={{ display: 'flex', py: 2, borderBottom: '1px solid #eee' }}
+            >
+              <img
+                src={JSON.parse(item.imageUrl)[0]}
+                alt={item.title}
+                style={{
+                  width: 80,
+                  height: 80,
+                  objectFit: 'cover',
+                  marginRight: 16
+                }}
+              />
+              <Box sx={{ flex: 1 }}>
+                <Typography>{item.title}</Typography>
+                <Typography variant='body2' color='text.secondary'>
+                  Số lượng: {item.quantity}
+                </Typography>
+                <Typography color='primary'>
+                  {formatCurrency(item.sellPrice)}
+                </Typography>
+              </Box>
+            </Box>
+          ))}
+
+          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
+            <Typography>Phí vận chuyển:</Typography>
+            <Typography>{formatCurrency(shop.fee)}</Typography>
+          </Box>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Typography>
-              Nón Kết Gấu Đâu, Mũ Bảo Hiểm Lưỡi Trai Gấu...
+              <strong>Tổng tiền:</strong>
             </Typography>
-            <Typography color='text.secondary'>Loại: Mũ Hồng 3D</Typography>
-            <Typography>₫25.500</Typography>
-          </Grid>
-        </Grid>
-      </Paper>
+            <Typography color='primary'>
+              <strong>{formatCurrency(shop.totalAmount)}</strong>
+            </Typography>
+          </Box>
+        </Paper>
+      ))}
 
-      {/* Payment Methods */}
+      {/* Phương thức vận chuyển */}
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Payment color='primary' />
-          <Typography variant='h6' sx={{ ml: 1 }}>
-            Phương thức thanh toán
-          </Typography>
+          <LocalShipping color='primary' sx={{ mr: 1 }} />
+          <Typography variant='h6'>Phương thức vận chuyển</Typography>
         </Box>
-        <RadioGroup
-          value={paymentMethod}
-          onChange={(e) => setPaymentMethod(e.target.value)}
-        >
+        <RadioGroup defaultValue='GHN'>
           <FormControlLabel
-            value='shopeePay'
+            value='GHN'
             control={<Radio />}
-            label='Ví ShopeePay'
+            label='Giao Hàng Nhanh'
           />
           <FormControlLabel
-            value='agribank'
+            value='GHTK'
             control={<Radio />}
-            label='Agribank'
+            label='Giao Hàng Tiết Kiệm'
           />
-          <FormControlLabel value='mb' control={<Radio />} label='MB' />
         </RadioGroup>
       </Paper>
 
-      {/* Voucher Selection */}
+      {/* Phương thức thanh toán */}
+      <Paper sx={{ p: 2, mb: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+          <Payment color='primary' sx={{ mr: 1 }} />
+          <Typography variant='h6'>Phương thức thanh toán</Typography>
+        </Box>
+        <RadioGroup defaultValue='VNPAY'>
+          <FormControlLabel value='VNPAY' control={<Radio />} label='VNPay' />
+          <FormControlLabel
+            value='COD'
+            control={<Radio />}
+            label='Thanh toán khi nhận hàng'
+          />
+          <FormControlLabel value='MOMO' control={<Radio />} label='Ví MoMo' />
+        </RadioGroup>
+      </Paper>
       <Paper sx={{ p: 2, mb: 2 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
           <Receipt color='primary' />
@@ -139,26 +197,32 @@ export default function CheckoutPage() {
         </Box>
       </Paper>
 
-      {/* Total */}
-      <Paper sx={{ p: 2 }}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-          <Typography>Tổng tiền hàng:</Typography>
-          <Typography>₫25.500</Typography>
-        </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-          <Typography>Phí vận chuyển:</Typography>
-          <Typography>₫16.500</Typography>
-        </Box>
-        <Divider sx={{ my: 2 }} />
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-          <Typography variant='h6'>Tổng thanh toán:</Typography>
-          <Typography variant='h6' color='error'>
-            ₫42.000
-          </Typography>
-        </Box>
-        <Button variant='contained' color='error' fullWidth size='large'>
-          Đặt hàng
-        </Button>
+      {/* Tổng kết đơn hàng */}
+      <Paper sx={{ p: 2, position: 'sticky', bottom: 0 }}>
+        <Grid container spacing={2} alignItems='center'>
+          <Grid item xs={12} md={8}>
+            <Box>
+              <Typography>
+                Tổng tiền hàng: {formatCurrency(data.productTotal)}
+              </Typography>
+              <Typography>
+                Phí vận chuyển: {formatCurrency(data.totalFee)}
+              </Typography>
+              <Typography>
+                Giảm giá:{' '}
+                {formatCurrency(data.shopDiscount + data.ecommerceDiscount)}
+              </Typography>
+              <Typography variant='h6' color='primary'>
+                Tổng thanh toán: {formatCurrency(data.totalAmount)}
+              </Typography>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Button variant='contained' color='primary' fullWidth size='large'>
+              Đặt hàng
+            </Button>
+          </Grid>
+        </Grid>
       </Paper>
 
       {/* Voucher Dialog */}

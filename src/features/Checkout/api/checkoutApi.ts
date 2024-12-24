@@ -13,12 +13,13 @@ export const checkoutApi = createApi({
   tagTypes: ['Checkout'],
   endpoints: (builder) => ({
     // Query để lấy preview đơn hàng
-    getCheckoutPreview: builder.query<IBaseResponse<CheckoutPreviewData>, CheckoutSubmitRequest>({
-      query: () => ({
+    checkoutPreview: builder.mutation<IBaseResponse<CheckoutPreviewData>, CheckoutSubmitRequest>({
+      query: (data) => ({
         url: '/customer/checkout',
-        method: 'GET'
+        method: 'POST',
+        data
       }),
-      providesTags: ['Checkout']
+      invalidatesTags: ['Checkout']
     }),
 
     // Mutation để submit đơn hàng
@@ -34,6 +35,6 @@ export const checkoutApi = createApi({
 })
 
 export const {
-  useGetCheckoutPreviewQuery,
+  useCheckoutPreviewMutation,
   useSubmitCheckoutMutation
 } = checkoutApi

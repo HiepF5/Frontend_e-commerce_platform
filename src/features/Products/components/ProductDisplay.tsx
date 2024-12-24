@@ -231,11 +231,21 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                 border: '1px solid #ffd6d6'
               }}
             >
-              <Typography variant='h5' color='error.main' gutterBottom>
-                {formatPrice(product.minPrice)}
-                {product.maxPrice > product.minPrice &&
-                  ` - ${formatPrice(product.maxPrice)}`}
-              </Typography>
+              {!selectedVariant ? (
+                <Typography variant='h5' color='error.main' gutterBottom>
+                  {formatPrice(product.minPrice)}
+                  {product.maxPrice > product.minPrice &&
+                    ` - ${formatPrice(product.maxPrice)}`}
+                </Typography>
+              ) : (
+                <Typography variant='h5' color='error.main' gutterBottom>
+                  Giá bán {formatPrice(
+                    product.productVariant.find(
+                      (v) => v.variantId === selectedVariant
+                    )?.sellPrice ?? 0
+                  )}
+                </Typography>
+              )}
             </Box>
 
             {/* Variant Groups */}
@@ -294,6 +304,11 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                     )?.soldCount
                   }
                 </Typography>
+                <Typography>Giá bán: {formatPrice(
+                    product.productVariant.find(
+                      (v) => v.variantId === selectedVariant
+                    )?.sellPrice ?? 0
+                  )}</Typography>
               </Box>
             )}
 
