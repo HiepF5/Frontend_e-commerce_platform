@@ -77,7 +77,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
             item_id: selectedVariant,
             quantity: quantity
           }).unwrap()
-          setQuantity(0)
+          setQuantity(1)
 
         } catch (err) {
           console.error('Failed to update quantity:', err)

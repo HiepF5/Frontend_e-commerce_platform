@@ -2,6 +2,7 @@ import { Children, Suspense } from 'react'
 import { useRoutes } from 'react-router-dom'
 import LayoutPage from '@layouts/LayoutPage'
 import CheckoutPage from '../components/CheckoutPage'
+import CheckoutStatus from '../components/CheckoutStatus'
 
 const CheckoutRoutes = (): JSX.Element => {
   const routes = [
@@ -13,6 +14,14 @@ const CheckoutRoutes = (): JSX.Element => {
           path: '',
           element: <CheckoutPage />
         },
+        {
+          path: 'success',
+          element: <CheckoutStatus  />
+        },
+        {
+          path: 'failed',
+          element: <CheckoutStatus />
+          }
         
       ]
     }

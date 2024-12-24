@@ -22,8 +22,8 @@ import {
   Store,
   Receipt
 } from '@mui/icons-material'
-import { useLocation } from 'react-router-dom'
-import { useCheckoutPreviewMutation } from '../api/checkoutApi'
+import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useCheckoutPreviewMutation, useSubmitCheckoutMutation } from '../api/checkoutApi'
 import { formatCurrency } from '@shared/utils/formatPrice'
 interface VoucherType {
   code: string
@@ -55,7 +55,7 @@ export default function CheckoutPage() {
   const location = useLocation()
   const { selectedCartItems } = location.state || { selectedCartItems: [] }
   const [checkoutPreview, { data: checkoutData }] = useCheckoutPreviewMutation()
-
+  const navigate = useNavigate()
   useEffect(() => {
     if (selectedCartItems.length > 0) {
       checkoutPreview({
@@ -69,6 +69,23 @@ export default function CheckoutPage() {
       })
     }
   }, [selectedCartItems])
+  const [
+    submitCheckout,
+  ] = useSubmitCheckoutMutation()
+  const handleSubmitCheckout = async () => {  
+    const response = await submitCheckout({
+      discountVoucher: null,
+      shippingVoucher: null,
+      addressId: 1,
+      paymentMethod: 'VNPAY',
+      shippingMethod: 'GHN',
+      items: selectedCartItems,
+      shopDiscounts: null
+    })
+    if (response.data?.code === 200) navigate('/checkout/success', { state: { link: response.data?.data } })
+    else navigate('/checkout/error')
+
+  }
 
   if (!checkoutData) return null
 
@@ -218,7 +235,13 @@ export default function CheckoutPage() {
             </Box>
           </Grid>
           <Grid item xs={12} md={4}>
-            <Button variant='contained' color='primary' fullWidth size='large'>
+            <Button
+              variant='contained'
+              color='primary'
+              fullWidth
+              size='large'
+              onClick={handleSubmitCheckout}
+            >
               Đặt hàng
             </Button>
           </Grid>

@@ -40,11 +40,7 @@ export interface CheckoutSubmitRequest {
 export interface CheckoutSubmitResponse {
   code: number
   message: string
-  data: {
-    orderId: string
-    paymentUrl?: string // URL thanh toán (cho VNPAY, MOMO)
-    totalAmount: number
-  }
+  data: string
   status: number
 }
 
