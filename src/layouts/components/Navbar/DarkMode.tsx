@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import lightButton from '@assets/website/light-mode-button.png'
 import DarkButton from '@assets/website/dark-mode-button.png'
 const DarkMode = () => {

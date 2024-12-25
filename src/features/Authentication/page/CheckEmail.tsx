@@ -1,4 +1,4 @@
-import React from 'react'
+
 import NavbarLogin from '../../../shared/components/NavbarLogin/NavbarLogin'
 import CheckEmailView from '../components/CheckEmail/CheckEmailView'
 

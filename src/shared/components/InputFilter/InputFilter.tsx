@@ -1,6 +1,12 @@
-import React from 'react'
 
-function InputFilter({ id, value, label, checked }) {
+interface InputFilterProps {
+  id: string;
+  value: string;
+  label: string;
+  checked: boolean;
+}
+
+function InputFilter({ id, value, label, checked }: InputFilterProps) {
   return (
     <div className='flex items-center'>
       <input

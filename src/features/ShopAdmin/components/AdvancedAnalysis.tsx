@@ -40,7 +40,7 @@ export const AdvancedAnalysis = ({
   const [results, setResults] = useState<any[]>([])
   const [forecastDays, setForecastDays] = useState(7)
   const [mlPredictions, setMLPredictions] = useState<number[]>([])
-
+console.log(mlPredictions)
   const performSeasonalAnalysis = () => {
     const values = data.map(item => item[valueKey])
     const seasonalPeriod = 7 // Weekly seasonality

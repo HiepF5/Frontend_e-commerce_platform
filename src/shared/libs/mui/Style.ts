@@ -70,7 +70,7 @@ export const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
   }
 }))
 
-export const StyledAvatar = styled(Avatar)(({ theme }) => ({
+export const StyledAvatar = styled(Avatar)(({  }) => ({
   width: 56,
   height: 56
 }))

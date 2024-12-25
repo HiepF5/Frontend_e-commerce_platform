@@ -6,7 +6,6 @@ import {
   Button,
   Select,
   MenuItem,
-  InputLabel,
   FormControl,
   Chip,
   Box,
@@ -61,7 +60,7 @@ export default function PostForm({ onSubmit, currentUser }: PostFormProps) {
       content,
       location,
       hashTags,
-      image: image || undefined,
+      image: image || undefined
     })
     onSubmit({
       postRole,
@@ -69,7 +68,7 @@ export default function PostForm({ onSubmit, currentUser }: PostFormProps) {
       content,
       location,
       hashTags,
-      image: image || undefined,
+      image: image || undefined
     })
     setContent('')
     setLocation('')
@@ -130,33 +129,50 @@ export default function PostForm({ onSubmit, currentUser }: PostFormProps) {
             sx={{ mb: 2 }}
           />
           <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-            <FormControl size='small'>
-              <Select
-                value={visibility}
-                onChange={(e) =>
-                  setVisibility(
-                    e.target.value as 'PUBLIC' | 'PRIVATE' | 'FRIENDS'
-                  )
-                }
-                displayEmpty
-                renderValue={(value) => (
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    {getVisibilityIcon()}
-                    <Typography sx={{ ml: 1 }}>
-                      {value === 'PUBLIC'
-                        ? 'Công khai'
-                        : value === 'PRIVATE'
-                          ? 'Chỉ mình tôi'
-                          : 'Bạn bè'}
-                    </Typography>
-                  </Box>
-                )}
-              >
-                <MenuItem value='PUBLIC'>Công khai</MenuItem>
-                <MenuItem value='PRIVATE'>Chỉ mình tôi</MenuItem>
-                <MenuItem value='FRIENDS'>Bạn bè</MenuItem>
-              </Select>
-            </FormControl>
+            <Box sx={{ display: 'flex', gap: 2 }}>
+              <FormControl size='small'>
+                <Select
+                  value={postRole}
+                  onChange={(e) =>
+                    setPostRole(
+                      e.target.value as 'KHACHHANG' | 'ADMIN' | 'STAFF'
+                    )
+                  }
+                  displayEmpty
+                >
+                  <MenuItem value='KHACHHANG'>Khách hàng</MenuItem>
+                  <MenuItem value='ADMIN'>Admin</MenuItem>
+                  <MenuItem value='STAFF'>Staff</MenuItem>
+                </Select>
+              </FormControl>
+              <FormControl size='small'>
+                <Select
+                  value={visibility}
+                  onChange={(e) =>
+                    setVisibility(
+                      e.target.value as 'PUBLIC' | 'PRIVATE' | 'FRIENDS'
+                    )
+                  }
+                  displayEmpty
+                  renderValue={(value) => (
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      {getVisibilityIcon()}
+                      <Typography sx={{ ml: 1 }}>
+                        {value === 'PUBLIC'
+                          ? 'Công khai'
+                          : value === 'PRIVATE'
+                            ? 'Chỉ mình tôi'
+                            : 'Bạn bè'}
+                      </Typography>
+                    </Box>
+                  )}
+                >
+                  <MenuItem value='PUBLIC'>Công khai</MenuItem>
+                  <MenuItem value='PRIVATE'>Chỉ mình tôi</MenuItem>
+                  <MenuItem value='FRIENDS'>Bạn bè</MenuItem>
+                </Select>
+              </FormControl>
+            </Box>
             <Box>
               <IconButton
                 onClick={() => setShowLocationInput(!showLocationInput)}

@@ -1,7 +1,6 @@
 import { Navigate } from 'react-router-dom'
 import Cookies from 'js-cookie'
 import { toast } from 'react-toastify'
-import React from 'react'
 
 interface User {
   full_name: string

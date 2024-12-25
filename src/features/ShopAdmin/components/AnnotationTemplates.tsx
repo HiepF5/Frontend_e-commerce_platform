@@ -93,7 +93,7 @@ export const AnnotationTemplates = ({ onSelectTemplate }: AnnotationTemplatesPro
         {templates.map((template) => (
           <ListItem
             key={template.id}
-            button
+            component="li"
             onClick={() => onSelectTemplate(template)}
           >
             <ListItemText

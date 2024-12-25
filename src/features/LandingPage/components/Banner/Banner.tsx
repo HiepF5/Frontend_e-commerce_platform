@@ -1,7 +1,4 @@
-import React from 'react'
 import BannerImg from '@assets/Images/Topproduct/6.png'
-import { GrSecure } from 'react-icons/gr'
-import { IoFastFood } from 'react-icons/io5'
 import { GiFoodTruck } from 'react-icons/gi'
 import { FaRegGem, FaShippingFast, FaExchangeAlt } from 'react-icons/fa'
 const Banner = () => {

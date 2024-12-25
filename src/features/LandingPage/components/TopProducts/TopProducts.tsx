@@ -1,7 +1,6 @@
 import React from 'react'
 import Img1 from '@assets/Images/Toprating/1.png'
 import Img2 from '@assets/Images/Toprating/2.png'
-import Img3 from '@assets/Images/Toprating/3.png'
 import Img4 from '@assets/Images/Toprating/4.png'
 import { FaStar } from 'react-icons/fa'
 const ProductsData = [

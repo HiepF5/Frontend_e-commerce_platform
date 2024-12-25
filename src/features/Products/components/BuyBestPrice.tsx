@@ -1,10 +1,21 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import TitleList from '@shared/components/TitleList/TitleList'
 import ProductItem from './ProductItem'
 
 function BuyBestPrice() {
   const [featuredProducts, setFeaturedProducts] = useState([])
-  const [lastProducts, setLastProducts] = useState([])
+  const [lastProducts] = useState([])
+  useEffect(() => {
+    // Example: Fetch featured products and update state
+    const fetchFeaturedProducts = async () => {
+      const response = await fetch('/api/featured-products');
+      const data = await response.json();
+      setFeaturedProducts(data);
+    };
+
+    fetchFeaturedProducts();
+  }, []);
+
   return (
     <div className='container'>
       <header className='bg-primary p-4 text-center'>

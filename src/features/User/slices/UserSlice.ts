@@ -93,7 +93,7 @@ const UserSlice = createSlice({
       .addCase(changePassword.pending, (state) => {
         state.status = false;
       })
-      .addCase(changePassword.fulfilled, (state, action) => {
+      .addCase(changePassword.fulfilled, (state) => {
         state.status = true;
         state.code = 200;
         state.error = null;
@@ -107,7 +107,7 @@ const UserSlice = createSlice({
       .addCase(changeInfo.pending, (state) => {
         state.status = false;
       })
-      .addCase(changeInfo.fulfilled, (state, action) => {
+      .addCase(changeInfo.fulfilled, (state) => {
         state.status = true;
         state.code = 200;
         state.error = null;
@@ -121,7 +121,7 @@ const UserSlice = createSlice({
       .addCase(changeAvatar.pending, (state) => {
         state.status = false;
       })
-      .addCase(changeAvatar.fulfilled, (state, action) => {
+      .addCase(changeAvatar.fulfilled, (state) => {
         state.status = true;
         state.code = 200;
         state.error = null;

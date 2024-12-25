@@ -28,9 +28,7 @@ interface BulkActionsProps {
 export const BulkActions = ({
   selectedOrders,
   onSelectAll,
-  onSelectOne,
   onBulkStatusUpdate,
-  orders,
   allSelected,
 }: BulkActionsProps): JSX.Element => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)

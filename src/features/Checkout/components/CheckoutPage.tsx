@@ -5,7 +5,6 @@ import {
   Paper,
   Typography,
   Grid,
-  Divider,
   Radio,
   RadioGroup,
   FormControlLabel,
@@ -22,7 +21,7 @@ import {
   Store,
   Receipt
 } from '@mui/icons-material'
-import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { useCheckoutPreviewMutation, useSubmitCheckoutMutation } from '../api/checkoutApi'
 import { formatCurrency } from '@shared/utils/formatPrice'
 interface VoucherType {
@@ -32,7 +31,7 @@ interface VoucherType {
   validTill: string
 }
 export default function CheckoutPage() {
-  const [paymentMethod, setPaymentMethod] = useState('shopeePay')
+  // const [paymentMethod, setPaymentMethod] = useState('shopeePay')
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false)
   const [selectedVoucher, setSelectedVoucher] = useState<VoucherType | null>(
     null

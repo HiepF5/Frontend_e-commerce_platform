@@ -34,7 +34,7 @@ export default function ColorFilter({ options }: ColorFilterProps) {
               {options.map((option, optionIdx) => (
                 <div key={option.value} className='flex items-center'>
                   <InputFilter
-                    id={optionIdx}
+                    id={optionIdx.toString()}
                     value={option.value}
                     label={option.label}
                     checked={option.checked}

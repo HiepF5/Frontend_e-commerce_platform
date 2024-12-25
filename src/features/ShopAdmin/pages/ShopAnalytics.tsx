@@ -122,7 +122,7 @@ const ShopAnalytics = (): JSX.Element => {
                 paddingAngle={5}
                 dataKey="value"
               >
-                {orderStatusData && orderStatusData.map((entry, index) => (
+                {orderStatusData && orderStatusData.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

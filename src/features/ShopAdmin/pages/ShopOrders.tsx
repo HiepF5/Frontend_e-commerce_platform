@@ -29,20 +29,22 @@ import {
   DialogContent,
   CardContent,
   Card,
-  DialogActions,
+  DialogActions
 } from '@mui/material'
 import { Search as SearchIcon } from '@mui/icons-material'
 import { useOrders } from '../hooks/useOrders'
 import DatePicker from 'react-datepicker'
-import "react-datepicker/dist/react-datepicker.css"
-import { SortableTableHead, type Order as SortOrder } from '../components/SortableTableHead'
+import 'react-datepicker/dist/react-datepicker.css'
+import {
+  SortableTableHead,
+  type Order as SortOrder
+} from '../components/SortableTableHead'
 import { ExportButton } from '../components/ExportButton'
 import { AdvancedFilters } from '../components/AdvancedFilters'
 import { BulkActions } from '../components/BulkActions'
 import { OrdersAnalytics } from '../components/OrdersAnalytics'
 import { ViewIcon } from 'lucide-react'
 import { Order } from '../types/order'
-
 
 interface FilterValues {
   search: string
@@ -52,14 +54,6 @@ interface FilterValues {
   minAmount: number
   maxAmount: number
 }
-
-interface OrderItem {
-  productName: string
-  quantity: number
-  price: number
-}
-
-
 
 const ShopOrders = (): JSX.Element => {
   // State for filters and pagination
@@ -79,7 +73,7 @@ const ShopOrders = (): JSX.Element => {
     startDate: null,
     endDate: null,
     minAmount: 0,
-    maxAmount: 10000,
+    maxAmount: 10000
   })
 
   // RTK Query hooks
@@ -103,14 +97,20 @@ const ShopOrders = (): JSX.Element => {
     setPage(1)
   }
 
-  const handlePageChange = (_event: React.ChangeEvent<unknown>, value: number): void => {
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    value: number
+  ): void => {
     setPage(value)
   }
 
-  const handleUpdateStatus = async (orderId: string, newStatus: string) => {
+  const handleUpdateStatus = async (newStatus: string) => {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 500))
     // Update local state logic here
+    if (selectedOrder) {
+      setSelectedOrder({ ...selectedOrder, status: newStatus })
+    }
   }
 
   const handleRequestSort = (property: string): void => {
@@ -120,21 +120,25 @@ const ShopOrders = (): JSX.Element => {
   }
 
   const handleSelectAll = (checked: boolean): void => {
-    setSelectedOrders(checked ? orders.map(order => order.id) ?? [] : [])
+    setSelectedOrders(checked ? (orders.map((order) => order.id) ?? []) : [])
   }
 
   const handleSelectOne = (orderId: string, checked: boolean): void => {
-    setSelectedOrders(prev => 
-      checked 
-        ? [...prev, orderId]
-        : prev.filter(id => id !== orderId)
+    setSelectedOrders((prev) =>
+      checked ? [...prev, orderId] : prev.filter((id) => id !== orderId)
     )
   }
 
-  const handleBulkStatusUpdate = async (orderIds: string[], newStatus: string) => {
+  const handleBulkStatusUpdate = async (
+    orderIds: string[],
+    newStatus: string
+  ) => {
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise((resolve) => setTimeout(resolve, 500))
     // Update local state logic here
+    setSelectedOrders((prev) =>
+      prev.map((id) => (orderIds.includes(id) ? newStatus : id))
+    )
   }
 
   const handleView = (order: Order): void => {
@@ -155,13 +159,18 @@ const ShopOrders = (): JSX.Element => {
     { id: 'date', label: 'Date', sortable: true, align: undefined },
     { id: 'status', label: 'Status', sortable: true, align: undefined },
     { id: 'total', label: 'Total', sortable: true, align: 'right' as 'right' },
-    { id: 'actions', label: 'Actions', sortable: false, align: undefined },
+    { id: 'actions', label: 'Actions', sortable: false, align: undefined }
   ]
 
   // Loading state
   if (isLoading) {
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" minHeight="400px">
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        minHeight='400px'
+      >
         <CircularProgress />
       </Box>
     )
@@ -170,13 +179,11 @@ const ShopOrders = (): JSX.Element => {
   // Error state
   if (error) {
     return (
-      <Alert severity="error" sx={{ mt: 2 }}>
+      <Alert severity='error' sx={{ mt: 2 }}>
         Error loading orders. Please try again later.
       </Alert>
     )
   }
-
-
 
   return (
     <Box>
@@ -188,56 +195,49 @@ const ShopOrders = (): JSX.Element => {
       />
 
       {/* Filters */}
-      <Stack spacing={2} direction="row" sx={{ mb: 3 }}>
+      <Stack spacing={2} direction='row' sx={{ mb: 3 }}>
         <TextField
-          placeholder="Search orders..."
+          placeholder='Search orders...'
           value={search}
           onChange={handleSearch}
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <SearchIcon />
               </InputAdornment>
-            ),
+            )
           }}
         />
         <FormControl sx={{ minWidth: 120 }}>
           <InputLabel>Status</InputLabel>
-          <Select value={status} onChange={handleStatusFilter} label="Status">
-            <MenuItem value="">All</MenuItem>
-            <MenuItem value="processing">Processing</MenuItem>
-            <MenuItem value="shipped">Shipped</MenuItem>
-            <MenuItem value="delivered">Delivered</MenuItem>
-            <MenuItem value="cancelled">Cancelled</MenuItem>
+          <Select value={status} onChange={handleStatusFilter} label='Status'>
+            <MenuItem value=''>All</MenuItem>
+            <MenuItem value='processing'>Processing</MenuItem>
+            <MenuItem value='shipped'>Shipped</MenuItem>
+            <MenuItem value='delivered'>Delivered</MenuItem>
+            <MenuItem value='cancelled'>Cancelled</MenuItem>
           </Select>
         </FormControl>
         <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <div className="datepicker">
+          <div className='datepicker'>
             <DatePicker
               selectsRange
               startDate={startDate}
               endDate={endDate}
               onChange={handleDateChange}
-              placeholderText="Select date range"
-              dateFormat="yyyy-MM-dd"
+              placeholderText='Select date range'
+              dateFormat='yyyy-MM-dd'
               isClearable
               showMonthDropdown
               showYearDropdown
-              dropdownMode="select"
+              dropdownMode='select'
               customInput={
-                <TextField
-                  label="Date Range"
-                  size="small"
-                  fullWidth
-                />
+                <TextField label='Date Range' size='small' fullWidth />
               }
             />
           </div>
         </Box>
-        <ExportButton 
-          orders={orders ?? []} 
-          selectedOrders={selectedOrders}
-        />
+        <ExportButton orders={orders ?? []} selectedOrders={selectedOrders} />
       </Stack>
 
       {/* Orders Table */}
@@ -257,16 +257,17 @@ const ShopOrders = (): JSX.Element => {
               onBulkStatusUpdate={handleBulkStatusUpdate}
               orders={orders ?? []}
               allSelected={
-                orders.length === selectedOrders.length &&
-                orders.length > 0
+                orders.length === selectedOrders.length && orders.length > 0
               }
             />
             {orders.map((order) => (
               <TableRow key={order.id}>
-                <TableCell padding="checkbox">
+                <TableCell padding='checkbox'>
                   <Checkbox
                     checked={selectedOrders.includes(order.id)}
-                    onChange={(e) => handleSelectOne(order.id, e.target.checked)}
+                    onChange={(e) =>
+                      handleSelectOne(order.id, e.target.checked)
+                    }
                   />
                 </TableCell>
                 <TableCell>{order.id}</TableCell>
@@ -279,8 +280,8 @@ const ShopOrders = (): JSX.Element => {
                       order.status === 'Delivered'
                         ? 'success'
                         : order.status === 'Processing'
-                        ? 'warning'
-                        : 'info'
+                          ? 'warning'
+                          : 'info'
                     }
                   />
                 </TableCell>
@@ -288,7 +289,7 @@ const ShopOrders = (): JSX.Element => {
                 <TableCell>
                   <Button
                     startIcon={<ViewIcon />}
-                    size="small"
+                    size='small'
                     onClick={() => handleView(order)}
                   >
                     View Details
@@ -306,12 +307,17 @@ const ShopOrders = (): JSX.Element => {
           count={totalPages ?? 1}
           page={page}
           onChange={handlePageChange}
-          color="primary"
+          color='primary'
         />
       </Box>
 
       {/* Order Details Dialog */}
-      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="md" fullWidth>
+      <Dialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>Order Details</DialogTitle>
         <DialogContent>
           {selectedOrder && (
@@ -319,24 +325,26 @@ const ShopOrders = (): JSX.Element => {
               <Grid item xs={12} md={6}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">Order Information</Typography>
+                    <Typography variant='h6'>Order Information</Typography>
                     <Typography>Order ID: {selectedOrder.id}</Typography>
-                    <Typography>Customer: {selectedOrder.customerName}</Typography>
+                    <Typography>
+                      Customer: {selectedOrder.customerName}
+                    </Typography>
                     <Typography>Date: {selectedOrder.date}</Typography>
                     <Typography>Phone: {selectedOrder.phone}</Typography>
                     <Typography>Address: {selectedOrder.address}</Typography>
                     <Box sx={{ mt: 2 }}>
-                      <FormControl fullWidth size="small">
+                      <FormControl fullWidth size='small'>
                         <InputLabel>Update Status</InputLabel>
                         <Select
                           value={selectedOrder.status}
-                          label="Update Status"
-                          onChange={(e) => handleUpdateStatus(selectedOrder.id, e.target.value)}
+                          label='Update Status'
+                          onChange={(e) => handleUpdateStatus(e.target.value)}
                         >
-                          <MenuItem value="Processing">Processing</MenuItem>
-                          <MenuItem value="Shipped">Shipped</MenuItem>
-                          <MenuItem value="Delivered">Delivered</MenuItem>
-                          <MenuItem value="Cancelled">Cancelled</MenuItem>
+                          <MenuItem value='Processing'>Processing</MenuItem>
+                          <MenuItem value='Shipped'>Shipped</MenuItem>
+                          <MenuItem value='Delivered'>Delivered</MenuItem>
+                          <MenuItem value='Cancelled'>Cancelled</MenuItem>
                         </Select>
                       </FormControl>
                     </Box>
@@ -346,8 +354,8 @@ const ShopOrders = (): JSX.Element => {
               <Grid item xs={12} md={6}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">Order Items</Typography>
-                    <Table size="small">
+                    <Typography variant='h6'>Order Items</Typography>
+                    <Table size='small'>
                       <TableHead>
                         <TableRow>
                           <TableCell>Product</TableCell>
@@ -364,8 +372,12 @@ const ShopOrders = (): JSX.Element => {
                           </TableRow>
                         ))}
                         <TableRow>
-                          <TableCell colSpan={2}><strong>Total</strong></TableCell>
-                          <TableCell><strong>${selectedOrder.total}</strong></TableCell>
+                          <TableCell colSpan={2}>
+                            <strong>Total</strong>
+                          </TableCell>
+                          <TableCell>
+                            <strong>${selectedOrder.total}</strong>
+                          </TableCell>
                         </TableRow>
                       </TableBody>
                     </Table>
@@ -383,4 +395,4 @@ const ShopOrders = (): JSX.Element => {
   )
 }
 
-export default ShopOrders 
+export default ShopOrders

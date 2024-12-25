@@ -7,11 +7,7 @@ import {
   AccordionDetails,
   TextField,
   Button,
-  Chip,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
+  Chip
 } from '@mui/material'
 import {
   ExpandMore,
@@ -66,14 +62,14 @@ export const DataAnalysisTools = ({
 
     const outliers = data.filter(item => 
       Math.abs(item[valueKey] - mean) > outlierThreshold * stdDev
-    ).map((item, index) => ({
+    ).map((item) => ({
       type: 'Outlier',
       value: item[valueKey],
       description: `Outlier detected: ${item[valueKey]} (${outlierThreshold} std devs from mean)`,
     }))
 
     setAnalysisResults(outliers)
-    outliers.forEach((outlier, index) => {
+    outliers.forEach((outlier) => {
       onHighlight([{
         start: data.findIndex(item => item[valueKey] === outlier.value),
         end: data.findIndex(item => item[valueKey] === outlier.value),

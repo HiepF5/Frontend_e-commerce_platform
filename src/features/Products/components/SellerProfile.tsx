@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {
   Container,
   Card,
@@ -12,7 +12,6 @@ import {
 import {
   MessageCircle,
   Store,
-  ChevronRight,
   Clock,
   Users,
   Star,
@@ -52,7 +51,7 @@ export default function SellerProfile({ stats, shopCode }: SellerProfileProps) {
           setIsFollowed(false) // Assuming the API returns this info
           setLoading(false)
         })
-        .catch((error) => {
+        .catch(() => {
           setError('Failed to fetch shop details')
           setLoading(false)
         })

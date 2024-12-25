@@ -9,7 +9,6 @@ import {
   Chip,
 } from '@mui/material'
 import {
-  NoteAdd as AddIcon,
   Delete as DeleteIcon,
   Edit as EditIcon,
 } from '@mui/icons-material'

@@ -1,8 +1,5 @@
-import React from 'react'
 import NavbarLayoutUser from '@features/User/components/NavbarLayoutUser'
-import UserInfo from './UserInfo'
 
-import { ReactNode } from 'react';
 import { Outlet } from 'react-router-dom';
 
 const LayoutUser = () => {

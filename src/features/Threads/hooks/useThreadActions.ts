@@ -31,6 +31,7 @@ export const useThreadActions = (setPosts: React.Dispatch<React.SetStateAction<P
         file: null // Replace with actual file if needed
       }).unwrap();
       setPosts((prevPosts) => [post, ...prevPosts]);
+      console.log('Thread created:', response);
     } catch (error) {
       console.error('Failed to create thread:', error);
     }
@@ -49,6 +50,7 @@ export const useThreadActions = (setPosts: React.Dispatch<React.SetStateAction<P
         file: null
       }).unwrap();
       console.log('Thread updated:', response);
+      console.log(id)
     } catch (error) {
       console.error('Failed to update thread:', error);
     }

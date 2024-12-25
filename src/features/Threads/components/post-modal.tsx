@@ -1,11 +1,10 @@
-import React, { useState } from 'react'
+import  { useState } from 'react'
 import {
   Dialog,
   DialogTitle,
   DialogContent,
   Avatar,
   Typography,
-  Button,
   IconButton,
   Tooltip,
   Box
@@ -16,11 +15,11 @@ import { CommentSection } from './comment-section'
 
 interface PostModalProps {
   post: Post | null
-  onClose: () => void
-  onReact: (postId: number, reactionType: Reaction['type']) => void
-  onAddComment: (postId: number, content: string, parentId?: string) => void
-  onUpdateComment: (postId: number, commentId: string, content: string) => void
-  onDeleteComment: (postId: number, commentId: string) => void
+  onClose?: () => void
+  onReact?: (postId: number, reactionType: Reaction['type']) => void
+  onAddComment?: (postId: number, content: string, parentId?: string) => void
+  onUpdateComment?: (postId: number, commentId: string, content: string) => void
+  onDeleteComment?: (postId: number, commentId: string) => void
 }
 
 export function PostModal({
@@ -64,7 +63,7 @@ export function PostModal({
         )}
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Tooltip title='React'>
-            <IconButton onClick={() => onReact(+post.id, 'like')}>
+            <IconButton onClick={() => onReact?.(+post.id, 'like')}>
               <Favorite color='primary' />
             </IconButton>
           </Tooltip>
@@ -85,13 +84,13 @@ export function PostModal({
           <CommentSection
             comments={post.comments}
             onAddComment={(content, parentId) =>
-              onAddComment(+post.id, content, parentId)
+              onAddComment?.(+post.id, content, parentId)
             }
             onUpdateComment={(commentId, content) =>
-              onUpdateComment(+post.id, commentId, content)
+              onUpdateComment?.(+post.id, commentId, content)
             }
             onDeleteComment={(commentId) =>
-              onDeleteComment(+post.id, commentId)
+              onDeleteComment?.(+post.id, commentId)
             }
           />
         )}

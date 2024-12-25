@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 import ProductItem from './ProductItem'
 import { IProduct } from '~/types/products.interface'

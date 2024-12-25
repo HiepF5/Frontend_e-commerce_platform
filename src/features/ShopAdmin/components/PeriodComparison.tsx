@@ -9,13 +9,6 @@ import {
   IconButton
 } from '@mui/material'
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
   ResponsiveContainer
 } from 'recharts'
 import { useState, useRef } from 'react'
@@ -26,7 +19,6 @@ import { ChartAnnotation } from './ChartAnnotation'
 import { filterChartData, calculatePeriodMetrics } from '../utils/dataFilters'
 import { InteractiveChart } from './InteractiveChart'
 import { Annotation } from './ChartAnnotation'
-import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 
 interface FilterOptions {
@@ -58,7 +50,7 @@ export const PeriodComparison = ({
   const [menuAnchorEl, setMenuAnchorEl] = useState<null | HTMLElement>(null)
   const chartRef = useRef<HTMLDivElement>(null)
   const [annotations, setAnnotations] = useState<Annotation[]>([])
-  const [filterOptions, setFilterOptions] = useState<FilterOptions>({})
+  const [filterOptions] = useState<FilterOptions>({})
   const [zoomedData, setZoomedData] = useState<any[] | null>(null)
   const [highlightRanges] = useState([
     {

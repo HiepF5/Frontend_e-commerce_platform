@@ -12,13 +12,6 @@ import {
   Divider,
   Grid
 } from '@mui/material'
-import {
-  Description,
-  Payment as PaymentIcon,
-  LocalShipping,
-  Inventory,
-  Star
-} from '@mui/icons-material'
 
 export default function OrderTracking() {
   const steps = [

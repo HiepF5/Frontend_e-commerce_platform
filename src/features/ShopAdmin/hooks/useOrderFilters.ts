@@ -16,7 +16,7 @@ export const useOrderFilters = () => {
     setFilters((prev) => ({
       ...prev,
       [key]: value,
-      page: key === 'page' ? value : 1, // Reset to first page when changing filters
+      page: key === 'page' ? (value as number) : 1, // Reset to first page when changing filters
     }))
   }
 

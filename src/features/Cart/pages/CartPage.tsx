@@ -25,8 +25,7 @@ export default function CartPage() {
   const [updateCartItem] = useUpdateCartItemMutation()
   const [removeFromCart] = useRemoveFromCartMutation()
   const [clearCart] = useClearCartMutation()
-  const { data: countItem, isLoading: isCountLoading, error: countError } = useGetCartCountQuery()
-  console.log(cartData)
+  const { data: countItem } = useGetCartCountQuery()
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {

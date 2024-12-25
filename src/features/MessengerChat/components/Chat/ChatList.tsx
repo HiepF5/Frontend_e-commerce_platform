@@ -12,16 +12,13 @@ import { useAppDispatch, useAppSelector } from '@store/hook'
 import { setCurrentChat } from '../../slices/ChatSlice'
 import {
   useFetchChatListOwnerQuery,
-  useFetchChatListCustomerQuery
 } from '../../service/chatMessage'
-import { IChatItem, IChatListResponse } from '~/types/message-chat.interface'
+import { IChatItem } from '~/types/message-chat.interface'
 import { OnlineBadge, StyledAvatar, StyledListItemButton } from '@shared/libs/mui/Style'
 
 const ChatList: React.FC = () => {
   const dispatch = useAppDispatch()
-  const user = JSON.parse(localStorage.getItem('user') || '{}')
   const { currentChat } = useAppSelector((state) => state.chatApi)
-  console.log('currentChat', currentChat)
   const {
     data: chatList,
     isLoading,

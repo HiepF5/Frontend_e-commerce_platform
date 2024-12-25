@@ -1,4 +1,4 @@
-import { useState, useCallback, SetStateAction } from 'react'
+import { useState, useCallback } from 'react'
 import {
   LineChart,
   Line,
@@ -15,7 +15,7 @@ import {
   BarChart,
   Bar,
 } from 'recharts'
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import { ChartControls } from './ChartControls'
 import { DataAnalysisTools } from './DataAnalysisTools'
 import { ChartCustomization } from './ChartCustomization'
@@ -65,7 +65,8 @@ export const InteractiveChart = ({
     },
     animation: true,
   })
-
+  console.log(chartSettings)
+  console.log(zoomLevel)
   const handleMouseDown = useCallback((e: any) => {
     if (e) {
       setRefAreaLeft(e.activeLabel)
@@ -234,7 +235,7 @@ export const InteractiveChart = ({
       <DataAnalysisTools
         data={data}
         valueKey={valueKey}
-        onHighlight={(range) => {
+        onHighlight={() => {
           setHighlightMode('range')
           // Add highlight range logic
         }}

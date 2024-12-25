@@ -1,4 +1,4 @@
-import React from 'react'
+
 import NavbarLogin from '../../../shared/components/NavbarLogin/NavbarLogin'
 import CreatePasswordView from '../components/CreatePassword/CreatePasswordView'
 

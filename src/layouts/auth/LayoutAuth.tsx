@@ -2,7 +2,6 @@ import type { BoxProps } from '@mui/material/Box';
 import type { Breakpoint } from '@mui/system';
 
 import Box from '@mui/material/Box';
-import { useTheme } from '@mui/system';
 
 
 type MainProps = BoxProps & {

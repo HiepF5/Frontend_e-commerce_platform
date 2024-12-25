@@ -1,4 +1,4 @@
-import { Grid, Paper, Typography, Box } from '@mui/material'
+import { Grid, Paper, Typography } from '@mui/material'
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, BarChart, Bar } from 'recharts'
 
 const ShopDashboard = (): JSX.Element => {

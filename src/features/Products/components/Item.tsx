@@ -1,7 +1,14 @@
-import React from 'react'
 import { Link } from 'react-router-dom'
 
-function Item({ id, image, name, new_price, old_price }) {
+type ItemProps = {
+  id: string;
+  image: string;
+  name: string;
+  new_price: number;
+  old_price: number;
+};
+
+function Item({ id, image, name, new_price, old_price }: ItemProps) {
   return (
     <div className='item w-80'>
       <Link to={`/product/${id}`}>

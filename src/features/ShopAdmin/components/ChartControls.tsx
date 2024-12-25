@@ -6,7 +6,6 @@ import {
   IconButton,
   Menu,
   MenuItem,
-  Divider,
 } from '@mui/material'
 import {
   ZoomIn,

@@ -1,4 +1,3 @@
-import React from 'react'
 import ThreadForMePage from '../components/threads-for-me'
 
 export const ThreadsUserPage = () => {

@@ -1,4 +1,3 @@
-import Logo from '@assets/HomeImg/Logo_Main.png'
 import { CiSearch } from 'react-icons/ci'
 import { IoMdArrowDropdown } from 'react-icons/io'
 import { Link } from 'react-router-dom'

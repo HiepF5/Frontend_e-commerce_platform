@@ -1,4 +1,4 @@
-import { Grid, Paper, Typography, Box, Card, CardContent, IconButton, Menu, MenuItem } from '@mui/material'
+import { Grid, Paper, Typography, Box, Card, CardContent, IconButton } from '@mui/material'
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
   PieChart, Pie, Cell, LineChart, Line, ResponsiveContainer,
@@ -7,7 +7,6 @@ import {
 import {
   TrendingUp,
   TrendingDown,
-  MoreVert as MoreIcon,
   AttachMoney,
   ShoppingCart,
   LocalShipping,
@@ -268,7 +267,7 @@ export const OrdersAnalytics = ({ orders }: OrdersAnalyticsProps): JSX.Element =
                   paddingAngle={5}
                   dataKey="value"
                 >
-                  {Object.entries(statusData).map((entry, index) => (
+                  {Object.entries(statusData).map((_, index: number) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>

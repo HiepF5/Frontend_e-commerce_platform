@@ -1,4 +1,3 @@
-import React from 'react'
 import Logo from '@assets/logo.png'
 import { IoMdSearch } from 'react-icons/io'
 import {
@@ -34,7 +33,7 @@ const Navbar = () => {
   const handleRegister = () => {
     navigate('/auth/signup')
   }
-  const { data: countItem, isLoading: isCountLoading, error: countError } = useGetCartCountQuery()
+  const { data: countItem } = useGetCartCountQuery()
 
 
   const user = JSON.parse(localStorage.getItem('user') || 'null')

@@ -150,7 +150,7 @@ const NewAddressForm: React.FC<NewAddressFormProps> = ({
   }
 
   const handleToggleChange = (
-    event: React.MouseEvent<HTMLElement>,
+    _event: React.MouseEvent<HTMLElement>,
     newType: AddressType
   ) => {
     if (newType !== null) {

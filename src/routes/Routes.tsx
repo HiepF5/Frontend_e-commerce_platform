@@ -1,10 +1,9 @@
-import React, { Suspense, lazy } from 'react'
+import { Suspense, lazy } from 'react'
 import {
   BrowserRouter as Router,
   Routes,
   Route,
 } from 'react-router-dom'
-import AuthenticatedGuard from '../guards/AuthenticatedGuard'
 import LandingPage from '../features/LandingPage/pages/LandingPage'
 import { AuthPermission } from '../guards/AuthPermission'
 

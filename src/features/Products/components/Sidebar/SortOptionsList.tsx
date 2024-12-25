@@ -1,11 +1,16 @@
-import React from 'react'
 import { Menu } from '@headlessui/react'
 
-function classNames(...classes) {
+function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-function SortOptionsList({ sortOptions }) {
+interface SortOption {
+  name: string;
+  href: string;
+  current: boolean;
+}
+
+function SortOptionsList({ sortOptions }: { sortOptions: SortOption[] }) {
   return (
     <div className='py-1'>
       {sortOptions.map((option) => (

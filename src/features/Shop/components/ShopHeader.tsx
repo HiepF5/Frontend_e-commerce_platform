@@ -1,16 +1,11 @@
 import React from 'react'
 import {
-  Grid,
-  Card,
-  CardContent,
   Typography,
   CardMedia,
   Box,
   Avatar,
   Rating,
   Button,
-  Tabs,
-  Tab
 } from '@mui/material'
 import banner from '@assets/img/banner_mens.png'
 import { useNavigate } from 'react-router-dom'

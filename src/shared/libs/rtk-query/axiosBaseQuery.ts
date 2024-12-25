@@ -1,5 +1,5 @@
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
-import axios, { AxiosRequestConfig, AxiosError } from 'axios';
+import { AxiosRequestConfig, AxiosError } from 'axios';
 import axiosInstance from '@shared/libs/axios/axiosInstance';
 
 // Tạo custom baseQuery sử dụng Axios

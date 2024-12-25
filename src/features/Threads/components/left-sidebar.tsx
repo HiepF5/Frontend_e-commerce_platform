@@ -1,4 +1,3 @@
-import React from 'react'
 import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { Home, Search, Notifications, Mail, Person } from '@mui/icons-material'
 import {  useNavigate } from 'react-router-dom'

@@ -1,4 +1,4 @@
-import React, { lazy, Suspense } from 'react'
+import { lazy, Suspense } from 'react'
 import { useRoutes } from 'react-router-dom'
 import { AuthLayout } from '@layouts/auth/LayoutAuth'
 const SignIn = lazy(() => import('../page/SignIn'))

@@ -1,4 +1,3 @@
-import React from 'react'
 import arrow_icon from '@assets/img/breadcrum_arrow.png'
 import { IProductData } from '../types/products.interface'
 interface BreadcrumProps {

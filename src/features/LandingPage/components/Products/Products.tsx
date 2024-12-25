@@ -4,7 +4,6 @@ import Img3 from '@assets/Images/Topproduct/8.png'
 import Img4 from '@assets/Images/Topproduct/9.png'
 import Img5 from '@assets/Images/Topproduct/10.png'
 import { FaStar } from 'react-icons/fa6'
-import React from 'react'
 const ProductsData = [
   {
     id: 1,

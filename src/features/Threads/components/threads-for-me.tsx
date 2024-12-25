@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { Container, Box, Fab, IconButton, Badge } from '@mui/material'
 import {
   Add,
@@ -19,7 +19,6 @@ export default function ThreadForMePage() {
   const [selectedPost, setSelectedPost] = useState<Post | null>(null)
   const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
   const [viewedPosts, setViewedPosts] = useState<Post[]>([])
-  const [isUserProfileOpen, setIsUserProfileOpen] = useState(false)
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
   const [notifications, setNotifications] = useState<any[]>([])
 
@@ -114,10 +113,19 @@ export default function ThreadForMePage() {
               avatar: '/placeholder.svg',
               timestamp: 'Just now',
               comments: [],
-              ...newPost
+              ...newPost,
+              reactions: []
             }
             setPosts([post, ...posts])
             setIsCreatePostOpen(false)
+            setNotifications([
+              {
+                id: Date.now(),
+                message: 'New post created',
+                timestamp: new Date().toISOString()
+              },
+              ...notifications
+            ])
           }}
           currentUser={{
             name: 'Current User',

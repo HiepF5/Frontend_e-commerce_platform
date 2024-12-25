@@ -1,6 +1,7 @@
 import * as XLSX from 'xlsx'
 import { Order } from '../types/order'
-import 'jspdf-autotable'
+import autoTable from 'jspdf-autotable'
+import { jsPDF } from 'jspdf'
 
 export const exportToExcel = (orders: Order[], fileName: string): void => {
   const worksheet = XLSX.utils.json_to_sheet(
@@ -70,7 +71,7 @@ export const exportAnalysisResults = (results: any[], filename: string): void =>
 
   // Export to PDF
   const pdf = new jsPDF()
-  pdf.autoTable({
+  autoTable(pdf, {
     head: [['Analysis Type', 'Description', 'Details']],
     body: results.map(result => [
       result.type,

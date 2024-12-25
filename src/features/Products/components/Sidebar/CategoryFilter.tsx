@@ -32,7 +32,7 @@ export default function CategoryFilter({ options }: CategoryFilterProps) {
             <div className='space-y-2'>
               {options.map((option, optionIdx) => (
                 <div key={option.value} className='flex items-center'>
-                  <InputFilter id={optionIdx} value={option.value} label={option.label} checked={option.checked} />
+                  <InputFilter id={optionIdx.toString()} value={option.value} label={option.label} checked={option.checked} />
                 </div>
               ))}
             </div>

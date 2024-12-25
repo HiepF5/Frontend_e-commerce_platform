@@ -6,8 +6,6 @@ import { toast } from 'react-toastify'
 import {
   TextField,
   Button,
-  Checkbox,
-  FormControlLabel,
   FormControlLabel as MuiFormControlLabel,
   Typography,
   IconButton,

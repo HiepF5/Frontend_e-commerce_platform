@@ -105,7 +105,7 @@ const AddressSlice = createSlice({
       .addCase(createAddress.pending, (state) => {
         state.status = false
       })
-      .addCase(createAddress.fulfilled, (state, action) => {
+      .addCase(createAddress.fulfilled, (state) => {
         state.status = true
         state.error = null
       })
@@ -118,7 +118,7 @@ const AddressSlice = createSlice({
       .addCase(updateAddress.pending, (state) => {
         state.status = false
       })
-      .addCase(updateAddress.fulfilled, (state, action) => {
+      .addCase(updateAddress.fulfilled, (state) => {
         state.status = true
         state.error = null
       })
@@ -131,7 +131,7 @@ const AddressSlice = createSlice({
       .addCase(deleteAddress.pending, (state) => {
         state.status = false
       })
-      .addCase(deleteAddress.fulfilled, (state, action) => {
+      .addCase(deleteAddress.fulfilled, (state) => {
         state.status = true
         state.address = null
         state.error = null

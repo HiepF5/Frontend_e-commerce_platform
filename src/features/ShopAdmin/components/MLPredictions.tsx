@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import * as tf from '@tensorflow/tfjs'
 import {
   Box,
@@ -187,7 +187,7 @@ export const MLPredictions = ({
   }
 
   const handleTuning = async (params: Record<string, number | string>) => {
-    const { tensor, min, max } = preprocessData(data)
+    const { tensor } = preprocessData(data)
     const lookback = 10
     const { X, y } = createSequences(tensor as tf.Tensor2D, lookback)
 

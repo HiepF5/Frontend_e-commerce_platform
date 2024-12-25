@@ -3,7 +3,6 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { createReviewApi, getReviewByPageApi } from '@api/shopReviewApi'
 import { ICreateReviewRequest, IGetReviewByPageRequest, IReview } from '~/types/shop-review.interface'
 import { IBaseResponse } from '~/types/base.interface'
-import { getShopDetailApiByShopCode } from '~/api/shopApi'
 
 interface ShopReviewState {
   reviews: Record<number, IReview[]>

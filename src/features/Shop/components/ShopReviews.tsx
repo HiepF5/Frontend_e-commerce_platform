@@ -218,7 +218,7 @@ const ShopReviews: React.FC = () => {
           <Rating
             name='rating'
             value={rating}
-            onChange={(event, newValue) => {
+            onChange={(_, newValue) => {
               setRating(newValue)
             }}
             precision={1}

@@ -1,4 +1,3 @@
-import React from 'react'
 import SubcribeShop from '../components/SubcribeShop'
 
 const SubcribeShopPage = () => {

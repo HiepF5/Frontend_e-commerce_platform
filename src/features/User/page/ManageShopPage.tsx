@@ -1,6 +1,5 @@
 // src/features/shop/pages/ManageShopPage.tsx
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
 
 import { Typography, CircularProgress, Box } from '@mui/material'
 import ManageShop from '../components/ManageShop'

@@ -1,7 +1,6 @@
 import axios from '@shared/libs/axios/axiosInterceptor'
 import { IBaseResponse } from '~/types/base.interface'
 import {
-  API_ENDPOINTS_THREAD_COMMENT,
   API_ENDPOINTS_THREAD
 } from '@config/apiConfig'
 import {

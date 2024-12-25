@@ -62,7 +62,7 @@ export const orderApi = createApi({
       }),
       async onQueryStarted({ orderIds, status }, { dispatch, queryFulfilled }) {
         const patches = dispatch(
-          orderApi.util.updateQueryData('getOrders', undefined, (draft) => {
+          orderApi.util.updateQueryData('getOrders', { page: 1, limit: 10 }, (draft) => {
             const ordersToUpdate = draft.orders.filter((order) => 
               orderIds.includes(order.id)
             )

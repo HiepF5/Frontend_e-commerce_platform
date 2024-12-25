@@ -99,7 +99,7 @@ const Dashboard = (): JSX.Element => {
                 paddingAngle={5}
                 dataKey="value"
               >
-                {userDistribution.map((entry, index) => (
+                {userDistribution.map((_, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

@@ -8,7 +8,6 @@ import {
   Avatar,
   Typography,
   Chip,
-  Button,
   Tooltip,
   IconButton
 } from '@mui/material'
@@ -36,11 +35,14 @@ export default function ThreadPage() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [hoveredPostId, setHoveredPostId] = useState<number | null>(null)
   const navigate = useNavigate()
+  console.log(anchorEl)
+  console.log(hoveredPostId)
   const handlePopoverOpen = (
     event: React.MouseEvent<HTMLElement>,
     postId: number
   ) => {
     setAnchorEl(event.currentTarget)
+
     setHoveredPostId(postId)
   }
 
@@ -210,6 +212,7 @@ export default function ThreadPage() {
     )
   }
   const handleProfile = (open: boolean) => {
+    console.log(open)
     navigate('/threads/me')
   }
 

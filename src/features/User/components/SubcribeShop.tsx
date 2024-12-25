@@ -15,7 +15,7 @@ import { RootState } from '@store/store'
 
 const SubcribeShop: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { loading, success, message, error } = useAppSelector(
+  const { loading, message, error } = useAppSelector(
     (state: RootState) => state.shop
   )
 
