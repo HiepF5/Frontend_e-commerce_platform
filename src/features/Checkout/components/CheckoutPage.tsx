@@ -24,6 +24,7 @@ import {
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useCheckoutPreviewMutation, useSubmitCheckoutMutation } from '../api/checkoutApi'
 import { formatCurrency } from '@shared/utils/formatPrice'
+import { useListDiscountVoucherMutation, useListShippingVoucherMutation, useListShopVoucherMutation } from '@features/Voucher/api/voucherApi'
 interface VoucherType {
   code: string
   discount: string
@@ -54,6 +55,16 @@ export default function CheckoutPage() {
   const location = useLocation()
   const { selectedCartItems } = location.state || { selectedCartItems: [] }
   const [checkoutPreview, { data: checkoutData }] = useCheckoutPreviewMutation()
+  const [discountPreview, { data: discountData }] =
+    useListShippingVoucherMutation()
+
+  const [shippingPreview, { data: shippingData }] =
+    useListDiscountVoucherMutation()
+  const [voucherShopPreview, { data: voucherShopData }] =
+    useListShopVoucherMutation()
+
+  const [voucherData, setVoucherData] = useState<VoucherType[]>([])
+
   const navigate = useNavigate()
   useEffect(() => {
     if (selectedCartItems.length > 0) {

@@ -7,6 +7,7 @@ export interface Voucher {
   type: VoucherType
   discountType: DiscountType
   voucherCode: string
+  description: string
   title: string
   voucherCount: number
   remainingCount: number
@@ -89,4 +90,21 @@ export interface GetCustomerVouchersParams {
   type : VoucherType
   page_number: number;
   page_size: number;
+}
+export interface GetGuestFormdata {
+  page_number: string;
+  page_size: string;
+}
+export interface VoucherRequest {
+  voucherCode: string | null
+  totalAmount: number
+  pageNumber: number
+  pageSize: number
+}
+export interface VoucherShopRequest {
+  shopCode?: string
+  voucherCode: string | null
+  totalAmount: number
+  pageNumber: number
+  pageSize: number
 }
