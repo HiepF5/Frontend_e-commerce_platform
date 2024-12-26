@@ -86,7 +86,7 @@ const NavbarLayoutUser = () => {
         <StoreMallIcon className='text-yellow-600' />
 
         <Link
-          to='/shop'
+          to='/shop/home'
           className='text-gray-800 font-medium text-lg hover:text-yellow-600'
         >
           Trang chủ Shop của Tôi

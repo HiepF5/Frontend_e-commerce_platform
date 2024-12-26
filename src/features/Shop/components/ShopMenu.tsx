@@ -11,7 +11,7 @@ const ShopMenu: React.FC = () => {
    if (newValue === 6) {
     const shopCode = 'SH00000001';
      // Assuming the "Review Shop" tab is the 7th tab (index 6)
-     navigate(`/shop/review-shop/${shopCode}`)
+     navigate(`/shop/${shopCode}/review-shop/`)
    }
  }
 

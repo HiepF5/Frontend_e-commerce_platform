@@ -10,14 +10,19 @@ const ShopRoutes = (): JSX.Element => {
       element: <LayoutPage />,
       children: [
         {
-          path: '/',
+          path: '/:shopId',
           element: <ShopHomePage />,
           children: [
             {
-              path: 'review-shop/:shopId',
+              path: 'review-shop',
               element: <ShopReviews />
             }
           ]
+        },
+        {
+          path: 'home',
+          element: <ShopHomePage />,
+          
         }
       ]
     }

@@ -116,14 +116,19 @@ export default function SellerProfile({ stats, shopCode }: SellerProfileProps) {
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       <Card sx={{ p: 3, mb: 4 }}>
-        <Grid container spacing={2} alignItems='center'>
+        <Grid
+          container
+          spacing={2}
+          alignItems='center'
+          onClick={() => navigator(`/shop/${shopCode}`)}
+        >
           <Grid item>
             <Avatar
               sx={{ width: 80, height: 80 }}
               src={shopDetails?.shopLogo}
             />
           </Grid>
-          <Grid item xs>
+          <Grid item xs onClick={() => navigator(`/shop/${shopCode}`)}>
             <Typography variant='h5'>{shopDetails?.shopName}</Typography>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
               <Store size={20} />
