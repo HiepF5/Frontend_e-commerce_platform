@@ -19,51 +19,37 @@ import {
   LocalShipping,
   Payment,
   Store,
-  Receipt
+  Receipt,
+  LocalOffer
 } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useCheckoutPreviewMutation, useSubmitCheckoutMutation } from '../api/checkoutApi'
 import { formatCurrency } from '@shared/utils/formatPrice'
 import { useListDiscountVoucherMutation, useListShippingVoucherMutation, useListShopVoucherMutation } from '@features/Voucher/api/voucherApi'
+import { VoucherSelector } from './VoucherSelector'
+import { Voucher } from '@features/Voucher/types/voucher'
+
 interface VoucherType {
   code: string
   discount: string
   minSpend: string
   validTill: string
 }
+
 export default function CheckoutPage() {
   // const [paymentMethod, setPaymentMethod] = useState('shopeePay')
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false)
-  const [selectedVoucher, setSelectedVoucher] = useState<VoucherType | null>(
-    null
-  )
+  const [selectedVouchers, setSelectedVouchers] = useState({
+    discount: null as Voucher | null,
+    shipping: null as Voucher | null,
+    shop: {} as { [shopCode: string]: Voucher | null }
+  })
 
-  const vouchers: VoucherType[] = [
-    {
-      code: 'FREESHIP40K',
-      discount: '40.000₫',
-      minSpend: '0₫',
-      validTill: '3 giờ'
-    },
-    {
-      code: 'FREESHIP35K',
-      discount: '35.000₫',
-      minSpend: '0₫',
-      validTill: '3 giờ'
-    }
-  ]
   const location = useLocation()
   const { selectedCartItems } = location.state || { selectedCartItems: [] }
   const [checkoutPreview, { data: checkoutData }] = useCheckoutPreviewMutation()
-  const [discountPreview, { data: discountData }] =
-    useListShippingVoucherMutation()
-
-  const [shippingPreview, { data: shippingData }] =
-    useListDiscountVoucherMutation()
-  const [voucherShopPreview, { data: voucherShopData }] =
-    useListShopVoucherMutation()
-
-  const [voucherData, setVoucherData] = useState<VoucherType[]>([])
+  const [activeShop, setActiveShop] = useState<string | null>(null)
+  const [activeTab, setActiveTab] = useState<'DISCOUNT' | 'SHIPPING' | 'SHOP'>('DISCOUNT')
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -101,6 +87,25 @@ export default function CheckoutPage() {
 
   const { data } = checkoutData
 
+  const handleVoucherSelect = (voucher: Voucher | null, type: 'DISCOUNT' | 'SHIPPING' | 'SHOP', shopCode?: string) => {
+    setSelectedVouchers(prev => {
+      if (type === 'SHOP' && shopCode) {
+        return {
+          ...prev,
+          shop: {
+            ...prev.shop,
+            [shopCode]: voucher
+          }
+        }
+      }
+      return {
+        ...prev,
+        [type.toLowerCase()]: voucher
+      }
+    })
+    setOpenVoucherDialog(false)
+  }
+
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       {/* Địa chỉ giao hàng */}
@@ -124,50 +129,114 @@ export default function CheckoutPage() {
 
       {/* Danh sách đơn hàng theo shop */}
       {data.shopBill.map((shop) => (
-        <Paper key={shop.shopCode} sx={{ p: 2, mb: 2 }}>
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-            <Store color='primary' sx={{ mr: 1 }} />
-            <Typography variant='h6'>{shop.shopName}</Typography>
+        <Paper key={shop.shopCode} sx={{ p: 3, mb: 3 }}>
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              mb: 2,
+              borderBottom: '1px solid',
+              borderColor: 'divider',
+              pb: 2
+            }}
+          >
+            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Store color='primary' sx={{ mr: 1 }} />
+              <Typography variant='h6'>{shop.shopName}</Typography>
+            </Box>
+            <Button
+              variant={
+                selectedVouchers.shop[shop.shopCode] ? 'contained' : 'outlined'
+              }
+              startIcon={<LocalOffer />}
+              onClick={() => {
+                setOpenVoucherDialog(true)
+                setActiveShop(shop.shopCode)
+                setActiveTab('SHOP')
+              }}
+              size='small'
+              color={
+                selectedVouchers.shop[shop.shopCode] ? 'primary' : 'inherit'
+              }
+              sx={{
+                borderRadius: 2,
+                '&:hover': {
+                  backgroundColor: selectedVouchers.shop[shop.shopCode]
+                    ? 'primary.dark'
+                    : 'rgba(0, 0, 0, 0.04)'
+                }
+              }}
+            >
+              {selectedVouchers.shop[shop.shopCode]
+                ? `Voucher: ${selectedVouchers.shop[shop.shopCode]?.voucherCode}`
+                : 'Chọn Voucher Shop'}
+            </Button>
           </Box>
 
-          {shop.listItem.map((item) => (
-            <Box
-              key={item.variantId}
-              sx={{ display: 'flex', py: 2, borderBottom: '1px solid #eee' }}
-            >
-              <img
-                src={JSON.parse(item.imageUrl)[0]}
-                alt={item.title}
-                style={{
-                  width: 80,
-                  height: 80,
-                  objectFit: 'cover',
-                  marginRight: 16
+          {/* Shop items */}
+          <Box sx={{ pl: 4 }}>
+            {shop.listItem.map((item) => (
+              <Box
+                key={item.variantId}
+                sx={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  py: 1,
+                  '&:not(:last-child)': {
+                    borderBottom: '1px solid',
+                    borderColor: 'divider'
+                  }
                 }}
-              />
-              <Box sx={{ flex: 1 }}>
-                <Typography>{item.title}</Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  Số lượng: {item.quantity}
-                </Typography>
-                <Typography color='primary'>
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+                  <img
+                    src={JSON.parse(item.imageUrl)[0]}
+                    alt={item.title}
+                    style={{
+                      width: 60,
+                      height: 60,
+                      objectFit: 'cover',
+                      borderRadius: 8
+                    }}
+                  />
+                  <Box>
+                    <Typography variant='body1'>{item.title}</Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      {item.title}
+                    </Typography>
+                    <Typography variant='body2' color='text.secondary'>
+                      Số lượng: {item.quantity}
+                    </Typography>
+                  </Box>
+                </Box>
+                <Typography variant='subtitle1' color='primary'>
                   {formatCurrency(item.sellPrice)}
                 </Typography>
               </Box>
-            </Box>
-          ))}
+            ))}
 
-          <Box sx={{ mt: 2, display: 'flex', justifyContent: 'space-between' }}>
-            <Typography>Phí vận chuyển:</Typography>
-            <Typography>{formatCurrency(shop.fee)}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Typography>
-              <strong>Tổng tiền:</strong>
-            </Typography>
-            <Typography color='primary'>
-              <strong>{formatCurrency(shop.totalAmount)}</strong>
-            </Typography>
+            {/* Shop summary */}
+            <Box
+              sx={{
+                mt: 2,
+                pt: 2,
+                borderTop: '1px dashed',
+                borderColor: 'divider',
+                display: 'flex',
+                justifyContent: 'flex-end',
+                alignItems: 'center',
+                gap: 2
+              }}
+            >
+              <Typography variant='body2' color='text.secondary'>
+                {shop.listItem.length} sản phẩm
+              </Typography>
+              <Typography variant='subtitle1'>
+                Tổng đơn shop: {formatCurrency(shop.totalAmount)}
+              </Typography>
+            </Box>
           </Box>
         </Paper>
       ))}
@@ -208,21 +277,75 @@ export default function CheckoutPage() {
           <FormControlLabel value='MOMO' control={<Radio />} label='Ví MoMo' />
         </RadioGroup>
       </Paper>
+
+      {/* Voucher section */}
       <Paper sx={{ p: 2, mb: 2 }}>
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-          <Receipt color='primary' />
-          <Typography variant='h6' sx={{ ml: 1 }}>
-            Shopee Voucher
-          </Typography>
+        <Typography variant='h6' gutterBottom>
+          Vouchers
+        </Typography>
+        <Box sx={{ display: 'flex', gap: 2, flexWrap: 'wrap' }}>
           <Button
-            variant='outlined'
-            sx={{ ml: 'auto' }}
-            onClick={() => setOpenVoucherDialog(true)}
+            startIcon={<LocalOffer />}
+            variant={selectedVouchers.discount ? 'contained' : 'outlined'}
+            onClick={() => {
+              setOpenVoucherDialog(true)
+              setActiveTab('DISCOUNT')
+              setActiveShop(null)
+            }}
           >
-            Chọn Voucher
+            {selectedVouchers.discount
+              ? `Discount: ${selectedVouchers.discount.voucherCode}`
+              : 'Select Discount Voucher'}
+          </Button>
+          <Button
+            startIcon={<LocalShipping />}
+            variant={selectedVouchers.shipping ? 'contained' : 'outlined'}
+            onClick={() => {
+              setOpenVoucherDialog(true)
+              setActiveTab('SHIPPING')
+              setActiveShop(null)
+            }}
+          >
+            {selectedVouchers.shipping
+              ? `Shipping: ${selectedVouchers.shipping.voucherCode}`
+              : 'Select Shipping Voucher'}
           </Button>
         </Box>
+
+        {/* Shop vouchers */}
+        {/* {data.shopBill.map((shop) => (
+          <Box key={shop.shopCode} sx={{ mt: 2 }}>
+            <Typography variant='subtitle2' gutterBottom>
+              {shop.shopName}
+            </Typography>
+            <Button
+              startIcon={<Store />}
+              variant={
+                selectedVouchers.shop[shop.shopCode] ? 'contained' : 'outlined'
+              }
+              onClick={() => setOpenVoucherDialog(true)}
+            >
+              {selectedVouchers.shop[shop.shopCode]
+                ? `Shop Voucher: ${selectedVouchers.shop[shop.shopCode]?.voucherCode}`
+                : 'Select Shop Voucher'}
+            </Button>
+          </Box>
+        ))} */}
       </Paper>
+
+      <VoucherSelector
+        open={openVoucherDialog}
+        onClose={() => {
+          setOpenVoucherDialog(false)
+          setActiveShop(null)
+        }}
+        onSelect={handleVoucherSelect}
+        totalAmount={data.totalAmount}
+        shopBills={data.shopBill}
+        selectedVouchers={selectedVouchers}
+        activeShop={activeShop}
+        initialTab={activeTab}
+      />
 
       {/* Tổng kết đơn hàng */}
       <Paper sx={{ p: 2, position: 'sticky', bottom: 0 }}>
@@ -257,60 +380,6 @@ export default function CheckoutPage() {
           </Grid>
         </Grid>
       </Paper>
-
-      {/* Voucher Dialog */}
-      <Dialog
-        open={openVoucherDialog}
-        onClose={() => setOpenVoucherDialog(false)}
-        maxWidth='sm'
-        fullWidth
-      >
-        <Box sx={{ p: 3 }}>
-          <Typography variant='h6' sx={{ mb: 2 }}>
-            Chọn Shopee Voucher
-          </Typography>
-          <TextField fullWidth placeholder='Mã Shopee Voucher' sx={{ mb: 2 }} />
-          {vouchers.map((voucher, index) => (
-            <Card key={index} sx={{ mb: 2 }}>
-              <CardContent>
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Box>
-                    <Typography variant='subtitle1'>
-                      Giảm tối đa {voucher.discount}
-                    </Typography>
-                    <Typography variant='body2' color='text.secondary'>
-                      Đơn Tối Thiểu {voucher.minSpend}
-                    </Typography>
-                    <Typography variant='caption' color='text.secondary'>
-                      Sắp hết hạn: Còn {voucher.validTill}
-                    </Typography>
-                  </Box>
-                  <Radio
-                    checked={selectedVoucher?.code === voucher.code}
-                    onChange={() => setSelectedVoucher(voucher)}
-                  />
-                </Box>
-              </CardContent>
-            </Card>
-          ))}
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-            <Button onClick={() => setOpenVoucherDialog(false)}>TRỞ LẠI</Button>
-            <Button
-              variant='contained'
-              color='error'
-              onClick={() => setOpenVoucherDialog(false)}
-            >
-              OK
-            </Button>
-          </Box>
-        </Box>
-      </Dialog>
     </Container>
   )
 }

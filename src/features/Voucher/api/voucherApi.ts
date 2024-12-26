@@ -173,7 +173,7 @@ export const voucherApi = createApi({
       query: (data) => ({
         url: '/customer/shipping-system-voucher',
         method: 'POST',
-        body: data
+        data
       }),
       invalidatesTags: ['Voucher']
     }),
@@ -182,15 +182,15 @@ export const voucherApi = createApi({
       query: (data) => ({
         url: '/customer/discount-system-voucher',
         method: 'POST',
-        body: data
+        data
       }),
       invalidatesTags: ['Voucher']
     }), 
     listShopVoucher: builder.mutation<IBaseResponse<PaginationResponse<Voucher>>, VoucherShopRequest>({
       query: (data) => ({
-        url: '/customer/shipping-system-voucher',
+        url: '/customer/discount-shop-voucher',
         method: 'POST',
-        body: data
+        data
       }),
       invalidatesTags: ['Voucher']
     })
