@@ -12,7 +12,8 @@ import {
   Dialog,
   TextField,
   Card,
-  CardContent
+  CardContent,
+  Collapse
 } from '@mui/material'
 import {
   LocationOn,
@@ -28,6 +29,7 @@ import { formatCurrency } from '@shared/utils/formatPrice'
 import { useListDiscountVoucherMutation, useListShippingVoucherMutation, useListShopVoucherMutation } from '@features/Voucher/api/voucherApi'
 import { VoucherSelector } from './VoucherSelector'
 import { Voucher } from '@features/Voucher/types/voucher'
+import { ShopVoucherList } from './ShopVoucherList'
 
 interface VoucherType {
   code: string
@@ -50,6 +52,7 @@ export default function CheckoutPage() {
   const [checkoutPreview, { data: checkoutData }] = useCheckoutPreviewMutation()
   const [activeShop, setActiveShop] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'DISCOUNT' | 'SHIPPING' | 'SHOP'>('DISCOUNT')
+  const [expandedShop, setExpandedShop] = useState<string | null>(null)
 
   const navigate = useNavigate()
   useEffect(() => {
@@ -146,27 +149,11 @@ export default function CheckoutPage() {
               <Typography variant='h6'>{shop.shopName}</Typography>
             </Box>
             <Button
-              variant={
-                selectedVouchers.shop[shop.shopCode] ? 'contained' : 'outlined'
-              }
+              variant={selectedVouchers.shop[shop.shopCode] ? 'contained' : 'outlined'}
               startIcon={<LocalOffer />}
-              onClick={() => {
-                setOpenVoucherDialog(true)
-                setActiveShop(shop.shopCode)
-                setActiveTab('SHOP')
-              }}
+              onClick={() => setExpandedShop(expandedShop === shop.shopCode ? null : shop.shopCode)}
               size='small'
-              color={
-                selectedVouchers.shop[shop.shopCode] ? 'primary' : 'inherit'
-              }
-              sx={{
-                borderRadius: 2,
-                '&:hover': {
-                  backgroundColor: selectedVouchers.shop[shop.shopCode]
-                    ? 'primary.dark'
-                    : 'rgba(0, 0, 0, 0.04)'
-                }
-              }}
+              color={selectedVouchers.shop[shop.shopCode] ? 'primary' : 'inherit'}
             >
               {selectedVouchers.shop[shop.shopCode]
                 ? `Voucher: ${selectedVouchers.shop[shop.shopCode]?.voucherCode}`
@@ -174,8 +161,19 @@ export default function CheckoutPage() {
             </Button>
           </Box>
 
+          {/* Shop vouchers section */}
+          <Collapse in={expandedShop === shop.shopCode}>
+            <ShopVoucherList 
+              shopCode={shop.shopCode}
+              shopName={shop.shopName}
+              selectedVoucher={selectedVouchers.shop[shop.shopCode]}
+              onSelectVoucher={(voucher) => handleVoucherSelect(voucher, 'SHOP', shop.shopCode)}
+              totalAmount={shop.totalAmount}
+            />
+          </Collapse>
+
           {/* Shop items */}
-          <Box sx={{ pl: 4 }}>
+          <Box sx={{ mt: 2 }}>
             {shop.listItem.map((item) => (
               <Box
                 key={item.variantId}
