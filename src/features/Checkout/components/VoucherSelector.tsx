@@ -86,8 +86,6 @@ export const VoucherSelector = ({
         pageNumber: 1,
         pageSize: 10
       }
-      debugger
-
       let response
       switch (activeTab) {
         case 'DISCOUNT':

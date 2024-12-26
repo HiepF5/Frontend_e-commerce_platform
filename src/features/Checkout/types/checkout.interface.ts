@@ -1,3 +1,4 @@
+import { Voucher } from "~/features/Voucher/types/voucher"
 import { IAddress } from "~/types/address.interface"
 
 // Interface cho item trong giỏ hàng khi checkout
@@ -73,7 +74,7 @@ export interface ShopBill {
   totalAmount: number
   leadDay: number
   leadTime: string
-  voucher: string | null
+  voucher: Voucher | null
   listItem: CheckoutBillItem[]
 }
 

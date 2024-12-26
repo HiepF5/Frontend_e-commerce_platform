@@ -9,10 +9,6 @@ import {
   RadioGroup,
   FormControlLabel,
   Button,
-  Dialog,
-  TextField,
-  Card,
-  CardContent,
   Collapse
 } from '@mui/material'
 import {
@@ -20,26 +16,21 @@ import {
   LocalShipping,
   Payment,
   Store,
-  Receipt,
   LocalOffer
 } from '@mui/icons-material'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useCheckoutPreviewMutation, useSubmitCheckoutMutation } from '../api/checkoutApi'
 import { formatCurrency } from '@shared/utils/formatPrice'
-import { useListDiscountVoucherMutation, useListShippingVoucherMutation, useListShopVoucherMutation } from '@features/Voucher/api/voucherApi'
 import { VoucherSelector } from './VoucherSelector'
 import { Voucher } from '@features/Voucher/types/voucher'
 import { ShopVoucherList } from './ShopVoucherList'
+import { ShopDiscount } from '../types/checkout.interface'
+import { toast } from 'react-toastify'
 
-interface VoucherType {
-  code: string
-  discount: string
-  minSpend: string
-  validTill: string
-}
 
 export default function CheckoutPage() {
-  // const [paymentMethod, setPaymentMethod] = useState('shopeePay')
+  const [paymentMethod, setPaymentMethod] = useState('VNPAY')
+  const [shippingMethod, setShippingMethod] = useState('GHN')
   const [openVoucherDialog, setOpenVoucherDialog] = useState(false)
   const [selectedVouchers, setSelectedVouchers] = useState({
     discount: null as Voucher | null,
@@ -51,38 +42,49 @@ export default function CheckoutPage() {
   const { selectedCartItems } = location.state || { selectedCartItems: [] }
   const [checkoutPreview, { data: checkoutData }] = useCheckoutPreviewMutation()
   const [activeShop, setActiveShop] = useState<string | null>(null)
+ 
   const [activeTab, setActiveTab] = useState<'DISCOUNT' | 'SHIPPING' | 'SHOP'>('DISCOUNT')
   const [expandedShop, setExpandedShop] = useState<string | null>(null)
-
+  const [shopDiscounts, setShopDiscounts] = useState<ShopDiscount>({} as ShopDiscount)
   const navigate = useNavigate()
   useEffect(() => {
     if (selectedCartItems.length > 0) {
       checkoutPreview({
-        discountVoucher: null,
-        shippingVoucher: null,
+        discountVoucher: selectedVouchers.discount?.voucherCode || null,
+        shippingVoucher: selectedVouchers.shipping?.voucherCode || null,
         addressId: 1,
         paymentMethod: 'VNPAY',
         shippingMethod: 'GHN',
         items: selectedCartItems,
-        shopDiscounts: null
+        shopDiscounts: shopDiscounts ? Object.values(shopDiscounts) : null
       })
     }
-  }, [selectedCartItems])
+  }, [selectedCartItems, shopDiscounts, selectedVouchers])
   const [
     submitCheckout,
   ] = useSubmitCheckoutMutation()
   const handleSubmitCheckout = async () => {  
     const response = await submitCheckout({
-      discountVoucher: null,
-      shippingVoucher: null,
+      discountVoucher: selectedVouchers.discount?.voucherCode || null,
+      shippingVoucher: selectedVouchers.shipping?.voucherCode || null,
       addressId: 1,
-      paymentMethod: 'VNPAY',
-      shippingMethod: 'GHN',
+      paymentMethod: paymentMethod,
+      shippingMethod: shippingMethod,
       items: selectedCartItems,
-      shopDiscounts: null
+      shopDiscounts: shopDiscounts ? Object.values(shopDiscounts) : null
     })
-    if (response.data?.code === 200) navigate('/checkout/success', { state: { link: response.data?.data } })
-    else navigate('/checkout/error')
+    if (response.data?.code === 200 && response.data.data ){
+      toast.success('Đặt hàng thành công với phương thức thanh toán Online')
+      navigate('/checkout/success', { state: { link: response.data?.data } })
+    }
+    else if (response.data?.code === 200 && response.data.data === null) {
+      toast.success('Đặt hàng thành công với phương thức thanh toán khi nhận hàng')
+      navigate('/order')
+    }
+    else {
+      toast.error('Đặt hàng thất bại')
+      navigate('/checkout/error')
+    }
 
   }
 
@@ -91,6 +93,7 @@ export default function CheckoutPage() {
   const { data } = checkoutData
 
   const handleVoucherSelect = (voucher: Voucher | null, type: 'DISCOUNT' | 'SHIPPING' | 'SHOP', shopCode?: string) => {
+    debugger
     setSelectedVouchers(prev => {
       if (type === 'SHOP' && shopCode) {
         return {
@@ -106,7 +109,22 @@ export default function CheckoutPage() {
         [type.toLowerCase()]: voucher
       }
     })
+    setShopDiscounts(prev => {
+      if (type === 'SHOP' && shopCode) {
+        return {
+          ...prev,
+          [shopCode]: {
+            shopCode,
+            voucherCode: voucher?.voucherCode || ''
+          }
+        }
+      }
+      return prev
+    }
+
+    )
     setOpenVoucherDialog(false)
+  
   }
 
   return (
@@ -149,11 +167,19 @@ export default function CheckoutPage() {
               <Typography variant='h6'>{shop.shopName}</Typography>
             </Box>
             <Button
-              variant={selectedVouchers.shop[shop.shopCode] ? 'contained' : 'outlined'}
+              variant={
+                selectedVouchers.shop[shop.shopCode] ? 'contained' : 'outlined'
+              }
               startIcon={<LocalOffer />}
-              onClick={() => setExpandedShop(expandedShop === shop.shopCode ? null : shop.shopCode)}
+              onClick={() =>
+                setExpandedShop(
+                  expandedShop === shop.shopCode ? null : shop.shopCode
+                )
+              }
               size='small'
-              color={selectedVouchers.shop[shop.shopCode] ? 'primary' : 'inherit'}
+              color={
+                selectedVouchers.shop[shop.shopCode] ? 'primary' : 'inherit'
+              }
             >
               {selectedVouchers.shop[shop.shopCode]
                 ? `Voucher: ${selectedVouchers.shop[shop.shopCode]?.voucherCode}`
@@ -163,11 +189,13 @@ export default function CheckoutPage() {
 
           {/* Shop vouchers section */}
           <Collapse in={expandedShop === shop.shopCode}>
-            <ShopVoucherList 
+            <ShopVoucherList
               shopCode={shop.shopCode}
               shopName={shop.shopName}
               selectedVoucher={selectedVouchers.shop[shop.shopCode]}
-              onSelectVoucher={(voucher) => handleVoucherSelect(voucher, 'SHOP', shop.shopCode)}
+              onSelectVoucher={(voucher) =>
+                handleVoucherSelect(voucher, 'SHOP', shop.shopCode)
+              }
               totalAmount={shop.totalAmount}
             />
           </Collapse>
@@ -245,16 +273,19 @@ export default function CheckoutPage() {
           <LocalShipping color='primary' sx={{ mr: 1 }} />
           <Typography variant='h6'>Phương thức vận chuyển</Typography>
         </Box>
-        <RadioGroup defaultValue='GHN'>
+        <RadioGroup
+          value={shippingMethod}
+          onChange={(e) => setShippingMethod(e.target.value)}
+        >
           <FormControlLabel
-            value='GHN'
-            control={<Radio />}
-            label='Giao Hàng Nhanh'
+        value='GHN'
+        control={<Radio />}
+        label='Giao Hàng Nhanh'
           />
           <FormControlLabel
-            value='GHTK'
-            control={<Radio />}
-            label='Giao Hàng Tiết Kiệm'
+        value='GHTK'
+        control={<Radio />}
+        label='Giao Hàng Tiết Kiệm'
           />
         </RadioGroup>
       </Paper>
@@ -265,12 +296,15 @@ export default function CheckoutPage() {
           <Payment color='primary' sx={{ mr: 1 }} />
           <Typography variant='h6'>Phương thức thanh toán</Typography>
         </Box>
-        <RadioGroup defaultValue='VNPAY'>
+        <RadioGroup
+          value={paymentMethod}
+          onChange={(e) => setPaymentMethod(e.target.value)}
+        >
           <FormControlLabel value='VNPAY' control={<Radio />} label='VNPay' />
           <FormControlLabel
-            value='COD'
-            control={<Radio />}
-            label='Thanh toán khi nhận hàng'
+        value='THANH_TOAN_KHI_GIAO_HANG'
+        control={<Radio />}
+        label='Thanh toán khi nhận hàng'
           />
           <FormControlLabel value='MOMO' control={<Radio />} label='Ví MoMo' />
         </RadioGroup>
@@ -309,26 +343,6 @@ export default function CheckoutPage() {
               : 'Select Shipping Voucher'}
           </Button>
         </Box>
-
-        {/* Shop vouchers */}
-        {/* {data.shopBill.map((shop) => (
-          <Box key={shop.shopCode} sx={{ mt: 2 }}>
-            <Typography variant='subtitle2' gutterBottom>
-              {shop.shopName}
-            </Typography>
-            <Button
-              startIcon={<Store />}
-              variant={
-                selectedVouchers.shop[shop.shopCode] ? 'contained' : 'outlined'
-              }
-              onClick={() => setOpenVoucherDialog(true)}
-            >
-              {selectedVouchers.shop[shop.shopCode]
-                ? `Shop Voucher: ${selectedVouchers.shop[shop.shopCode]?.voucherCode}`
-                : 'Select Shop Voucher'}
-            </Button>
-          </Box>
-        ))} */}
       </Paper>
 
       <VoucherSelector
@@ -358,7 +372,7 @@ export default function CheckoutPage() {
               </Typography>
               <Typography>
                 Giảm giá:{' '}
-                {formatCurrency(data.shopDiscount + data.ecommerceDiscount)}
+                {formatCurrency(data.shopDiscount + data.ecommerceDiscount + data.ecommerceShipping)}
               </Typography>
               <Typography variant='h6' color='primary'>
                 Tổng thanh toán: {formatCurrency(data.totalAmount)}
