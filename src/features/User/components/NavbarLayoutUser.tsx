@@ -6,7 +6,8 @@ import {
   VpnKey as KeyIcon,
   Store as StoreIcon,
   Storefront as ShopManagementIcon,
-  ShoppingCart as ShoppingCartIcon
+  ShoppingCart as ShoppingCartIcon,
+  HomeWorkTwoTone as StoreMallIcon
 } from '@mui/icons-material'
 
 const NavbarLayoutUser = () => {
@@ -75,10 +76,20 @@ const NavbarLayoutUser = () => {
         <ShoppingCartIcon className='text-yellow-600' />
 
         <Link
-          to='/shop'
+          to='/shop-admin'
           className='text-gray-800 font-medium text-lg hover:text-yellow-600'
         >
           Quản lí Shop
+        </Link>
+      </div>
+      <div className='flex items-center p-4 gap-4 rounded-lg transition-all duration-300 hover:bg-gray-100 hover:scale-105 hover:shadow-lg'>
+        <StoreMallIcon className='text-yellow-600' />
+
+        <Link
+          to='/shop'
+          className='text-gray-800 font-medium text-lg hover:text-yellow-600'
+        >
+          Trang chủ Shop của Tôi
         </Link>
       </div>
       <div className='flex items-center p-4 gap-4 rounded-lg transition-all duration-300 hover:bg-gray-100 hover:scale-105 hover:shadow-lg'>

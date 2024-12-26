@@ -93,7 +93,6 @@ export default function CheckoutPage() {
   const { data } = checkoutData
 
   const handleVoucherSelect = (voucher: Voucher | null, type: 'DISCOUNT' | 'SHIPPING' | 'SHOP', shopCode?: string) => {
-    debugger
     setSelectedVouchers(prev => {
       if (type === 'SHOP' && shopCode) {
         return {

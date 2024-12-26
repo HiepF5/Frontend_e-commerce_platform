@@ -91,7 +91,12 @@ export interface GetCustomerVouchersParams {
   page_number: number;
   page_size: number;
 }
-export interface GetGuestFormdata {
+export interface GetGuestSystemVouchers {
+  page_number: string;
+  page_size: string;
+}
+export interface GetGuestShopVouchers{
+  shop_code: string
   page_number: string;
   page_size: string;
 }

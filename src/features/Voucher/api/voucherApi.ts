@@ -7,9 +7,10 @@ import {
   VoucherUpdateRequest,
   VoucherStatusRequest,
   PaginationResponse,
-  GetGuestFormdata,
   VoucherRequest,
-  VoucherShopRequest
+  VoucherShopRequest,
+  GetGuestSystemVouchers,
+  GetGuestShopVouchers
 } from '../types/voucher'
 import { IBaseResponse } from '~/types/base.interface'
 
@@ -138,38 +139,39 @@ export const voucherApi = createApi({
     // Customer endpoints
     getGuestSystemVouchers: builder.query<
       IBaseResponse<PaginationResponse<Voucher>>,
-      GetGuestFormdata
+      GetGuestSystemVouchers
     >({
       query: (data) => {
-        const formData = new FormData()
-        formData.append('page_number', data.page_number)
-        formData.append('page_size', data.page_size)
+        const params = new URLSearchParams()
+        params.append('page_number', data.page_number)
+        params.append('page_size', data.page_size)
         return {
-          url: '/guest/system-voucher',
+          url: `/guest/system-voucher?${params.toString()}`,
           method: 'GET',
-          data: formData
         }
       },
       providesTags: ['Voucher']
     }),
     getGuestShopVouchers: builder.query<
       IBaseResponse<PaginationResponse<Voucher>>,
-      GetGuestFormdata
+      GetGuestShopVouchers
     >({
       query: (data) => {
-        const formData = new FormData()
-        formData.append('page_number', data.page_number)
-        formData.append('page_size', data.page_size)
+        const params = new URLSearchParams()
+        params.append('page_number', data.page_number)
+        params.append('page_size', data.page_size)
         return {
-          url: '/guest/shop-voucher',
-          method: 'GET',
-          data: formData
+          url: `/guest/shop-voucher?${params.toString()}`,
+          method: 'GET'
         }
       },
       providesTags: ['Voucher']
     }),
 
-    listShippingVoucher: builder.mutation<IBaseResponse<PaginationResponse<Voucher>>, VoucherRequest>({
+    listShippingVoucher: builder.mutation<
+      IBaseResponse<PaginationResponse<Voucher>>,
+      VoucherRequest
+    >({
       query: (data) => ({
         url: '/customer/shipping-system-voucher',
         method: 'POST',
@@ -178,15 +180,21 @@ export const voucherApi = createApi({
       invalidatesTags: ['Voucher']
     }),
 
-    listDiscountVoucher: builder.mutation<IBaseResponse<PaginationResponse<Voucher>>, VoucherRequest>({
+    listDiscountVoucher: builder.mutation<
+      IBaseResponse<PaginationResponse<Voucher>>,
+      VoucherRequest
+    >({
       query: (data) => ({
         url: '/customer/discount-system-voucher',
         method: 'POST',
         data
       }),
       invalidatesTags: ['Voucher']
-    }), 
-    listShopVoucher: builder.mutation<IBaseResponse<PaginationResponse<Voucher>>, VoucherShopRequest>({
+    }),
+    listShopVoucher: builder.mutation<
+      IBaseResponse<PaginationResponse<Voucher>>,
+      VoucherShopRequest
+    >({
       query: (data) => ({
         url: '/customer/discount-shop-voucher',
         method: 'POST',

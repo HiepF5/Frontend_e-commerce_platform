@@ -1,26 +1,35 @@
 import { Suspense, lazy } from 'react'
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LandingPage from '../features/LandingPage/pages/LandingPage'
 import { AuthPermission } from '../guards/AuthPermission'
 
-
 // Lazy load routes
 const AdminRoutes = lazy(() => import('../features/Admin/routes/AdminRoutes'))
-const AuthRoutes = lazy(() => import('../features/Authentication/routes/AuthRoutes'))
+const AuthRoutes = lazy(
+  () => import('../features/Authentication/routes/AuthRoutes')
+)
 const UserRoutes = lazy(() => import('../features/User/routes/UserRoutes'))
-const ProductRoutes = lazy(() => import('../features/Products/routes/ProductRoutes'))
+const ProductRoutes = lazy(
+  () => import('../features/Products/routes/ProductRoutes')
+)
 const ShopRoutes = lazy(() => import('../features/Shop/routes/ShopRoutes'))
-const ChatRoutes = lazy(() => import('../features/MessengerChat/routes/ChatRoutes'))
-const ChatRoutesUser = lazy(() => import('../features/Messenger/routes/ChatRoutesUser'))
-const CheckoutRoutes = lazy(() => import('../features/Checkout/routes/CheckoutRoutes'))
+const ChatRoutes = lazy(
+  () => import('../features/MessengerChat/routes/ChatRoutes')
+)
+const ChatRoutesUser = lazy(
+  () => import('../features/Messenger/routes/ChatRoutesUser')
+)
+const CheckoutRoutes = lazy(
+  () => import('../features/Checkout/routes/CheckoutRoutes')
+)
 const OrderRoutes = lazy(() => import('../features/Order/routes/OrderRoutes'))
 const CartRoutes = lazy(() => import('../features/Cart/routes/CartRoutes'))
-const ThreadsRoutes = lazy(() => import('../features/Threads/routes/ThreadsRoutes'))
-const ShopAdminRoutes = lazy(() => import('../features/ShopAdmin/routes/ShopAdminRoutes'))
+const ThreadsRoutes = lazy(
+  () => import('../features/Threads/routes/ThreadsRoutes')
+)
+const ShopAdminRoutes = lazy(
+  () => import('../features/ShopAdmin/routes/ShopAdminRoutes')
+)
 const RootRoutes = lazy(() => import('../features/Root/routes/RootRoutes'))
 
 const MainRoutes = (): JSX.Element => {
@@ -67,16 +76,16 @@ const MainRoutes = (): JSX.Element => {
                 </AuthPermission>
               }
             />
-          </Route>
 
-          <Route
-            path="/root/*"
-            element={
-              <AuthPermission allowedRoles={['ROOT']}>
-                <RootRoutes />
-              </AuthPermission>
-            }
-          />
+            <Route
+              path='/root/*'
+              element={
+                <AuthPermission allowedRoles={['ROOT']}>
+                  <RootRoutes />
+                </AuthPermission>
+              }
+            />
+          </Route>
         </Routes>
       </Suspense>
     </Router>

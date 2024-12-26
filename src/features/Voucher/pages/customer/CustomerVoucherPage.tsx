@@ -1,13 +1,13 @@
 import { Box, Typography, Grid } from '@mui/material'
-import { useGetCustomerVouchersQuery } from '../../api/voucherApi'
+import { useGetGuestSystemVouchersQuery } from '../../api/voucherApi'
 import { VoucherCard } from '../../components/VoucherCard'
 
 const CustomerVoucherPage = (): JSX.Element => {
-  const { data, isLoading } = useGetCustomerVouchersQuery({
-    type: 'DISCOUNT', 
-    page_number: 1,
-    page_size: 10
+  const { data, isLoading } = useGetGuestSystemVouchersQuery({
+    page_number: '1',
+    page_size: '10'
   })
+  console.log(data)
 
   if (isLoading) return <div>Loading...</div>
 
