@@ -18,7 +18,7 @@ import {
   Timer
 } from 'lucide-react'
 import { IShopDetails } from '~/types/shop.interface'
-import { followShopApi, getShopDetailApiByShopCode } from '@api/shopApi'
+import { checkFollowByShopCode, followShopApi, getShopDetailApiByShopCode } from '@api/shopApi'
 import { toast } from 'react-toastify'
 import { createChatWithShop } from '@api/chatMessageApi'
 import { useNavigate } from 'react-router-dom'
@@ -41,24 +41,41 @@ export default function SellerProfile({ stats, shopCode }: SellerProfileProps) {
   const [shopDetails, setShopDetails] = useState<IShopDetails | null>(null)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
-  const [isFollowed, setIsFollowed] = useState<boolean>(false)
   const navigator = useNavigate()
   useEffect(() => {
-    if (shopCode) {
-      getShopDetailApiByShopCode(shopCode)
-        .then((response) => {
-          setShopDetails(response.data)
-          setIsFollowed(false) // Assuming the API returns this info
-          setLoading(false)
-        })
-        .catch(() => {
-          setError('Failed to fetch shop details')
-          setLoading(false)
-        })
-    } else {
-      setLoading(false)
+    const fetchData = async () => {
+      if (shopCode) {
+        getShopDetailApiByShopCode(shopCode)
+          .then((response) => {
+            setShopDetails(response.data)
+            setLoading(false)
+          })
+          .catch(() => {
+            setError('Failed to fetch shop details')
+            setLoading(false)
+          })
+      } else {
+        setLoading(false)
+      }
+      
     }
+    fetchData()
   }, [shopCode])
+  const [isFollowed, setIsFollowed] = useState<boolean>()
+  useEffect(() => {
+    const checkFollowStatus = async () => {
+      if (shopCode) {
+        try {
+          const response = await checkFollowByShopCode(shopCode)
+            setIsFollowed(response.data === true)
+        } catch (error) {
+          console.error('Failed to check follow status:', error)
+        }
+      }
+    }
+    checkFollowStatus()
+  }, [shopCode])
+  console.log(isFollowed)
 
   const handleFollowClick = async () => {
     if (shopCode) {
@@ -116,16 +133,12 @@ export default function SellerProfile({ stats, shopCode }: SellerProfileProps) {
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       <Card sx={{ p: 3, mb: 4 }}>
-        <Grid
-          container
-          spacing={2}
-          alignItems='center'
-          onClick={() => navigator(`/shop/${shopCode}`)}
-        >
+        <Grid container spacing={2} alignItems='center'>
           <Grid item>
             <Avatar
               sx={{ width: 80, height: 80 }}
               src={shopDetails?.shopLogo}
+              onClick={() => navigator(`/shop/${shopCode}`)}
             />
           </Grid>
           <Grid item xs onClick={() => navigator(`/shop/${shopCode}`)}>

@@ -1,16 +1,15 @@
 import { Box, Tab, Tabs } from '@mui/material'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
 const ShopMenu: React.FC = () => {
   const [value, setValue] = React.useState(0)
    const navigate = useNavigate()
-
+const { shopId } = useParams<{ shopId: string }>()
  const handleChange = (_event: React.SyntheticEvent, newValue: number) => {
    setValue(newValue)
    if (newValue === 6) {
-    const shopCode = 'SH00000001';
-     // Assuming the "Review Shop" tab is the 7th tab (index 6)
+    const shopCode = shopId
      navigate(`/shop/${shopCode}/review-shop/`)
    }
  }

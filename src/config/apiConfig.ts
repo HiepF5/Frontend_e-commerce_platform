@@ -43,6 +43,7 @@ export const API_ENDPOINTS_SHOP = {
   ApiLockShop: 'admin/shop/lock',
   ApiFollowShop: 'customer/shop/follow-shop',
   ApiGetShopByShopCode: 'guest/shop/get-detail-by-code',
+  ApiCheckShopFollow:'/customer/shop/check-follow'  
 };
 export const API_ENDPOINTS_SHOPREVIEW = {
   ApiGetReviewByPage: 'guest/shop/page-review',

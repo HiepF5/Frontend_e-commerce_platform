@@ -120,3 +120,14 @@ export const lockShopApi = async (): Promise<IBaseResponse<string>> => {
     throw error
   }
 }
+export const checkFollowByShopCode = async (shopCode: string): Promise<IBaseResponse<boolean>> => {
+  try {
+    const response = await axios.get<IBaseResponse<boolean>>(
+      `${API_ENDPOINTS_SHOP.ApiCheckShopFollow}/${shopCode}`,
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error in getShopDetailApi:', error)
+    throw error
+  }
+}

@@ -1,27 +1,30 @@
 import { Box, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import ShopHeader from '../components/ShopHeader'
 import ShopMenu from '../components/ShopMenu'
 import ShopListProducts, { products } from '../components/ShopListProducts'
-import { Outlet } from 'react-router-dom'
-
-
-const shopInfo = {
-  name: 'Shopee Choice Việt Nam',
-  followers: '1.2tr',
-  productsCount: '15,4k',
-  rating: 4.8,
-  joinedDate: '26 Tháng Trước',
-  responseRate: '100%',
-  logoUrl: 'https://link-to-shop-logo.com',
-  bannerUrl: 'https://link-to-shop-banner.com'
-}
+import { Outlet, useParams } from 'react-router-dom'
+import { getShopDetailApiByShopCode } from '@api/shopApi'
+import { IShopDetails } from '~/types/shop.interface'
 
 const ShopHomePage: React.FC = () => {
+  const { shopId } = useParams<{ shopId: string }>()
+  const [shopInfo, setShopInfo] = useState<IShopDetails>()
+  useEffect(() => {
+    const fetchShopInfo = async () => {
+      if (shopId) {
+        const response = await getShopDetailApiByShopCode(shopId)
+        setShopInfo(response.data)
+        console.log(shopInfo)
+      }
+    }
+    fetchShopInfo()
+  }, [shopId])
+
   return (
     <div className='container'>
       <Box bgcolor='#f5f5f5' p={2}>
-        <ShopHeader shopInfo={shopInfo} />
+        {shopInfo && <ShopHeader shopInfo={shopInfo} />}
         <ShopMenu />
         <Outlet />
         <Typography variant='h5' mt={2} mb={2}>

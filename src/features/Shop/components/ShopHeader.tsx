@@ -5,24 +5,14 @@ import {
   Box,
   Avatar,
   Rating,
-  Button,
+  Button
 } from '@mui/material'
 import banner from '@assets/img/banner_mens.png'
 import { useNavigate } from 'react-router-dom'
-
-interface ShopInfo {
-  name: string
-  followers: string
-  productsCount: string
-  rating: number
-  joinedDate: string
-  responseRate: string
-  logoUrl: string
-  bannerUrl: string
-}
+import { IShopDetails } from '~/types/shop.interface'
 
 interface ShopHeaderProps {
-  shopInfo: ShopInfo
+  shopInfo: IShopDetails
 }
 
 const ShopHeader: React.FC<ShopHeaderProps> = ({ shopInfo }) => {
@@ -39,18 +29,18 @@ const ShopHeader: React.FC<ShopHeaderProps> = ({ shopInfo }) => {
       {/* Thông tin Shop */}
       <Box display='flex' alignItems='center' p={2} bgcolor='#fff'>
         <Avatar
-          src={shopInfo.logoUrl}
+          src={shopInfo.shopLogo}
           alt='Shop Logo'
           sx={{ width: 80, height: 80 }}
         />
         <Box ml={2}>
-          <Typography variant='h6'>{shopInfo.name}</Typography>
+          <Typography variant='h6'>{shopInfo.fullName}</Typography>
           <Box display='flex' alignItems='center'>
             <Typography variant='body2'>
-              Sản phẩm: {shopInfo.productsCount}
+              Sản phẩm: {shopInfo.productQuantity}
             </Typography>
             <Typography variant='body2' ml={2}>
-              Người theo dõi: {shopInfo.followers}
+              Người theo dõi: {shopInfo.followCount}
             </Typography>
             <Typography variant='body2' ml={2}>
               Đánh giá: {shopInfo.rating}
@@ -61,10 +51,10 @@ const ShopHeader: React.FC<ShopHeaderProps> = ({ shopInfo }) => {
           </Box>
           <Box display='flex' alignItems='center' mt={1}>
             <Typography variant='body2'>
-              Tỉ lệ phản hồi: {shopInfo.responseRate}
+              Tỉ lệ phản hồi: {shopInfo.processOrder}
             </Typography>
             <Typography variant='body2' ml={2}>
-              Tham gia: {shopInfo.joinedDate}
+              Tham gia: {shopInfo.successOrder}
             </Typography>
           </Box>
         </Box>
