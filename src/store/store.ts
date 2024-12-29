@@ -21,6 +21,7 @@ import { voucherApi } from '../features/Voucher/api/voucherApi'
 import { rootApi } from '@features/Root/api/rootApi'
 import { cartApi } from '@features/Cart/api/cartApi'
 import { checkoutApi } from '@features/Checkout/api/checkoutApi'
+import { orderShopApi } from '@features/Order/api/orderShopApi'
 
 export const store = configureStore({
   reducer: {
@@ -43,7 +44,8 @@ export const store = configureStore({
     [voucherApi.reducerPath]: voucherApi.reducer,
     [rootApi.reducerPath]: rootApi.reducer,
     [cartApi.reducerPath]: cartApi.reducer,
-    [checkoutApi.reducerPath]: checkoutApi.reducer
+    [checkoutApi.reducerPath]: checkoutApi.reducer,
+    [orderShopApi.reducerPath]: orderShopApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -56,7 +58,8 @@ export const store = configureStore({
       voucherApi.middleware,
       rootApi.middleware,
       cartApi.middleware,
-      checkoutApi.middleware
+      checkoutApi.middleware,
+      orderShopApi.middleware,
     )
 })
 setupListeners(store.dispatch)

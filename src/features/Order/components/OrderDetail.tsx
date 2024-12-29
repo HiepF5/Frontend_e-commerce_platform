@@ -25,7 +25,9 @@ import OrderMap from './OrderMap'
 import OrderInvoice from './OrderInvoice'
 import ChatWithSeller from './ChatWithSeller'
 import { sendNotification, subscribeToOrderUpdates } from '../services/notificationService'
-import { OrderDetail as IOrderDetail, OrderStatus, PaymentMethod, getOrderStatusText, getOrderStatusColor, DeliveryMethod, ShippingStatus } from '../types/order.interface'
+import { getOrderStatusText, getOrderStatusColor } from '../helper/orderHelper'
+import { DeliveryMethod, OrderStatus, PaymentMethod, ShippingStatus } from '../types/order.enum'
+import type { OrderDetail } from '../types/order.interface'
 
 export default function OrderDetail() {
   const { orderId } = useParams()
@@ -34,7 +36,7 @@ export default function OrderDetail() {
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const navigate = useNavigate()
   // Mock data
-  const orderDetail: IOrderDetail = {
+  const orderDetail: OrderDetail = {
     id: Number(orderId),
     orderShopCode: `SOR-20241227-DUUM-${orderId?.padStart(8, '0')}`,
     orderStatus: OrderStatus.CHO_XAC_NHAN,
@@ -303,7 +305,7 @@ export default function OrderDetail() {
                 sx={{ mb: 1 }}
                 onClick={() => navigate(`/order/detail-status/${orderId}`)}
               >
-                Thông Tin Vận Chuyển
+                Theo dõi trạng thái
               </Button>
             </Box>
           </Paper>
