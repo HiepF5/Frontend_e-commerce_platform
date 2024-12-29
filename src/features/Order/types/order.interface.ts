@@ -140,4 +140,69 @@ export interface OrderHistory {
 
 
 
+///admin
 
+export interface OrderDataAdmin {
+  id: number;
+  orderCode: string;
+  status: string;
+  totalFee: number;
+  totalShipping: number;
+  totalDiscount: number;
+  totalAmount: number;
+  ecommerceServiceFee: number;
+  deliveryMethod: string;
+  clientInfo: string;
+  paymentMethod: string;
+  isPayment: boolean;
+  createdAt: string;
+  listOrderPayment: OrderPaymentAdmin[];
+  listOrderShop: OrderShopAdmin[];
+}
+
+interface OrderPaymentAdmin {
+  id: number;
+  method: string;
+  amount: number;
+  status: string;
+  transactionCode: string;
+  transactionNote: string | null;
+  startDate: string;
+  expiryDate: string;
+}
+
+interface OrderShopAdmin {
+  id: number;
+  shopName: string;
+  shopLogo: string;
+  shopCode: string;
+  orderShopCode: string;
+  orderStatus: string;
+  totalProduct: number;
+  shopShippingFee: number;
+  shopDiscount: number;
+  serviceFee: number;
+  shopTotalAmount: number;
+  ecommerceTotalAmount: number;
+  deliveryMethod: string;
+  paymentMethod: string;
+  isPayment: boolean;
+  clientInfo: string;
+  createdAt: string;
+}
+//shop
+export interface OrderShop {
+  id: number;
+  orderCode: string;
+  status: string;
+  totalFee: number;
+  totalShipping: number;
+  totalDiscount: number;
+  totalAmount: number;
+  ecommerceServiceFee: number;
+  deliveryMethod: string;
+  clientInfo: string;
+  paymentMethod: string;
+  isPayment: boolean;
+  createdAt: string;
+}
