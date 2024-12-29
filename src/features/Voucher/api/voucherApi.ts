@@ -6,13 +6,12 @@ import {
   VoucherCreateRequest,
   VoucherUpdateRequest,
   VoucherStatusRequest,
-  PaginationResponse,
   VoucherRequest,
   VoucherShopRequest,
   GetGuestSystemVouchers,
   GetGuestShopVouchers
 } from '../types/voucher'
-import { IBaseResponse } from '~/types/base.interface'
+import { IBaseResponse, PaginationResponse } from '~/types/base.interface'
 
 export const voucherApi = createApi({
   reducerPath: 'voucherApi',

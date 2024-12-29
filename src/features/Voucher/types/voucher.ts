@@ -79,13 +79,7 @@ export interface VoucherCheckRequest {
   shopAmount?: number
 }
 
-export interface PaginationResponse<T> {
-  data: T[]
-  totalAmount: number
-  totalPage: number
-  pageNumber: number
-  pageSize: number
-} 
+
 export interface GetCustomerVouchersParams {
   type : VoucherType
   page_number: number;

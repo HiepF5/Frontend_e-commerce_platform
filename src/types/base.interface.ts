@@ -4,3 +4,10 @@ export interface IBaseResponse<T> {
   data: T
   status: boolean
 }
+export interface PaginationResponse<T> {
+  data: T[]
+  totalAmount: number
+  totalPage: number
+  pageNumber: number
+  pageSize: number
+} 
