@@ -33,7 +33,7 @@ const Navbar = () => {
   const handleRegister = () => {
     navigate('/auth/signup')
   }
-  const { data: countItem } = useGetCartCountQuery()
+  const { data: countItem } = useGetCartCountQuery() || { data: 0 }
 
 
   const user = JSON.parse(localStorage.getItem('user') || 'null')
