@@ -17,7 +17,7 @@ import {
   Chip
 } from '@mui/material'
 import { useState, useEffect } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { formatCurrency } from '@shared/utils/formatPrice'
 import ReviewDialog from './ReviewDialog'
 import RefundDialog from './RefundDialog'
@@ -32,7 +32,7 @@ export default function OrderDetail() {
   const [reviewOpen, setReviewOpen] = useState(false)
   const [refundOpen, setRefundOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
-
+  const navigate = useNavigate()
   // Mock data
   const orderDetail: IOrderDetail = {
     id: Number(orderId),
@@ -134,26 +134,28 @@ export default function OrderDetail() {
 
   return (
     <Box sx={{ p: 3 }}>
-      <Typography variant="h5" gutterBottom>
+      <Typography variant='h5' gutterBottom>
         Chi tiết đơn hàng #{orderDetail.orderShopCode}
       </Typography>
 
       <Grid container spacing={3}>
         <Grid item xs={12}>
           <Paper sx={{ p: 2, mb: 3 }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
-              <Typography variant="h6">Trạng thái đơn hàng</Typography>
-              <Chip 
+            <Box
+              sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}
+            >
+              <Typography variant='h6'>Trạng thái đơn hàng</Typography>
+              <Chip
                 label={getOrderStatusText(orderDetail.orderStatus)}
                 color={getOrderStatusColor(orderDetail.orderStatus) as any}
               />
             </Box>
-            <Stepper orientation="vertical">
+            <Stepper orientation='vertical'>
               {orderDetail.historyDtoList.map((history, index) => (
                 <Step key={index} active={true}>
                   <StepLabel>
-                    <Typography variant="subtitle2">{history.event}</Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    <Typography variant='subtitle2'>{history.event}</Typography>
+                    <Typography variant='body2' color='text.secondary'>
                       {history.description}
                     </Typography>
                   </StepLabel>
@@ -165,46 +167,53 @@ export default function OrderDetail() {
 
         <Grid item xs={12} md={8}>
           <Paper sx={{ p: 2 }}>
-            <Typography variant="h6" gutterBottom>Sản phẩm</Typography>
+            <Typography variant='h6' gutterBottom>
+              Sản phẩm
+            </Typography>
             <TableContainer>
               <Table>
                 <TableHead>
                   <TableRow>
                     <TableCell>Sản phẩm</TableCell>
-                    <TableCell align="right">Đơn giá</TableCell>
-                    <TableCell align="right">Số lượng</TableCell>
-                    <TableCell align="right">Thành tiền</TableCell>
-                    <TableCell align="right">Thao tác</TableCell>
+                    <TableCell align='right'>Đơn giá</TableCell>
+                    <TableCell align='right'>Số lượng</TableCell>
+                    <TableCell align='right'>Thành tiền</TableCell>
+                    <TableCell align='right'>Thao tác</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {orderDetail.itemDtoList.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>
-                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-                          <img 
+                        <Box
+                          sx={{ display: 'flex', alignItems: 'center', gap: 2 }}
+                        >
+                          <img
                             src={JSON.parse(item.productImage)[0]}
                             alt={item.productTitle}
-                            style={{ width: 50, height: 50, objectFit: 'cover' }}
+                            style={{
+                              width: 50,
+                              height: 50,
+                              objectFit: 'cover'
+                            }}
                           />
                           <Box>
                             <Typography>{item.productTitle}</Typography>
-                            <Typography variant="body2" color="text.secondary">
+                            <Typography variant='body2' color='text.secondary'>
                               {item.variantName}
                             </Typography>
                           </Box>
                         </Box>
                       </TableCell>
-                      <TableCell align="right">{formatCurrency(item.price)}</TableCell>
-                      <TableCell align="right">{item.quantity}</TableCell>
-                      <TableCell align="right">
+                      <TableCell align='right'>
+                        {formatCurrency(item.price)}
+                      </TableCell>
+                      <TableCell align='right'>{item.quantity}</TableCell>
+                      <TableCell align='right'>
                         {formatCurrency(item.price * item.quantity)}
                       </TableCell>
-                      <TableCell align="right">
-                        <Button 
-                          size="small" 
-                          onClick={() => handleReview(item)}
-                        >
+                      <TableCell align='right'>
+                        <Button size='small' onClick={() => handleReview(item)}>
                           Đánh giá
                         </Button>
                       </TableCell>
@@ -215,7 +224,7 @@ export default function OrderDetail() {
             </TableContainer>
 
             <Box sx={{ mt: 2 }}>
-              <Typography variant="subtitle1" gutterBottom>
+              <Typography variant='subtitle1' gutterBottom>
                 Thông tin giao hàng
               </Typography>
               <Typography>
@@ -233,38 +242,76 @@ export default function OrderDetail() {
 
         <Grid item xs={12} md={4}>
           <Paper sx={{ p: 2, mb: 2 }}>
-            <Typography variant="h6" gutterBottom>Tổng quan đơn hàng</Typography>
+            <Typography variant='h6' gutterBottom>
+              Tổng quan đơn hàng
+            </Typography>
             <Box sx={{ mt: 2 }}>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+              >
                 <Typography>Tổng tiền hàng</Typography>
-                <Typography>{formatCurrency(orderDetail.totalProduct)}</Typography>
+                <Typography>
+                  {formatCurrency(orderDetail.totalProduct)}
+                </Typography>
               </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+              >
                 <Typography>Phí vận chuyển</Typography>
-                <Typography>{formatCurrency(orderDetail.shopShippingFee)}</Typography>
+                <Typography>
+                  {formatCurrency(orderDetail.shopShippingFee)}
+                </Typography>
               </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+              >
                 <Typography>Giảm giá</Typography>
-                <Typography>-{formatCurrency(orderDetail.shopDiscount)}</Typography>
+                <Typography>
+                  -{formatCurrency(orderDetail.shopDiscount)}
+                </Typography>
               </Box>
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+              >
                 <Typography>Phí dịch vụ</Typography>
-                <Typography>{formatCurrency(orderDetail.serviceFee)}</Typography>
+                <Typography>
+                  {formatCurrency(orderDetail.serviceFee)}
+                </Typography>
               </Box>
               <Divider sx={{ my: 1 }} />
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="h6">Thành tiền</Typography>
-                <Typography variant="h6" color="error">
+              <Box
+                sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
+              >
+                <Typography variant='h6'>Thành tiền</Typography>
+                <Typography variant='h6' color='error'>
                   {formatCurrency(orderDetail.ecommerceTotalAmount)}
                 </Typography>
               </Box>
+              <Button
+                variant='contained'
+                color='error'
+                fullWidth
+                sx={{ mb: 1 }}
+                onClick={() => navigate(`/order/tracking/${orderId}`)}
+              >
+                Theo dõi đơn hàng
+              </Button>
+              <Button
+                variant='contained'
+                color='error'
+                fullWidth
+                sx={{ mb: 1 }}
+                onClick={() => navigate(`/order/detail-status/${orderId}`)}
+              >
+                Thông Tin Vận Chuyển
+              </Button>
             </Box>
           </Paper>
 
           <Paper sx={{ p: 2, mb: 2 }}>
             <OrderInvoice order={orderDetail} />
           </Paper>
-          
+
           <ChatWithSeller />
         </Grid>
       </Grid>

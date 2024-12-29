@@ -8,6 +8,7 @@ import OrderList from '../components/OrderList'
 import OrderDetail from '../components/OrderDetail'
 import OrderCancel from '../components/OrderCancel'
 import OrderHistory from '../components/OrderHistory'
+import OrderStatus from '../components/OrderStatus'
 
 const OrderRoutes = (): JSX.Element => {
   const routes = [
@@ -58,6 +59,10 @@ const OrderRoutes = (): JSX.Element => {
             {
               path: 'history',
               element: <OrderHistory />
+            },
+            {
+              path: 'detail-status/:status',
+              element: <OrderStatus />
             }
           ]
         }
