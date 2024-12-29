@@ -107,10 +107,20 @@ const NavbarLayoutUser = () => {
         <StoreMallDirectoryIcon className='text-yellow-600' />
 
         <Link
-          to='/order/list-order'
+          to='/order'
           className='text-gray-800 font-medium text-lg hover:text-yellow-600'
         >
           Đơn mua
+        </Link>
+      </div>
+      <div className='flex items-center p-4 gap-4 rounded-lg transition-all duration-300 hover:bg-gray-100 hover:scale-105 hover:shadow-lg'>
+        <StoreMallDirectoryIcon className='text-yellow-600' />
+
+        <Link
+          to='/order/history'
+          className='text-gray-800 font-medium text-lg hover:text-yellow-600'
+        >
+          Lịch sử đơn hàng
         </Link>
       </div>
     </>

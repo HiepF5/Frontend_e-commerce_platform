@@ -10,115 +10,181 @@ import {
   Step,
   StepLabel,
   Divider,
-  Grid
+  Grid,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
 } from '@mui/material'
+import { formatCurrency } from '@shared/utils/formatPrice'
+import { TileLayer, Marker, Popup, Polyline, MapContainer } from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
+import { useParams } from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import { ShippingStatus, getShippingStatusText } from '../types/order.interface'
+
+// Fix for default marker icons
+import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
+import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+
+// Fix for default marker icons
+delete (L.Icon.Default.prototype as any)._getIconUrl
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerIcon2x,
+  iconUrl: markerIcon,
+  shadowUrl: markerShadow
+})
+
+
+interface TrackingPoint {
+  lat: number
+  lng: number
+  status: ShippingStatus
+  timestamp: string
+  address: string
+}
 
 export default function OrderTracking() {
-  const steps = [
-    'Đơn Hàng Đã Đặt',
-    'Đã Xác Nhận Thông Tin Thanh Toán',
-    'Đã Giao Cho ĐVVC',
-    'Đã Nhận Được Hàng',
-    'Đơn Hàng Đã Hoàn Thành'
-  ]
+  const { orderId } = useParams()
+  const [trackingData, setTrackingData] = useState<TrackingPoint[]>([
+    {
+      lat: 21.028511,
+      lng: 105.804817,
+      status: ShippingStatus.PICKED_UP,
+      timestamp: '2024-03-15 08:00:00',
+      address: 'Kho Hà Nội'
+    },
+    {
+      lat: 21.025511,
+      lng: 105.814817,
+      status: ShippingStatus.IN_TRANSIT,
+      timestamp: '2024-03-15 10:30:00',
+      address: 'Trung tâm phân loại'
+    },
+    {
+      lat: 21.022511,
+      lng: 105.824817,
+      status: ShippingStatus.IN_TRANSIT,
+      timestamp: '2024-03-15 14:00:00',
+      address: 'Đang giao đến người nhận'
+    }
+  ])
+
+  const [currentLocation, setCurrentLocation] = useState<TrackingPoint>({
+    lat: 21.020511,
+    lng: 105.834817,
+    status: ShippingStatus.IN_TRANSIT,
+    timestamp: new Date().toISOString(),
+    address: 'Vị trí hiện tại'
+  })
+
+  // Simulate real-time updates
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentLocation(prev => ({
+        ...prev,
+        lat: prev.lat + 0.001 * (Math.random() - 0.5),
+        lng: prev.lng + 0.001 * (Math.random() - 0.5),
+        timestamp: new Date().toISOString()
+      }))
+    }, 5000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  const deliveryIcon = new L.Icon({
+    iconUrl: '/delivery-icon.png',
+    iconSize: [38, 38],
+  })
+
+  const positions: L.LatLngTuple[] = trackingData.map(point => [point.lat, point.lng] as L.LatLngTuple)
 
   return (
-    <Container maxWidth='md' sx={{ py: 4 }}>
-      <Paper sx={{ p: 3, mb: 3 }}>
-        <Typography variant='h6' gutterBottom>
-          MÃ ĐƠN HÀNG: 241010SKTECKC7 | ĐƠN HÀNG ĐÃ HOÀN THÀNH
-        </Typography>
-        <Stepper activeStep={4} alternativeLabel>
-          {steps.map((label) => (
-            <Step key={label}>
-              <StepLabel>{label}</StepLabel>
-            </Step>
-          ))}
-        </Stepper>
-      </Paper>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h5" gutterBottom>
+        Theo dõi đơn hàng #{orderId}
+      </Typography>
 
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant='h6' gutterBottom>
-              Địa Chỉ Nhận Hàng
+        <Grid item xs={12} md={4}>
+          <Paper sx={{ p: 2 }}>
+            <Typography variant="h6" gutterBottom>
+              Lịch trình vận chuyển
             </Typography>
-            <Box sx={{ mb: 3 }}>
-              <Typography>NGUYỄN CÔNG HIỆP</Typography>
-              <Typography>(+84) 975251857</Typography>
-              <Typography>
-                Số nhà 12A ngõ 4 ao sen Hà Đông, Phường Mộ Lao, Quận Hà Đông, Hà
-                Nội
-              </Typography>
-            </Box>
-
-            <Typography variant='h6' gutterBottom>
-              Thông Tin Vận Chuyển
-            </Typography>
-            <Box sx={{ ml: 2 }}>
-              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                <Typography color='success.main'>12:50 12-10-2024</Typography>
-                <Typography>Đã giao</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                <Typography>07:54 12-10-2024</Typography>
-                <Typography>Đang vận chuyển</Typography>
-              </Box>
-              <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-                <Typography>04:23 12-10-2024</Typography>
-                <Typography>Đơn hàng đã đến trạm</Typography>
-              </Box>
-            </Box>
+            <Stepper orientation="vertical">
+              {[...trackingData, currentLocation].map((point, index) => (
+                <Step key={index} active={true}>
+                  <StepLabel>
+                    <Typography variant="subtitle2">
+                      {getShippingStatusText(point.status)}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {point.address}
+                    </Typography>
+                    <Typography variant="caption" color="text.secondary">
+                      {new Date(point.timestamp).toLocaleString()}
+                    </Typography>
+                  </StepLabel>
+                </Step>
+              ))}
+            </Stepper>
           </Paper>
         </Grid>
 
-        <Grid item xs={12} md={4}>
-          <Paper sx={{ p: 3 }}>
-            <Typography variant='h6' gutterBottom>
-              Chi Tiết Thanh Toán
-            </Typography>
-            <Box
-              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
-            >
-              <Typography>Tổng tiền hàng</Typography>
-              <Typography>₫139.000</Typography>
+        <Grid item xs={12} md={8}>
+          <Paper sx={{ p: 2 }}>
+            <Box sx={{ height: 500, width: '100%' }}>
+              <MapContainer
+                center={[currentLocation.lat, currentLocation.lng]}
+                zoom={13}
+                style={{ height: '100%', width: '100%' }}
+              >
+                <TileLayer
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                />
+
+                {trackingData.map((point, index) => (
+                  <Marker
+                    key={index}
+                    position={[point.lat, point.lng]}
+                  >
+                    <Popup>
+                      <Typography variant="body2">
+                        {getShippingStatusText(point.status)}<br />
+                        {point.address}<br />
+                        {new Date(point.timestamp).toLocaleString()}
+                      </Typography>
+                    </Popup>
+                  </Marker>
+                ))}
+
+                <Marker
+                  position={[currentLocation.lat, currentLocation.lng]}
+                  icon={deliveryIcon}
+                >
+                  <Popup>
+                    <Typography variant="body2">
+                      Vị trí hiện tại<br />
+                      {new Date(currentLocation.timestamp).toLocaleString()}
+                    </Typography>
+                  </Popup>
+                </Marker>
+
+                <Polyline 
+                  positions={positions}
+                  color="blue"
+                  weight={3}
+                  opacity={0.5}
+                />
+              </MapContainer>
             </Box>
-            <Box
-              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
-            >
-              <Typography>Phí vận chuyển</Typography>
-              <Typography>₫18.300</Typography>
-            </Box>
-            <Box
-              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
-            >
-              <Typography>Giảm giá phí vận chuyển</Typography>
-              <Typography>-₫14.800</Typography>
-            </Box>
-            <Box
-              sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
-            >
-              <Typography>Voucher từ Shopee</Typography>
-              <Typography>-₫14.500</Typography>
-            </Box>
-            <Divider sx={{ my: 2 }} />
-            <Box
-              sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}
-            >
-              <Typography variant='h6'>Thành tiền</Typography>
-              <Typography variant='h6' color='error'>
-                ₫18.000
-              </Typography>
-            </Box>
-            <Button variant='contained' color='error' fullWidth sx={{ mb: 2 }}>
-              Mua Lại
-            </Button>
-            <Button variant='outlined' fullWidth>
-              Liên Hệ Người Bán
-            </Button>
           </Paper>
         </Grid>
       </Grid>
-    </Container>
+    </Box>
   )
 }

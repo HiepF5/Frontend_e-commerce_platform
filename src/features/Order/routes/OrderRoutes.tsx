@@ -4,6 +4,10 @@ import LayoutPage from '@layouts/LayoutPage'
 import OrderTracking from '../components/OrderTracking'
 import LayoutUser from '@features/User/components/LayoutUser'
 import path from 'path'
+import OrderList from '../components/OrderList'
+import OrderDetail from '../components/OrderDetail'
+import OrderCancel from '../components/OrderCancel'
+import OrderHistory from '../components/OrderHistory'
 
 const OrderRoutes = (): JSX.Element => {
   const routes = [
@@ -16,24 +20,44 @@ const OrderRoutes = (): JSX.Element => {
           element: <LayoutUser />,
           children: [
             {
-              path: 'tracking',
+              index: true,
+              element: <OrderList />
+            },
+            {
+              path: 'pending',
+              element: <OrderList />
+            },
+            {
+              path: 'processing',
+              element: <OrderList />
+            },
+            {
+              path: 'shipping',
+              element: <OrderList />
+            },
+            {
+              path: 'completed',
+              element: <OrderList />
+            },
+            {
+              path: 'cancelled',
+              element: <OrderList />
+            },
+            {
+              path: 'tracking/:orderId',
               element: <OrderTracking />
+            },
+            {
+              path: 'detail/:orderId',
+              element: <OrderDetail />
+            },
+            {
+              path: 'cancel/:orderId',
+              element: <OrderCancel />
             },
             {
               path: 'history',
-              element: <OrderTracking />
-            },
-            {
-              path: 'detail',
-              element: <OrderTracking/>
-            },
-            {
-              path: 'cancel',
-              element: <OrderTracking />
-            },
-            {
-              path: 'list-order',
-              element: <OrderTracking />
+              element: <OrderHistory />
             }
           ]
         }

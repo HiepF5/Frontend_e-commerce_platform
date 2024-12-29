@@ -1,0 +1,23 @@
+.datePicker {
+  width: 100%;
+}
+
+.datePicker input {
+  width: 100%;
+  padding: 16.5px 14px;
+  border: 1px solid rgba(0, 0, 0, 0.23);
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1.4375em;
+  font-family: inherit;
+}
+
+.datePicker input:focus {
+  border-color: #1976d2;
+  border-width: 2px;
+  outline: none;
+}
+
+.datePicker input:hover {
+  border-color: rgba(0, 0, 0, 0.87);
+} 
