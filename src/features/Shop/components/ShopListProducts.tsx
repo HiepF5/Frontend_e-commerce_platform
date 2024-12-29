@@ -1,87 +1,60 @@
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Grid,
-  Rating,
-  Typography
-} from '@mui/material'
-import React from 'react'
+import { Box, Grid, Typography } from '@mui/material'
+import ProductItem from '@features/Products/components/ProductItem'
+import { useParams } from 'react-router-dom'
+import { useGetListProductQuery } from '@features/Products/api/productApi'
+import { IProduct } from '~/types/products.interface'
+import { useEffect, useState } from 'react'
+// import { useGetShopRecommendedQuery } from '@features/Products/api/productApi'
 
-interface Product {
-  id: number
-  name: string
-  price: string
-  discount: string
-  sold: string
-  rating: number
-  imgUrl: string
-}
-
-interface ShopListProductsProps {
-  products: Product[]
-}
-
-export const products: Product[] = [
-  {
-    id: 1,
-    name: 'Dây Đeo Thẻ Choice SC650005',
-    price: '6.100',
-    discount: '-44%',
-    sold: '3,6k',
-    rating: 4.8,
-    imgUrl:
-      'https://down-vn.img.susercontent.com/file/89261ae1ea32cb8fb5259585d4a60393'
-  },
-  {
-    id: 2,
-    name: 'Dây đeo thẻ học sinh, sinh viên',
-    price: '15.300',
-    discount: '-30%',
-    sold: '798',
-    rating: 4.8,
-    imgUrl:
-      'https://quaviet365.vn/huc/fitting-350-350-100/20230810/day-deo-the-1-20230810153950851.jpg'
-  }
-  // thêm các sản phẩm khác
-]
-
-const ShopListProducts: React.FC<ShopListProductsProps> = ({ products }) => {
+const ShopListProducts = () => {
+  const { shopId } = useParams()
+  const [products, setProducts] = useState<IProduct[]>([])
+    const { data, isLoading, isError } = useGetListProductQuery({
+      pageNumber: 1,
+      pageSize: 40
+    })
+  
+    useEffect(() => {
+      if (data && data.data) {
+        setProducts((prevProducts) => [
+          ...prevProducts,
+          ...(Array.isArray(data.data) ? data.data : [])
+        ])
+      }
+    }, [data])
+    console.log(products)
   return (
-    <Grid container spacing={2} mt={2}>
-      {products.map((product) => (
-        <Grid item xs={12} sm={6} md={4} key={product.id}>
-          <Card>
-            <CardMedia
-              component='img'
-              height='140'
-              image={product.imgUrl}
-              alt={product.name}
-            />
-            <CardContent>
-              <Typography variant='h6'>{product.name}</Typography>
-              <Box
-                display='flex'
-                justifyContent='space-between'
-                alignItems='center'
-              >
-                <Typography variant='body2' color='text.secondary'>
-                  {product.price} ₫
-                </Typography>
-                <Typography variant='body2' color='text.secondary'>
-                  {product.discount}
-                </Typography>
-              </Box>
-              <Typography variant='body2' color='text.secondary'>
-                Đã bán: {product.sold}
-              </Typography>
-              <Rating value={product.rating} precision={0.1} readOnly />
-            </CardContent>
-          </Card>
+    <Box sx={{ mt: 3 }}>
+      <Typography variant='h6' gutterBottom>
+        Gợi ý cho bạn
+      </Typography>
+
+      {isLoading ? (
+        <Box>Loading...</Box>
+      ) : (
+        <Grid container spacing={2}>
+          {products.map((product, index) => (
+            <Grid item xs={12} sm={6} md={3} key={`${product.productId}-${index}`}>
+              <ProductItem product={product} />
+            </Grid>
+          ))}
         </Grid>
-      ))}
-    </Grid>
+      )}
+
+      <Box sx={{ mt: 4 }}>
+        <Typography variant='h6' gutterBottom>
+          Danh mục nổi bật
+        </Typography>
+        {/* Add featured categories grid/list */}
+      </Box>
+
+      <Box sx={{ mt: 4 }}>
+        <Typography variant='h6' gutterBottom>
+          Thương hiệu nổi bật
+        </Typography>
+        {/* Add featured brands grid/list */}
+      </Box>
+    </Box>
   )
 }
 

@@ -8,7 +8,11 @@ import {
   CircularProgress,
   IconButton,
   Snackbar,
-  Alert
+  Alert,
+  Tooltip,
+  Menu,
+  MenuItem,
+  Divider
 } from '@mui/material'
 import { styled } from '@mui/system'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
@@ -27,9 +31,23 @@ import {
 } from '../../slices/ChatUserSlice'
 import ChatService from '../../service/ChatServiceUser'
 import { dateMapper } from '@shared/utils/dateMapper'
-
+import {
+  AttachFile,
+  EmojiEmotions,
+  Gif,
+  Image,
+  Info,
+  Phone,
+  Search,
+  Send,
+  ThumbUp,
+  VideoCall,
+  Videocam
+} from '@mui/icons-material'
+import { OnlineBadge, StyledAvatar } from '@shared/libs/mui/Style'
 const MessageBubble = styled(Box)<{ owner: boolean }>(({ theme, owner }) => ({
   display: 'inline-block',
+  // position: 'relative',
   padding: theme.spacing(1.5),
   borderRadius: theme.spacing(2),
   maxWidth: '70%',
@@ -40,12 +58,22 @@ const MessageBubble = styled(Box)<{ owner: boolean }>(({ theme, owner }) => ({
     : theme.palette.text.primary,
   alignSelf: owner ? 'flex-end' : 'flex-start'
 }))
-
+const StyledInput = styled(TextField)(({ theme }) => ({
+  '& .MuiInputBase-root': {
+    backgroundColor: theme.palette.action.hover,
+    borderRadius: 20,
+    padding: theme.spacing(1),
+    '&:hover': {
+      backgroundColor: theme.palette.action.selected
+    },
+    '& fieldset': {
+      border: 'none'
+    }
+  }
+}))
 const ChatUser: React.FC = () => {
   const dispatch = useAppDispatch()
-  const { chatStory } = useAppSelector(
-    (state) => state.chatUserApi
-  )
+  const { chatStory } = useAppSelector((state) => state.chatUserApi)
   const currentChat = useAppSelector((state) => state.chatUserApi.currentChat)
   const [input, setInput] = useState('')
   const [sending, setSending] = useState(false)
@@ -53,7 +81,7 @@ const ChatUser: React.FC = () => {
   const [error, setError] = useState<string | null>(null)
   const user = JSON.parse(localStorage.getItem('user') || '{}')
   const messageBoxRef = useRef<HTMLDivElement | null>(null)
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
 
   const {
     data: fetchedChatStory,
@@ -65,9 +93,7 @@ const ChatUser: React.FC = () => {
     page_number: 1,
     page_size: 10
   })
-  const {
-    refetch: refetchChatList
-  } = useFetchChatListCustomerQuery({
+  const { refetch: refetchChatList } = useFetchChatListCustomerQuery({
     shopCode: null,
     userCode: null,
     pageNumber: 1,
@@ -166,7 +192,7 @@ const ChatUser: React.FC = () => {
           if (updatedChatStoryCustomer.data) {
             dispatch(setChatStory(updatedChatStoryCustomer.data.data))
           }
-        } 
+        }
       } else {
         throw new Error('Failed to send message')
       }
@@ -177,7 +203,6 @@ const ChatUser: React.FC = () => {
       setSending(false)
     }
   }
-  
 
   const seenMessage = useCallback(() => {
     if (!connected || !currentChat) {
@@ -215,7 +240,6 @@ const ChatUser: React.FC = () => {
     seenMessage()
   }, [chatStory, seenMessage])
 
-
   if (isLoading) return <CircularProgress />
   if (fetchError)
     return <Typography color='error'>Error loading chat story</Typography>
@@ -228,59 +252,202 @@ const ChatUser: React.FC = () => {
     }
     reader.readAsDataURL(file)
   }
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [showReactions, setShowReactions] = useState(false)
+  const [messageMenuAnchor, setMessageMenuAnchor] =
+    useState<null | HTMLElement>(null)
+  const [selectedMessage, setSelectedMessage] = useState<any>(null)
+
+  const handleMenuClose = () => {
+    setAnchorEl(null)
+  }
+
+  const handleMessageMenu = (
+    event: React.MouseEvent<HTMLElement>,
+    message: any
+  ) => {
+    event.preventDefault()
+    setSelectedMessage(message)
+    setMessageMenuAnchor(event.currentTarget)
+  }
+  const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(
+    null
+  )
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+    <Box
+      sx={{
+        height: '100%',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: 'background.default'
+      }}
+    >
+      <Box
+        sx={{
+          p: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: 1,
+          borderColor: 'divider',
+          bgcolor: 'background.paper'
+        }}
+      >
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
+          <Box sx={{ position: 'relative' }}>
+            <OnlineBadge
+              overlap='circular'
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+              variant='dot'
+              sx={{
+                '& .MuiBadge-badge': {
+                  backgroundColor: '#44b700',
+                  width: 10,
+                  height: 10,
+                  borderRadius: '50%',
+                  border: '2px solid white'
+                }
+              }}
+            >
+              <StyledAvatar
+                src={currentChat?.story_avatar}
+                sx={{ width: 40, height: 40 }}
+              />
+            </OnlineBadge>
+          </Box>
+          <Box>
+            <Typography variant='subtitle1' sx={{ fontWeight: 500 }}>
+              {currentChat?.story_name}
+            </Typography>
+            <Typography variant='caption' color='text.secondary'>
+              Đang hoạt động
+            </Typography>
+          </Box>
+        </Box>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Tooltip title='Bắt đầu gọi thoại'>
+            <IconButton sx={{ color: 'text.secondary' }}>
+              <Phone />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Bắt đầu gọi video'>
+            <IconButton sx={{ color: 'text.secondary' }}>
+              <Videocam />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Tìm kiếm trong cuộc trò chuyện'>
+            <IconButton sx={{ color: 'text.secondary' }}>
+              <Search />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Thông tin về đoạn chat'>
+            <IconButton sx={{ color: 'text.secondary' }}>
+              <Info />
+            </IconButton>
+          </Tooltip>
+        </Box>
+      </Box>
       <Paper
-        elevation={2}
+        elevation={0}
         sx={{
           p: 2,
           flex: 1,
           overflowY: 'auto',
           display: 'flex',
           flexDirection: 'column',
-          gap: 2
+          gap: 2,
+          bgcolor: 'background.default'
         }}
         ref={messageBoxRef}
       >
         {chatStory?.list_message?.length ? (
-          chatStory.list_message.map((msg: any, i: number) => {
-            {
-              return (
-                <Box
-                  key={i}
+          chatStory.list_message.map((msg: any, i: number) => (
+            <Box
+              key={i}
+              sx={{
+                display: 'flex',
+                justifyContent: !msg.is_shop_sender ? 'flex-end' : 'flex-start',
+                position: 'relative',
+                padding: 0.5
+              }}
+              onMouseEnter={() => setHoveredMessageIndex(i)} // Khi hover, lưu chỉ số tin nhắn
+              onMouseLeave={() => setHoveredMessageIndex(null)} // Khi rời chuột, reset state
+              onContextMenu={(e) => handleMessageMenu(e, msg)}
+            >
+              {msg.is_shop_sender && (
+                <StyledAvatar
+                  src={currentChat?.story_avatar}
                   sx={{
-                    display: 'flex',
-                    justifyContent: !msg.is_shop_sender
-                      ? 'flex-end'
-                      : 'flex-start'
+                    width: 28,
+                    height: 28,
+                    mr: 1,
+                    alignSelf: 'flex-end'
+                  }}
+                />
+              )}
+              <MessageBubble owner={!msg.is_shop_sender}>
+                {msg.image_Url && (
+                  <img
+                    src={msg.image_Url}
+                    alt='Sent'
+                    style={{
+                      maxHeight: 150,
+                      maxWidth: '100%',
+                      objectFit: 'contain',
+                      marginBottom: 8,
+                      borderRadius: 8
+                    }}
+                  />
+                )}
+                <Typography>{msg.content}</Typography>
+                <Typography
+                  variant='caption'
+                  sx={{
+                    opacity: 0.7,
+                    display: 'block',
+                    mt: 0.5,
+                    fontSize: '0.7rem'
                   }}
                 >
-                  <MessageBubble owner={!msg.is_shop_sender}>
-                    {msg.image_Url && (
-                      <img
-                        src={msg.image_Url}
-                        alt='Sent'
-                        style={{
-                          maxHeight: 150,
-                          maxWidth: '100%',
-                          objectFit: 'contain',
-                          marginBottom: 8
+                  {msg.created_at}
+                </Typography>
+                {/* Hiển thị phản ứng chỉ khi tin nhắn được hover */}
+                {hoveredMessageIndex === i && (
+                  <Box
+                    sx={{
+                      position: 'absolute',
+                      bottom: '-24px', // Căn sát phía dưới tin nhắn
+                      left: !msg.is_shop_sender ? 'auto' : '0', // Bên trái nếu shop gửi
+                      right: !msg.is_shop_sender ? '0' : 'auto', // Bên phải nếu user gửi
+                      display: 'flex',
+                      gap: 0.5,
+                      bgcolor: 'background.paper',
+                      p: 0.5,
+                      borderRadius: 5,
+                      boxShadow: 2
+                    }}
+                  >
+                    {['👍', '❤️', '😆', '😮', '😢', '😠'].map((emoji) => (
+                      <Typography
+                        key={emoji}
+                        sx={{
+                          cursor: 'pointer',
+                          '&:hover': { transform: 'scale(1.2)' },
+                          transition: 'transform 0.2s'
                         }}
-                      />
-                    )}
-                    <Typography>{msg.content}</Typography>
-                    <Typography variant='caption' sx={{ opacity: 0.7 }}>
-                      {msg.created_at}
-                    </Typography>
-                  </MessageBubble>
-                </Box>
-              )
-            }
-          })
+                      >
+                        {emoji}
+                      </Typography>
+                    ))}
+                  </Box>
+                )}
+              </MessageBubble>
+            </Box>
+          ))
         ) : (
           <Typography variant='body2' color='text.secondary' align='center'>
-            No messages yet.
+            Chưa có tin nhắn.
           </Typography>
         )}
       </Paper>
@@ -294,17 +461,45 @@ const ChatUser: React.FC = () => {
         sx={{
           p: 2,
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-end',
           gap: 1,
           backgroundColor: 'background.paper',
           position: 'relative'
         }}
       >
-        <label htmlFor='file-input'>
-          <IconButton component='span'>
-            <AttachFileIcon />
-          </IconButton>
-        </label>
+        <Box sx={{ display: 'flex', gap: 1 }}>
+          <Tooltip title='Đính kèm'>
+            <IconButton component='label' sx={{ color: 'text.secondary' }}>
+              <AttachFile />
+              <input
+                accept='image/*'
+                style={{ display: 'none' }}
+                id='file-input'
+                type='file'
+                onChange={(e) => {
+                  if (e.target.files && e.target.files[0]) {
+                    sendFile(e.target.files[0])
+                  }
+                }}
+              />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Gửi ảnh'>
+            <IconButton sx={{ color: 'text.secondary' }}>
+              <Image />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Chọn nhãn dán'>
+            <IconButton sx={{ color: 'text.secondary' }}>
+              <EmojiEmotions />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title='Chọn file GIF'>
+            <IconButton sx={{ color: 'text.secondary' }}>
+              <Gif />
+            </IconButton>
+          </Tooltip>
+        </Box>
         {selectedImage && (
           <Box
             sx={{
@@ -340,7 +535,7 @@ const ChatUser: React.FC = () => {
           </Box>
         )}
 
-        <input
+        {/* <input
           accept='image/*'
           style={{ display: 'none' }}
           id='file-input'
@@ -350,14 +545,45 @@ const ChatUser: React.FC = () => {
               sendFile(e.target.files[0])
             }
           }}
-        />
-        <TextField
+        /> */}
+        {/* <TextField
           fullWidth
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder='Type a message...'
           disabled={!connected}
+        /> */}
+        <StyledInput
+          fullWidth
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          placeholder='Aa'
+          disabled={!connected}
+          multiline
+          maxRows={4}
         />
+        {!input.trim() ? (
+          <Tooltip title='Gửi like'>
+            <IconButton sx={{ color: '#0084ff' }}>
+              <ThumbUp />
+            </IconButton>
+          </Tooltip>
+        ) : (
+          <Tooltip title='Gửi'>
+            <IconButton
+              type='submit'
+              color='primary'
+              disabled={sending || !connected}
+              sx={{
+                '&.Mui-disabled': {
+                  color: 'text.disabled'
+                }
+              }}
+            >
+              <Send />
+            </IconButton>
+          </Tooltip>
+        )}
         <Button
           type='submit'
           variant='contained'
@@ -389,6 +615,31 @@ const ChatUser: React.FC = () => {
           {error}
         </Alert>
       </Snackbar>
+      <Menu
+        anchorEl={messageMenuAnchor}
+        open={Boolean(messageMenuAnchor)}
+        onClose={() => setMessageMenuAnchor(null)}
+        sx={{
+          '& .MuiList-root': {
+            padding: 0
+          },
+          left: !selectedMessage?.is_shop_sender ? '850px' : '10px',
+          top: '50px'
+        }}
+      >
+        <MenuItem onClick={() => setMessageMenuAnchor(null)}>Trả lời</MenuItem>
+        <MenuItem onClick={() => setMessageMenuAnchor(null)}>
+          Chuyển tiếp
+        </MenuItem>
+        <MenuItem onClick={() => setMessageMenuAnchor(null)}>Sao chép</MenuItem>
+        <Divider />
+        <MenuItem
+          onClick={() => setMessageMenuAnchor(null)}
+          sx={{ color: 'error.main' }}
+        >
+          Thu hồi
+        </MenuItem>
+      </Menu>
     </Box>
   )
 }

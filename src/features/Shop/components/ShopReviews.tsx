@@ -19,7 +19,9 @@ import {
 import { useAppDispatch, useAppSelector } from '@store/hook'
 import { IReview } from '~/types/shop-review.interface'
 import { createReview, fetchReviews } from '../slices/ShopReviewSlice'
-
+import { useParams } from 'react-router-dom'
+import { IProduct } from '~/types/products.interface'
+import { useGetListProductQuery } from '@features/Products/api/productApi'
 const ShopReviews: React.FC = () => {
   const dispatch = useAppDispatch()
   const { reviews, loading, error } = useAppSelector(
@@ -29,7 +31,25 @@ const ShopReviews: React.FC = () => {
   const [comment, setComment] = useState('')
   const [rating, setRating] = useState<number | null>(null)
   const [selectedStar, setSelectedStar] = useState<number | null>(null)
-  // const {shopCode} = useAppSelector((state) => state.shop.shop)
+  const { shopId } = useParams()
+  const [selectedRating, setSelectedRating] = useState<number | null>(null)
+  
+ const [products, setProducts] = useState<IProduct[]>([])
+   const { data, isLoading, refetch } = useGetListProductQuery({
+     pageNumber: 1,
+     pageSize: 40
+   })
+ 
+   useEffect(() => {
+     if (data && data.data) {
+       setProducts((prevProducts) => [
+         ...prevProducts,
+         ...(Array.isArray(data.data) ? data.data : [])
+       ])
+     }
+   }, [data])
+
+
   const fetchAllReviews = async () => {
     const ratings = [1, 2, 3, 4, 5]
     await Promise.all(

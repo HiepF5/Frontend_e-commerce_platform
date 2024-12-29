@@ -6,9 +6,9 @@ import { useGetListProductQuery } from '../api/productApi'
 
 export default function Products() {
   const [pageNumber, setPageNumber] = useState(1)
-  const [products, setProducts] = useState<IProduct[]>([])
   const [hasMore, setHasMore] = useState(true)
-
+  
+  const [products, setProducts] = useState<IProduct[]>([])
   const { data, isFetching, isError } = useGetListProductQuery({
     pageNumber,
     pageSize: 40
@@ -62,8 +62,8 @@ export default function Products() {
               <ProductItem
                 product={{
                   productId: product.productId,
-                  image: product.imageUrl || '',
-                  productName: product.productTitle,
+                  imageUrl: product.imageUrl || '',
+                  productTitle: product.productTitle,
                   brand: `Brand: ${product.brand}`,
                   price: product.minPrice,
                   hasVideo: true,

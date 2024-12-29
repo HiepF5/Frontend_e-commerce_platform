@@ -11,8 +11,8 @@ interface ProductSpecs {
 
 interface Product {
   productId: number
-  image: string
-  productName: string
+  imageUrl: string | null
+  productTitle: string
   brand: string
   price: number
   specs?: ProductSpecs
@@ -33,8 +33,8 @@ interface ProductItemProps {
 
 const DEFAULT_PRODUCT: Product = {
   productId: 1,
-  image: '/placeholder.svg',
-  productName: 'Sản phẩm mẫu',
+  imageUrl: '/placeholder.svg',
+  productTitle: 'Sản phẩm mẫu',
   brand: 'Thương hiệu',
   price: 999000,
   specs: {
@@ -76,8 +76,8 @@ const ProductItem: React.FC<ProductItemProps> = ({
         <div className='relative'>
           <div className='overflow-hidden rounded-lg bg-gray-100'>
             <img
-              src={product.image}
-              alt={product.productName}
+              src={product.imageUrl || '/placeholder.svg'}
+              alt={product.productTitle}
               className='h-[200px] w-full object-cover transition-transform duration-300 group-hover:scale-105'
             />
             {product.hasVideo && (
@@ -123,7 +123,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
 
           {/* Product Name */}
           <h3 className='text-sm font-medium text-gray-900 line-clamp-2 min-h-[40px]'>
-            {product.productName}
+            {product.productTitle}
           </h3>
 
           {/* Ratings and Stats */}
