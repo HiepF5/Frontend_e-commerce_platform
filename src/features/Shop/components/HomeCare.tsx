@@ -6,12 +6,13 @@ import { useEffect, useState } from 'react'
 import { useGetListProductQuery } from '@features/Products/api/productApi'
 const HomeCare = () => {
   const { shopId } = useParams()
+    console.log(shopId)
   // const { data: products, isLoading } = useGetShopCategoryProductsQuery({
   //   shopCode: shopId,
   //   category: 'home-care'
   // })
   const [products, setProducts] = useState<IProduct[]>([])
-    const { data, isLoading, refetch } = useGetListProductQuery({
+    const { data, isLoading } = useGetListProductQuery({
       pageNumber: 1,
       pageSize: 40
     })

@@ -1,4 +1,4 @@
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import ShopHeader from '../components/ShopHeader'
 import ShopMenu from '../components/ShopMenu'

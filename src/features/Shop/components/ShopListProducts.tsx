@@ -8,8 +8,9 @@ import { useEffect, useState } from 'react'
 
 const ShopListProducts = () => {
   const { shopId } = useParams()
+  console.log(shopId)
   const [products, setProducts] = useState<IProduct[]>([])
-    const { data, isLoading, isError } = useGetListProductQuery({
+    const { data, isLoading } = useGetListProductQuery({
       pageNumber: 1,
       pageSize: 40
     })

@@ -21,7 +21,6 @@ import {
   useListShopVoucherMutation
 } from '@features/Voucher/api/voucherApi'
 import { Voucher } from '@features/Voucher/types/voucher'
-import { formatCurrency } from '@shared/utils/formatPrice'
 import { ShopBill } from '../types/checkout.interface'
 
 interface VoucherSelectorProps {

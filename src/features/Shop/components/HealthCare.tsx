@@ -41,10 +41,11 @@ const healthCategories = [
 
 const HealthCare = () => {
   const { shopId } = useParams()
+  console.log(shopId)
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null)
 
 const [products, setProducts] = useState<IProduct[]>([])
-  const { data, isLoading, refetch } = useGetListProductQuery({
+  const { data, isLoading } = useGetListProductQuery({
     pageNumber: 1,
     pageSize: 40
   })

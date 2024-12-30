@@ -1,4 +1,5 @@
-import { DeliveryMethod, OrderDetail, OrderStatus, PaymentMethod, ShippingStatus } from "../types/order.interface";
+import { DeliveryMethod, OrderStatus, PaymentMethod, ShippingStatus } from "../types/order.enum";
+import { OrderDetail } from "../types/order.interface";
 
 export const mockOrder: OrderDetail = {
   id: 1,

@@ -9,8 +9,6 @@ import {
   InputLabel,
   Select,
   MenuItem,
-  Box,
-  Typography
 } from '@mui/material'
 import { useState } from 'react'
 

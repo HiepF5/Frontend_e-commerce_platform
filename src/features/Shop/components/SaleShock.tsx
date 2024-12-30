@@ -8,9 +8,10 @@ import { useGetListProductQuery } from '@features/Products/api/productApi'
 
 const SaleShock = () => {
   const { shopId } = useParams()
+  console.log(shopId)
   // const { data: products, isLoading } = useGetShopSaleProductsQuery(shopId)
 const [products, setProducts] = useState<IProduct[]>([])
-  const { data, isLoading, refetch } = useGetListProductQuery({
+  const { data, isLoading } = useGetListProductQuery({
     pageNumber: 1,
     pageSize: 40
   })

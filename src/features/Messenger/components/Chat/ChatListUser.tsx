@@ -54,6 +54,7 @@ const ChatListUser: React.FC = () => {
   const [tabValue, setTabValue] = useState(0)
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedChat, setSelectedChat] = useState<IChatItem | null>(null)
+  console.log(selectedChat)
   const handleChatMenu = (
     event: React.MouseEvent<HTMLElement>,
     chat: IChatItem

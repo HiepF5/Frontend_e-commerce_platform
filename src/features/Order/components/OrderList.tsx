@@ -35,6 +35,7 @@ export default function OrderList() {
   const [activeFilters, setActiveFilters] = useState<any>(null)
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
+    console.log(event)
     setTabValue(newValue)
     const path = tabPaths[newValue]
     navigate(path ? `/order/${path}` : '/order')
@@ -66,7 +67,7 @@ export default function OrderList() {
       <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
         <Tabs 
           value={tabValue} 
-          onChange={handleTabChange}
+          onChange={(event, newValue) => handleTabChange(event, newValue)}
           variant="scrollable"
           scrollButtons="auto"
         >

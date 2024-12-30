@@ -32,10 +32,10 @@ const ShopReviews: React.FC = () => {
   const [rating, setRating] = useState<number | null>(null)
   const [selectedStar, setSelectedStar] = useState<number | null>(null)
   const { shopId } = useParams()
-  const [selectedRating, setSelectedRating] = useState<number | null>(null)
   
  const [products, setProducts] = useState<IProduct[]>([])
-   const { data, isLoading, refetch } = useGetListProductQuery({
+ console.log(products)
+   const { data } = useGetListProductQuery({
      pageNumber: 1,
      pageSize: 40
    })
@@ -56,7 +56,7 @@ const ShopReviews: React.FC = () => {
       ratings.map((rating) =>
         dispatch(
           fetchReviews({
-            shopCode: 'SH00000001',
+            shopCode: shopId || '',
             rating,
             sort: 1,
             pageNumber: 1

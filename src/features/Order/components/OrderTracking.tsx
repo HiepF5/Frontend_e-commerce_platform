@@ -2,22 +2,14 @@
 
 import {
   Box,
-  Container,
   Paper,
   Typography,
-  Button,
   Stepper,
   Step,
   StepLabel,
-  Divider,
   Grid,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
+  
 } from '@mui/material'
-import { formatCurrency } from '@shared/utils/formatPrice'
 import { TileLayer, Marker, Popup, Polyline, MapContainer } from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
@@ -73,6 +65,17 @@ export default function OrderTracking() {
       address: 'Đang giao đến người nhận'
     }
   ])
+  setTrackingData([
+    ...trackingData,
+    {
+      lat: 21.020511,
+      lng: 105.834817,
+      status: ShippingStatus.DELIVERED,
+      timestamp: '2024-03-15 16:30:00',
+      address: 'Đã giao hàng'
+    }
+  ]
+  )
 
   const [currentLocation, setCurrentLocation] = useState<TrackingPoint>({
     lat: 21.020511,

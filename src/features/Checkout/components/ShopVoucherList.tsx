@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   Radio,
-  Divider
 } from '@mui/material'
 import { useListShopVoucherMutation } from '@features/Voucher/api/voucherApi'
 import { Voucher } from '@features/Voucher/types/voucher'

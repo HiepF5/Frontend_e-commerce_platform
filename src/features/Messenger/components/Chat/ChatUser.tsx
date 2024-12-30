@@ -21,7 +21,6 @@ import {
   useFetchChatListCustomerQuery,
   useFetchChatStoryCustomerQuery
 } from '../../service/chatMessageUser'
-import AttachFileIcon from '@mui/icons-material/AttachFile'
 import { useAppDispatch, useAppSelector } from '@store/hook'
 import {
   addMessageToChatStory,
@@ -41,7 +40,6 @@ import {
   Search,
   Send,
   ThumbUp,
-  VideoCall,
   Videocam
 } from '@mui/icons-material'
 import { OnlineBadge, StyledAvatar } from '@shared/libs/mui/Style'
@@ -203,14 +201,21 @@ const ChatUser: React.FC = () => {
       setSending(false)
     }
   }
+    const [messageMenuAnchor, setMessageMenuAnchor] = useState<null | HTMLElement>(
+      null
+    )
+    const [selectedMessage, setSelectedMessage] = useState<any>(null)
+      const seenMessage = useCallback(() => {
+        if (!connected) {
+          // console.error('Cannot mark as seen. WebSocket is not connected.')
+          return
+        }
 
-  const seenMessage = useCallback(() => {
-    if (!connected || !currentChat) {
-      console.error(
-        'Cannot mark as seen. WebSocket is not connected or no current chat.'
-      )
-      return
-    }
+        if (!currentChat) {
+          // console.error('Cannot mark as seen. No current chat available.')
+          return
+        }
+
 
     const message = {
       body: {
@@ -239,7 +244,9 @@ const ChatUser: React.FC = () => {
     }
     seenMessage()
   }, [chatStory, seenMessage])
-
+const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(
+  null
+)
   if (isLoading) return <CircularProgress />
   if (fetchError)
     return <Typography color='error'>Error loading chat story</Typography>
@@ -252,9 +259,7 @@ const ChatUser: React.FC = () => {
     }
     reader.readAsDataURL(file)
   }
-  const [messageMenuAnchor, setMessageMenuAnchor] =
-    useState<null | HTMLElement>(null)
-  const [selectedMessage, setSelectedMessage] = useState<any>(null)
+  
 
   const handleMessageMenu = (
     event: React.MouseEvent<HTMLElement>,
@@ -264,9 +269,7 @@ const ChatUser: React.FC = () => {
     setSelectedMessage(message)
     setMessageMenuAnchor(event.currentTarget)
   }
-  const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(
-    null
-  )
+  
 
   return (
     <Box

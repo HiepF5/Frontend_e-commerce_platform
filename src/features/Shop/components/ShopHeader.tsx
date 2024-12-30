@@ -18,6 +18,7 @@ interface ShopHeaderProps {
 const ShopHeader: React.FC<ShopHeaderProps> = ({ shopInfo }) => {
   const { shopId } = useParams()
   const [isFollowing, setIsFollowing] = React.useState<boolean | null>(null)
+  console.log(isFollowing)
   const navigate = useNavigate()
 
   React.useEffect(() => {

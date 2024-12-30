@@ -14,7 +14,6 @@ import {
 import {
   ViewModule,
   ViewList,
-  Favorite,
   Compare,
   Share
 } from '@mui/icons-material'
@@ -28,10 +27,10 @@ import { IProduct } from '~/types/products.interface'
 
 const AllProducts = () => {
   const { shopId } = useParams()
+  console.log(shopId)
   const [sortBy, setSortBy] = useState('newest')
   const [searchTerm, setSearchTerm] = useState('')
   const [page, setPage] = useState(1)
-  const [filters, setFilters] = useState({})
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [selectedProducts, setSelectedProducts] = useState<string[]>([])
 
@@ -61,8 +60,8 @@ const AllProducts = () => {
     }
   }, [inView])
 
-  const handleFilterChange = (newFilters: any) => {
-    setFilters((prev) => ({ ...prev, ...newFilters }))
+  const handleFilterChange = () => {
+    setSelectedProducts([]) // Reset sản phẩm đã chọn khi thay đổi filter
     setPage(1) // Reset về trang đầu khi thay đổi filter
     setProducts([]) // Xóa sản phẩm cũ để tải mới
   }

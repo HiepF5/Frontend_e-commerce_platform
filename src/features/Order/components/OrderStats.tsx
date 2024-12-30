@@ -84,7 +84,7 @@ export default function OrderStats() {
                 dataKey="value"
                 label
               >
-                {statusData.map((entry, index) => (
+                {statusData.map((_entry, index) => (
                   <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
               </Pie>

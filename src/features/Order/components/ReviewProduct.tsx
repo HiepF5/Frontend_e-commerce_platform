@@ -28,7 +28,6 @@ interface ReviewData {
 }
 
 export default function ReviewProduct({
-  productId,
   productName,
   productImage,
   onSubmit,
