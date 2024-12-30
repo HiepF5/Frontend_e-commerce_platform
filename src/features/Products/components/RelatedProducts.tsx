@@ -33,7 +33,7 @@ const relatedProducts: RelatedProduct[] = [
     name: 'Samsung Galaxy S24 Plus 5G 256GB',
     price: 19990000,
     originalPrice: 26990000,
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true',
     specs: {
       weight: '196 g',
       material: 'Hợp kim nhôm',
@@ -47,7 +47,7 @@ const relatedProducts: RelatedProduct[] = [
     name: 'Samsung Galaxy Z Flip6 256GB',
     price: 22990000,
     originalPrice: 28990000,
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true',
     specs: {
       weight: '187 g',
       material: 'Armor aluminum',
@@ -61,7 +61,7 @@ const relatedProducts: RelatedProduct[] = [
     name: 'Samsung Galaxy S24 5G 512GB',
     price: 21490000,
     originalPrice: 26490000,
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
     specs: {
       weight: '167 g',
       material: 'Hợp kim nhôm',

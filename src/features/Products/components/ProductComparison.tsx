@@ -35,7 +35,8 @@ const products: Product[] = [
     name: 'iPhone 16 Pro 128GB',
     price: 28390000,
     originalPrice: 28990000,
-    image: '/placeholder.svg?height=100&width=100',
+    image:
+      'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true',
     specs: {
       weight: '199 g',
       material: 'Khung máy: Titanium',
@@ -50,7 +51,8 @@ const products: Product[] = [
     name: 'Samsung Galaxy S24 Plus 5G 256GB',
     price: 19990000,
     originalPrice: 26990000,
-    image: '/placeholder.svg?height=100&width=100',
+    image:
+      'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true',
     specs: {
       weight: '196 g',
       material: 'Khung máy: Hợp kim nhôm',
@@ -65,7 +67,8 @@ const products: Product[] = [
     name: 'Samsung Galaxy Z Flip6 256GB',
     price: 22990000,
     originalPrice: 28990000,
-    image: '/placeholder.svg?height=100&width=100',
+    image:
+      'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
     specs: {
       weight: '187 g',
       material: 'Khung máy: Armor aluminum',

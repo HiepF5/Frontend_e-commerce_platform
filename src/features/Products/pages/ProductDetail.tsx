@@ -43,7 +43,7 @@ const shopProducts = [
   {
     id: '1',
     name: 'Miếng lót chuột, bàn di chuột anime One Piece',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
     price: 18000,
     originalPrice: 34000,
     discount: 47,
@@ -54,7 +54,7 @@ const shopProducts = [
   {
     id: '2',
     name: 'Giá kê đỡ điện thoại, máy tính bảng',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
     price: 15000,
     originalPrice: 24000,
     discount: 37,
@@ -65,7 +65,7 @@ const shopProducts = [
   {
     id: '3',
     name: 'Miếng Lót Chuột Bằng Xốp e-DRA',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
     price: 24000,
     originalPrice: 38000,
     discount: 32,
@@ -76,7 +76,7 @@ const shopProducts = [
   {
     id: '4',
     name: 'Giá đỡ điện thoại máy tính bảng đa năng',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true',
     price: 33000,
     originalPrice: 49000,
     discount: 32,
@@ -88,7 +88,7 @@ const shopProducts = [
   {
     id: '5',
     name: 'Bộ Dụng Cụ Vệ Sinh Laptop, Điện Thoại',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/1.jpg?raw=true',
     price: 56000,
     originalPrice: 74000,
     discount: 24,
@@ -99,7 +99,7 @@ const shopProducts = [
   {
     id: '6',
     name: 'Chuột Bluetooth Không Dây Sạc Pin',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
     price: 40000,
     originalPrice: 65000,
     discount: 38,
@@ -112,7 +112,7 @@ const recommendedProducts = [
   {
     id: '1',
     name: 'Giá đỡ LAPTOP, MACBOOK nhôm cao cấp',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true',
     price: 64000,
     originalPrice: 89000,
     discount: 28,
@@ -123,7 +123,7 @@ const recommendedProducts = [
   {
     id: '2',
     name: 'Giá đỡ máy tính xách tay Giá đỡ Laptop',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
     price: 28000,
     originalPrice: 35000,
     discount: 20,
@@ -134,7 +134,7 @@ const recommendedProducts = [
   {
     id: '3',
     name: 'Giá đỡ Laptop, Macbook, Máy Tính Bảng',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/1.jpg?raw=true',
     price: 129000,
     originalPrice: 199000,
     discount: 35,
@@ -145,7 +145,7 @@ const recommendedProducts = [
   {
     id: '4',
     name: '[Choice] Giá đỡ máy tính Pahada',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true',
     price: 57000,
     originalPrice: 88000,
     discount: 35,
@@ -155,7 +155,7 @@ const recommendedProducts = [
   {
     id: '5',
     name: 'Giá đỡ laptop, macbook, máy tính bảng',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true',
     price: 50000,
     originalPrice: 81000,
     discount: 38,
@@ -167,7 +167,7 @@ const recommendedProducts = [
   {
     id: '6',
     name: 'Giá đỡ Laptop, Macbook, Ipad bằng nhôm',
-    image: '/placeholder.svg?height=200&width=200',
+    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
     price: 56000,
     originalPrice: 125000,
     discount: 55,

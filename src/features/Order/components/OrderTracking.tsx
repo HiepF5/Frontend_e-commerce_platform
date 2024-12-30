@@ -23,12 +23,13 @@ import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
-import { ShippingStatus, getShippingStatusText } from '../types/order.interface'
 
 // Fix for default marker icons
 import markerIcon2x from 'leaflet/dist/images/marker-icon-2x.png'
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
+import { ShippingStatus } from '../types/order.enum'
+import { getShippingStatusText } from '../helper/orderHelper'
 
 // Fix for default marker icons
 delete (L.Icon.Default.prototype as any)._getIconUrl

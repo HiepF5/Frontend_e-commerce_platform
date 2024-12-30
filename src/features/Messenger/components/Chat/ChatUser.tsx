@@ -252,15 +252,9 @@ const ChatUser: React.FC = () => {
     }
     reader.readAsDataURL(file)
   }
-  const [anchorEl, setAnchorEl] = useState(null)
-  const [showReactions, setShowReactions] = useState(false)
   const [messageMenuAnchor, setMessageMenuAnchor] =
     useState<null | HTMLElement>(null)
   const [selectedMessage, setSelectedMessage] = useState<any>(null)
-
-  const handleMenuClose = () => {
-    setAnchorEl(null)
-  }
 
   const handleMessageMenu = (
     event: React.MouseEvent<HTMLElement>,

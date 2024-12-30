@@ -2,6 +2,7 @@ import { Suspense, lazy } from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import LandingPage from '../features/LandingPage/pages/LandingPage'
 import { AuthPermission } from '../guards/AuthPermission'
+import ErrorPage from '@pages/error-page'
 
 // Lazy load routes
 const AdminRoutes = lazy(() => import('../features/Admin/routes/AdminRoutes'))
@@ -49,13 +50,13 @@ const MainRoutes = (): JSX.Element => {
           <Route path='/cart/*' element={<CartRoutes />} />
           <Route path='/checkout/*' element={<CheckoutRoutes />} />
           <Route path='/order/*' element={<OrderRoutes />} />
-
+          <Route path='*' element={<ErrorPage />} />
           {/* Protected routes */}
           <Route>
             <Route
               path='/admin/*'
               element={
-                <AuthPermission allowedRoles={['ADMIN']}>
+                <AuthPermission allowedRoles={['QUANLY']}>
                   <AdminRoutes />
                 </AuthPermission>
               }

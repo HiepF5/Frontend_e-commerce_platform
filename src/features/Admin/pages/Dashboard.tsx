@@ -35,7 +35,7 @@ const Dashboard = (): JSX.Element => {
           <Typography color="textSecondary" gutterBottom>
             Total Revenue
           </Typography>
-          <Typography variant="h4">$15,350</Typography>
+          <Typography variant="h4">15,350,000 VNĐ</Typography>
         </Paper>
       </Grid>
       <Grid item xs={12} md={3}>
