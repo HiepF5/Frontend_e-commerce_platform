@@ -22,27 +22,31 @@ const OrderRoutes = (): JSX.Element => {
           children: [
             {
               index: true,
-              element: <OrderList />
+              element: <OrderList status={''} />
             },
             {
               path: 'pending',
-              element: <OrderList />
+              element: <OrderList status={'CHO_XAC_NHAN'} />
             },
             {
               path: 'processing',
-              element: <OrderList />
+              element: <OrderList status={'DANG_LAY_HANG'} />
             },
             {
               path: 'shipping',
-              element: <OrderList />
+              element: <OrderList status={'DANG_GIAO_HANG'} />
             },
             {
               path: 'completed',
-              element: <OrderList />
+              element: <OrderList status={'GH_THANH_CONG'} />
             },
             {
               path: 'cancelled',
-              element: <OrderList />
+              element: <OrderList status={'DA_HUY'} />
+            },
+            {
+              path: 'return',
+              element: <OrderList status={'TRA_HANG'} />
             },
             {
               path: 'order-receipt/:orderId',

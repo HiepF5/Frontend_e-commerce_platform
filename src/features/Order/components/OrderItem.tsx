@@ -6,35 +6,67 @@ import {
   Divider,
   Grid,
   Chip,
-  Avatar
+  Avatar,
+  CircularProgress
 } from '@mui/material'
 import { formatCurrency } from '@shared/utils/formatPrice'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useGetOrderListsMutation } from '../api/orderShopApi'
-import { useEffect } from 'react'
-import { OrderListItem } from '../types/order.interface'
-import { OrderStatus } from '../types/order.enum'
+import { useEffect, useState } from 'react'
+import { IFilters, OrderListItem } from '../types/order.interface'
 import { getOrderStatusColor, getOrderStatusText } from '../helper/orderHelper'
 import useCreateMessage from '@hooks/useCreateMessage'
 
-export default function OrderItem() {
-  const [getOrderLists, { data }] = useGetOrderListsMutation()
+interface OrderItemProps {
+  searchTerm: string
+  activeFilters: IFilters | null
+}
+
+export default function OrderItem({
+  searchTerm,
+  activeFilters
+}: OrderItemProps) {
+  console.log('render')
+  const [getOrderLists, { data, isLoading }] = useGetOrderListsMutation()
+  // const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
-  useEffect(() => {
-    getOrderLists({
-      orderCode: null,
-      status: null,
-      sort: null,
-      pageNumber: 1,
-      pageSize: 10
-    })
-  }, [getOrderLists])
+
+    useEffect(() => {
+      // const delayDebounceFn = setTimeout(() => {
+        getOrderLists({
+          orderCode: searchTerm || null,
+          status: (activeFilters?.status as string) || null,
+          sort: null,
+          pageNumber: 1,
+          pageSize: 10
+        })
+      // }, 1000) // 1 minute delay
+
+      // return () => clearTimeout(delayDebounceFn)
+    }, [getOrderLists, searchTerm, activeFilters])
+
   const dataOrder =
-  data?.data?.data.map((item: OrderListItem) => ({
-    ...item
-  })) || []
-  
+    data?.data?.data.map((item: OrderListItem) => ({
+      ...item
+    })) || []
+
   const { handleChatClick } = useCreateMessage()
+
+  if (isLoading || !data) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '200px'
+        }}
+      >
+        <CircularProgress />
+      </Box>
+    )
+  }
+
   return (
     <Paper sx={{ p: 2, mb: 2 }}>
       {dataOrder.map((data, index) => (

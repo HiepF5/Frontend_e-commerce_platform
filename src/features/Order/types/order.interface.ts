@@ -1,5 +1,7 @@
 import { DeliveryMethod, OrderStatus, PaymentMethod, ShippingStatus } from "./order.enum"
-
+export interface IFilters {
+  status: String | null
+}
 export interface OrderItem {
   name: string
   quantity: number
