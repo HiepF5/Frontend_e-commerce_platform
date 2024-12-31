@@ -25,16 +25,22 @@ export const orderShopApi = createApi({
       }),
       invalidatesTags: ['OrderShop']
     }),
-    getOrderDetail: builder.query<IBaseResponse<OrderDetail>, void>({
-      query: (orderId) => ({
+    getOrderDetail: builder.query<
+      IBaseResponse<OrderDetail>,
+      { orderId: String }
+    >({
+      query: ({ orderId }: { orderId: string }) => ({
         url: `/customer/order/detail/${orderId}`,
         method: 'GET'
       }),
       providesTags: ['OrderShop']
     }),
-    cancelOrderByID: builder.mutation<IBaseResponse<String>, void>({
-      query: (id) => ({
-        url: `/customer/order/cancel/${id}`,
+    cancelOrderByID: builder.mutation<
+      IBaseResponse<String>,
+      { orderId: String }
+    >({
+      query: ({ orderId }: { orderId: string }) => ({
+        url: `/customer/order/cancel/${orderId}`,
         method: 'PUT'
       }),
       invalidatesTags: ['OrderShop']

@@ -7,7 +7,8 @@ import {
   Grid,
   Chip,
   Avatar,
-  CircularProgress
+  CircularProgress,
+  Pagination
 } from '@mui/material'
 import { formatCurrency } from '@shared/utils/formatPrice'
 import { useNavigate } from 'react-router-dom'
@@ -16,6 +17,8 @@ import { useEffect, useState } from 'react'
 import { IFilters, OrderListItem } from '../types/order.interface'
 import { getOrderStatusColor, getOrderStatusText } from '../helper/orderHelper'
 import useCreateMessage from '@hooks/useCreateMessage'
+import PaginationComponent from '@shared/components/Pagination/PaginationComponent'
+import usePagination from '@hooks/usePagination'
 
 interface OrderItemProps {
   searchTerm: string
@@ -30,20 +33,31 @@ export default function OrderItem({
   const [getOrderLists, { data, isLoading }] = useGetOrderListsMutation()
   // const [loading, setLoading] = useState(false)
   const navigate = useNavigate()
+ const { currentPage, handlePageChange } = usePagination({ initialPage: 1 })
 
+
+    // useEffect(() => {
+    //   // const delayDebounceFn = setTimeout(() => {
+    //     getOrderLists({
+    //       orderCode: searchTerm || null,
+    //       status: (activeFilters?.status as string) || null,
+    //       sort: null,
+    //       pageNumber: 1,
+    //       pageSize: 10
+    //     })
+    //   // }, 1000) // 1 minute delay
+
+    //   // return () => clearTimeout(delayDebounceFn)
+    // }, [getOrderLists, searchTerm, activeFilters])
     useEffect(() => {
-      // const delayDebounceFn = setTimeout(() => {
-        getOrderLists({
-          orderCode: searchTerm || null,
-          status: (activeFilters?.status as string) || null,
-          sort: null,
-          pageNumber: 1,
-          pageSize: 10
-        })
-      // }, 1000) // 1 minute delay
-
-      // return () => clearTimeout(delayDebounceFn)
-    }, [getOrderLists, searchTerm, activeFilters])
+      getOrderLists({
+        orderCode: searchTerm || null,
+        status: (activeFilters?.status as string) || null,
+        sort: null,
+        pageNumber: currentPage, // sử dụng pageNumber từ state
+        pageSize: 10
+      })
+    }, [getOrderLists, searchTerm, activeFilters, currentPage])
 
   const dataOrder =
     data?.data?.data.map((item: OrderListItem) => ({
@@ -190,6 +204,11 @@ export default function OrderItem({
           <Divider sx={{ my: 2 }} />
         </Box>
       ))}
+      <PaginationComponent
+        totalPage={data?.data?.totalPage || 1}
+        currentPage={currentPage}
+        onPageChange={handlePageChange}
+      />
     </Paper>
   )
 }

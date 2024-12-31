@@ -14,7 +14,11 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Chip
+  Chip,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem
 } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -23,10 +27,51 @@ import ReviewDialog from './ReviewDialog'
 import RefundDialog from './RefundDialog'
 import OrderInvoice from './OrderInvoice'
 import ChatWithSeller from './ChatWithSeller'
-import { sendNotification, subscribeToOrderUpdates } from '../services/notificationService'
+import {
+  sendNotification,
+  subscribeToOrderUpdates
+} from '../services/notificationService'
 import { getOrderStatusText, getOrderStatusColor } from '../helper/orderHelper'
-import { DeliveryMethod, OrderStatus, PaymentMethod, ShippingStatus } from '../types/order.enum'
+import {
+  DeliveryMethod,
+  OrderStatus,
+  PaymentMethod,
+  ShippingStatus
+} from '../types/order.enum'
 import type { OrderDetail } from '../types/order.interface'
+import { useCancelOrderByIDMutation, useGetOrderDetailQuery } from '../api/orderShopApi'
+import { toast } from 'react-toastify'
+const initOrderDetail: OrderDetail = {
+  id: 0,
+  orderShopCode: '',
+  orderStatus: OrderStatus.CHO_XAC_NHAN,
+  totalProduct: 0,
+  shopShippingFee: 0,
+  shopDiscount: 0,
+  serviceFee: 0,
+  shopTotalAmount: 0,
+  ecommerceTotalAmount: 0,
+  deliveryMethod: DeliveryMethod.GHN,
+  paymentMethod: PaymentMethod.THANH_TOAN_KHI_GIAO_HANG,
+  isPayment: false,
+  createdAt: '',
+  shippingDto: {
+    id: 0,
+    clientAddress: '',
+    clientTelephone: '',
+    clientName: '',
+    shippingId: null,
+    method: DeliveryMethod.GHN,
+    status: ShippingStatus.PENDING,
+    trackingCode: 0,
+    carrier: '',
+    shippingDate: null,
+    deliveryDate: '',
+    shippingFee: 0
+  },
+  itemDtoList: [],
+  historyDtoList: []
+}
 
 export default function OrderDetail() {
   const { orderId } = useParams()
@@ -34,84 +79,41 @@ export default function OrderDetail() {
   const [refundOpen, setRefundOpen] = useState(false)
   const [selectedProduct, setSelectedProduct] = useState<any>(null)
   const navigate = useNavigate()
-  // Mock data
-  const orderDetail: OrderDetail = {
-    id: Number(orderId),
-    orderShopCode: `SOR-20241227-DUUM-${orderId?.padStart(8, '0')}`,
-    orderStatus: OrderStatus.CHO_XAC_NHAN,
-    totalProduct: 5292000,
-    shopShippingFee: 41501,
-    shopDiscount: 100000,
-    serviceFee: 158760,
-    shopTotalAmount: 5033240,
-    ecommerceTotalAmount: 5233501,
-    deliveryMethod: DeliveryMethod.GHN,
-    paymentMethod: PaymentMethod.THANH_TOAN_KHI_GIAO_HANG,
-    isPayment: false,
-    createdAt: '27/12/2024 03:03:55',
-    shippingDto: {
-      id: Number(orderId),
-      clientAddress: 'nha 20, Chi Can, Thieu Hoa, Thanh Hoa',
-      clientTelephone: '0987654321',
-      clientName: 'Hoang Van An',
-      shippingId: null,
-      method: DeliveryMethod.GHN,
-      status: ShippingStatus.PENDING,
-      trackingCode: 1000000,
-      carrier: 'GHN',
-      shippingDate: null,
-      deliveryDate: '2024-12-31T03:03:54.966857',
-      shippingFee: 41501
-    },
-    itemDtoList: [
+  console.log(orderId)
+  // const [orderDetail, setOrderDetail] = useState<OrderDetail | null>(null)
+  const { data: getData, isLoading } = useGetOrderDetailQuery({
+    orderId: orderId!
+  })
+  console.log(getData)
+
+  const [orderDetail, setOrderDetail] = useState<OrderDetail>(initOrderDetail)
+  useEffect(() => {
+    if (getData && getData.data) {
       {
-        id: 586,
-        productId: 491,
-        variantId: 1967,
-        productTitle: 'Don Thatt',
-        variantName: '...',
-        productImage:
-          '["https://down-vn.img.susercontent.com/file/vn-11134207-7r98o-lzd2qfj9xc99f4.webp"]',
-        quantity: 1,
-        price: 5292000,
-        description: null
+        setOrderDetail(getData.data)
       }
-    ],
-    historyDtoList: [
-      {
-        id: 357,
-        event: 'Tạo đơn hàng',
-        description: 'Đơn hàng được tạo vào lúc 27/12/2024 03:03:54',
-        note: null
-      },
-      {
-        id: 358,
-        event: 'Xác nhận đơn hàng',
-        description: 'Đơn hàng đã được xác nhận',
-        note: null
-      },
-      {
-        id: 359,
-        event: 'Đóng gói',
-        description: 'Đơn hàng đang được đóng gói',
-        note: null
-      }
-    ]
-  }
+    }
+  }, [getData])
 
   const handleReview = (product: any) => {
-    setSelectedProduct(product)
-    setReviewOpen(true)
+    if (orderDetail.orderStatus === OrderStatus.GH_THANH_CONG) {
+      setSelectedProduct(product)
+      setReviewOpen(true)
+    } else {
+      toast.error('Chưa thể đánh giá. Đơn hàng chưa hoàn thành.')
+    }
   }
 
   const handleSubmitReview = (review: any) => {
     console.log('Review submitted:', review)
   }
+  const [cancelOrder] = useCancelOrderByIDMutation()
 
   const handleSubmitRefund = (refundData: any) => {
-    console.log('Refund requested:', refundData)
+    toast.success('Đã gửi yêu cầu hủy đơn hàng')
+    console.log(refundData)
+    const respone = cancelOrder({ orderId: orderId! })
   }
-
   useEffect(() => {
     const unsubscribe = subscribeToOrderUpdates(orderId!, async (update) => {
       if (update.status !== orderDetail.orderStatus) {
@@ -152,7 +154,7 @@ export default function OrderDetail() {
               />
             </Box>
             <Stepper orientation='vertical'>
-              {orderDetail.historyDtoList.map((history, index) => (
+              {orderDetail?.historyDtoList.map((history, index) => (
                 <Step key={index} active={true}>
                   <StepLabel>
                     <Typography variant='subtitle2'>{history.event}</Typography>
@@ -280,6 +282,19 @@ export default function OrderDetail() {
                 </Typography>
               </Box>
               <Divider sx={{ my: 1 }} />
+              {orderDetail.orderStatus !== OrderStatus.GH_THANH_CONG && (
+                <Box sx={{ mt: 3 }}>
+                  <Button
+                    variant='contained'
+                    color='error'
+                    fullWidth
+                    onClick={() => setRefundOpen(true)}
+                  >
+                    Hủy đơn hàng
+                    </Button>              
+                </Box>
+              )}
+              <Divider sx={{ my: 1 }} />
               <Box
                 sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}
               >
@@ -332,4 +347,4 @@ export default function OrderDetail() {
       />
     </Box>
   )
-} 
+}
