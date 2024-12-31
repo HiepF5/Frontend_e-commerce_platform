@@ -88,5 +88,11 @@ export const orderShopApi = createApi({
 export const {
   useGetOrderListsMutation,
   useGetOrderDetailQuery,
-  useCancelOrderByIDMutation
+  useCancelOrderByIDMutation,
+  useGetShopOrderListsMutation,
+  useGetShopOrderDetailQuery,
+  useShopUpdateOrderByIDMutation,
+  useGetAdminOrderListsMutation,
+  useGetAdminOrderDetailQuery
+  
 } = orderShopApi

@@ -1,11 +1,5 @@
 import { useEffect, useState } from 'react'
-import {
-  Box,
-  Button,
-  Typography,
-  CircularProgress,
-  Alert
-} from '@mui/material'
+import { Box, Button, Typography, CircularProgress, Alert } from '@mui/material'
 import { Add as AddIcon } from '@mui/icons-material'
 import { VoucherTable } from './VoucherTable'
 import { VoucherForm } from './VoucherForm'
@@ -79,14 +73,14 @@ export const VoucherManagement = ({
       discountType: item.discountType,
       discountValue: item.discountValue,
       maxDiscountValue: item.maxDiscountValue,
-      shippingDiscount : item.shippingDiscount,
+      shippingDiscount: item.shippingDiscount,
       maxShippingDiscount: item.maxShippingDiscount,
       minTotalOrder: item.minTotalOrder,
       startedAt: item.startedAt,
       expiredAt: item.expiredAt,
       status: item.status
     })) || []
-    console.log(dataTable)
+  console.log(dataTable)
   if (error) {
     console.error('Error:', error)
   }
@@ -128,11 +122,14 @@ export const VoucherManagement = ({
     }
   }
 
-  const handleStatusChange = async (voucherCode: string, status: VoucherStatus) => {
+  const handleStatusChange = async (
+    voucherCode: string,
+    status: VoucherStatus
+  ) => {
     try {
-      const formData = new FormData();
-      formData.append('voucher_code', voucherCode);
-      formData.append('status', status);
+      const formData = new FormData()
+      formData.append('voucher_code', voucherCode)
+      formData.append('status', status)
 
       await changeStatus({ voucherCode, status }).unwrap()
       await refreshDashboard()
@@ -214,21 +211,23 @@ export const VoucherManagement = ({
         page={paginationData.pageNumber}
         totalPages={paginationData.totalPage}
         onPageChange={setPage}
-        onEdit={(voucher: Voucher) => handleUpdateVoucher({
-          voucherCode: voucher.voucherCode,
-          title: voucher.title,
-          type: voucher.type,
-          discountType: voucher.discountType,
-          discountValue: voucher.discountValue || 0,
-          maxDiscountValue: voucher.maxDiscountValue,
-          shippingDiscount: voucher.shippingDiscount,
-          maxShippingDiscount: voucher.maxShippingDiscount,
-          minTotalOrder: voucher.minTotalOrder,
-          startedAt: voucher.startedAt,
-          expiredAt: voucher.expiredAt,
-          voucherCount: 0,
-          remainingCount: 0
-        })}
+        onEdit={(voucher: Voucher) =>
+          handleUpdateVoucher({
+            voucherCode: voucher.voucherCode,
+            title: voucher.title,
+            type: voucher.type,
+            discountType: voucher.discountType,
+            discountValue: voucher.discountValue || 0,
+            maxDiscountValue: voucher.maxDiscountValue,
+            shippingDiscount: voucher.shippingDiscount,
+            maxShippingDiscount: voucher.maxShippingDiscount,
+            minTotalOrder: voucher.minTotalOrder,
+            startedAt: voucher.startedAt,
+            expiredAt: voucher.expiredAt,
+            voucherCount: 0,
+            remainingCount: 0
+          })
+        }
         onDelete={(voucher) => console.log('Delete voucher', voucher)}
       />
 

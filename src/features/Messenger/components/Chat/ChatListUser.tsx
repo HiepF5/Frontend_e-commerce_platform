@@ -159,7 +159,22 @@ const ChatListUser: React.FC = () => {
           }}
         />
       </SearchBox>
-      <List>
+      <List
+        sx={{
+          maxHeight: '400px', // Chiều cao tối đa cho danh sách
+          overflowY: 'auto', // Kích hoạt cuộn dọc khi vượt quá chiều cao
+          '&::-webkit-scrollbar': {
+            width: '8px' // Kích thước scrollbar
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#c4c4c4', // Màu của scrollbar
+            borderRadius: '4px'
+          },
+          '&::-webkit-scrollbar-thumb:hover': {
+            backgroundColor: '#a0a0a0' // Màu khi hover
+          }
+        }}
+      >
         {chatListData.length ? (
           chatListData.map((chat: IChatItem, index: number) => (
             <StyledListItemButton

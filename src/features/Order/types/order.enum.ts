@@ -1,11 +1,11 @@
 
 export enum OrderStatus {
   CHO_XAC_NHAN = 'CHO_XAC_NHAN',
-  DA_XAC_NHAN = 'DA_XAC_NHAN',
-  DANG_GIAO = 'DANG_GIAO',
-  DA_GIAO = 'DA_GIAO',
+  DANG_LAY_HANG = 'DANG_LAY_HANG',
+  DANG_GIAO_HANG = 'DANG_GIAO_HANG',
+  GH_THANH_CONG = 'GH_THANH_CONG',
   DA_HUY = 'DA_HUY',
-  HOAN_TIEN = 'HOAN_TIEN'
+  TRA_HANG = 'TRA_HANG'
 }
 
 export enum DeliveryMethod {

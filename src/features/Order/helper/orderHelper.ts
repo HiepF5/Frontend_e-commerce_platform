@@ -19,11 +19,11 @@ export const parseClientInfo = (clientInfo: string): {
 export const getOrderStatusText = (status: OrderStatus): string => {
   const statusMap: Record<OrderStatus, string> = {
     [OrderStatus.CHO_XAC_NHAN]: 'Chờ xác nhận',
-    [OrderStatus.DA_XAC_NHAN]: 'Đã xác nhận',
-    [OrderStatus.DANG_GIAO]: 'Đang giao',
-    [OrderStatus.DA_GIAO]: 'Đã giao',
+    [OrderStatus.DANG_LAY_HANG]: 'Đang lấy hàng',
+    [OrderStatus.DANG_GIAO_HANG]: 'Đang giao hàng',
+    [OrderStatus.GH_THANH_CONG]: 'Giao hàng thành công',
     [OrderStatus.DA_HUY]: 'Đã hủy',
-    [OrderStatus.HOAN_TIEN]: 'Hoàn tiền'
+    [OrderStatus.TRA_HANG]: 'Trả hàng'
   }
   return statusMap[status]
 }
@@ -32,11 +32,11 @@ export const getOrderStatusText = (status: OrderStatus): string => {
 export const getOrderStatusColor = (status: OrderStatus): string => {
   const colorMap: Record<OrderStatus, string> = {
     [OrderStatus.CHO_XAC_NHAN]: 'warning',
-    [OrderStatus.DA_XAC_NHAN]: 'info',
-    [OrderStatus.DANG_GIAO]: 'primary',
-    [OrderStatus.DA_GIAO]: 'success',
+    [OrderStatus.DANG_LAY_HANG]: 'info',
+    [OrderStatus.DANG_GIAO_HANG]: 'primary',
+    [OrderStatus.GH_THANH_CONG]: 'success',
     [OrderStatus.DA_HUY]: 'error',
-    [OrderStatus.HOAN_TIEN]: 'secondary'
+    [OrderStatus.TRA_HANG]: 'secondary'
   }
   return colorMap[status]
 }
