@@ -14,6 +14,7 @@ export interface ILoginResponse {
   role: string[]
   issued_at: string
   expire_at: string
+  shop_id: string
 }
 //Request
 export interface ILoginFormRequest {
