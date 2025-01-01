@@ -15,6 +15,7 @@ export interface ILoginResponse {
   issued_at: string
   expire_at: string
   shop_id: string
+  user_id: string
 }
 //Request
 export interface ILoginFormRequest {

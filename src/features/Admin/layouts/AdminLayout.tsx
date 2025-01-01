@@ -12,7 +12,8 @@ const AdminLayout = (): JSX.Element => {
     { text: 'Users', icon: <People />, path: '/admin/users' },
     { text: 'Products', icon: <ShoppingCart />, path: '/admin/products' },
     { text: 'Orders', icon: <LocalShipping />, path: '/admin/orders' },
-    { text: 'Vouchers', icon: <LocalOffer />, path: '/admin/vouchers' }
+    { text: 'Vouchers', icon: <LocalOffer />, path: '/admin/vouchers' },
+    { text: 'Orders Manager', icon: <LocalShipping />, path: '/admin/orders-manager' }
   ]
 
   return (

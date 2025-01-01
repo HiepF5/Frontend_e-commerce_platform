@@ -47,3 +47,17 @@ export interface IAttribute {
     name: string;
     value: string;
 }
+export interface ProductRecommend {
+  id: number;
+  title: string;
+  description: string | null;
+  minPrice: number;
+  maxPrice: number;
+  brand: string;
+  category: string;
+  attribute: string; // Hoặc thay thế bằng: AttributeDocument[] nếu xử lý được attribute đúng là danh sách
+  rating: number;
+  reviewCount: number;
+  soldCount: number;
+  stockCount: number;
+}

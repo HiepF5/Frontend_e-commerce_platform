@@ -3,6 +3,8 @@ import { axiosBaseQuery } from '@shared/libs/rtk-query/axiosBaseQuery'
 import { IBaseResponse, PaginationResponse } from '~/types/base.interface'
 import {
   OrderAdminRequest,
+  OrderAdminResponse,
+  OrderDataAdmin,
   OrderDetail,
   OrderListItem,
   OrderRequest,
@@ -56,8 +58,11 @@ export const orderShopApi = createApi({
       }),
       invalidatesTags: ['OrderShop']
     }),
-    getShopOrderDetail: builder.query<IBaseResponse<OrderDetail>, void>({
-      query: (orderId) => ({
+    getShopOrderDetail: builder.query<
+      IBaseResponse<OrderDetail>,
+      { orderId: String }
+    >({
+      query: ({ orderId }: { orderId: string }) => ({
         url: `/owner/order/detail/${orderId}`,
         method: 'GET'
       }),
@@ -71,7 +76,7 @@ export const orderShopApi = createApi({
       invalidatesTags: ['OrderShop']
     }),
     getAdminOrderLists: builder.mutation<
-      IBaseResponse<PaginationResponse<OrderListItem>>,
+      IBaseResponse<PaginationResponse<OrderDataAdmin>>,
       OrderAdminRequest
     >({
       query: (data) => ({
@@ -81,13 +86,17 @@ export const orderShopApi = createApi({
       }),
       invalidatesTags: ['OrderShop']
     }),
-    getAdminOrderDetail: builder.query<IBaseResponse<OrderDetail>, void>({
-      query: (orderId) => ({
+    getAdminOrderDetail: builder.query<
+      IBaseResponse<OrderAdminResponse>,
+      { orderId: String }
+    >({
+      query: ({ orderId }: { orderId: string }) => ({
         url: `/admin/order/detail/${orderId}`,
         method: 'GET'
       }),
       providesTags: ['OrderShop']
     })
+    
   })
 })
 

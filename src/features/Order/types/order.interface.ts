@@ -208,3 +208,71 @@ export interface OrderShop {
   isPayment: boolean;
   createdAt: string;
 }
+
+export interface OrderListManagerProps {
+  useGetDashboardMutation: any;
+  status: string;
+}
+
+export interface OrderTableProps {
+  data: OrderDataAdmin[];
+  isLoading: boolean;
+  onPageChange: (event: React.ChangeEvent<unknown>, page: number) => void
+  pagination: {
+    currentPage: number;
+    totalPages: number;
+    totalItems: number;
+  };
+}
+// Interface cho OrderPayment
+interface OrderPayment {
+  id: number;
+  method: string;
+  amount: number;
+  status: string;
+  transactionCode: string;
+  transactionNote: string | null;
+  startDate: string;
+  expiryDate: string;
+}
+
+// Interface cho OrderShop
+export interface OrderAdminShop {
+  id: number;
+  shopName: string;
+  shopLogo: string;
+  shopCode: string;
+  orderShopCode: string;
+  orderStatus: string;
+  totalProduct: number;
+  shopShippingFee: number;
+  shopDiscount: number;
+  serviceFee: number;
+  shopTotalAmount: number;
+  ecommerceTotalAmount: number;
+  deliveryMethod: string;
+  paymentMethod: string;
+  isPayment: boolean;
+  clientInfo: string;
+  createdAt: string;
+}
+
+// Interface cho dữ liệu trả về của API
+export interface OrderAdminResponse {
+    id: number;
+    orderCode: string;
+    status: string;
+    totalFee: number;
+    totalShipping: number;
+    totalDiscount: number;
+    totalAmount: number;
+    ecommerceServiceFee: number;
+    deliveryMethod: string;
+    clientInfo: string;
+    paymentMethod: string;
+    isPayment: boolean;
+    createdAt: string;
+    listOrderPayment: OrderPayment[];
+    listOrderShop: OrderAdminShop[];
+  };
+

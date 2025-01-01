@@ -1,4 +1,4 @@
-import { DeliveryMethod, OrderStatus, PaymentMethod, ShippingStatus } from "../types/order.enum"
+import { DeliveryMethod, OrderAdminStatus, OrderStatus, PaymentMethod, ShippingStatus } from "../types/order.enum"
 import { OrderItemDetail } from "../types/order.interface"
 
 // Helper function to format client info
@@ -96,3 +96,10 @@ export const parseProductImages = (imageJson: string): string[] => {
     return []
   }
 }
+export const statusMapping: Record<string, OrderAdminStatus> = {
+  '': OrderAdminStatus.UNKNOWN,
+  'pending': OrderAdminStatus.CHO_THANH_TOAN,
+  'processing': OrderAdminStatus.DANG_XU_LY,
+  'completed': OrderAdminStatus.HOAN_THANH,
+  'cancelled': OrderAdminStatus.DA_HUY,
+};

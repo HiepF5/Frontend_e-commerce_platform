@@ -7,6 +7,8 @@ const UserManagement = lazy(() => import('../pages/UserManagement'))
 const ProductManagement = lazy(() => import('../pages/ProductManagement'))
 const OrderManagement = lazy(() => import('../pages/OrderManagement'))
 import AdminVoucherPage from '@features/Voucher/pages/admin/AdminVoucherPage'
+import AdminOrderPage from '@features/Order/page/admin/AdminOrderPage'
+import OrderAdminDetail from '@features/Order/components/admin/OrderAdminDetail'
 
 const AdminRoutes = (): JSX.Element => {
   return (
@@ -17,6 +19,12 @@ const AdminRoutes = (): JSX.Element => {
         <Route path='products' element={<ProductManagement />} />
         <Route path='orders' element={<OrderManagement />} />
         <Route path='vouchers' element={<AdminVoucherPage />} />
+        <Route path='orders-manager' element={<AdminOrderPage />} />
+        <Route path='orders-manager/:path' element={<AdminOrderPage />} />
+        <Route
+          path='orders-manager/detail/:orderId'
+          element={<OrderAdminDetail />}
+        />
       </Route>
     </Routes>
   )

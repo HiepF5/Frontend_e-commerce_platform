@@ -11,6 +11,9 @@ import {
   CardContent
 } from '@mui/material'
 import { formatPrice } from '@shared/utils/formatPrice'
+import { useGetProductRecommendContentBasedQuery } from '../api/productApi'
+import { useEffect, useState } from 'react'
+import { IProduct } from '~/types/products.interface'
 
 interface RelatedProduct {
   id: string
@@ -72,7 +75,7 @@ const relatedProducts: RelatedProduct[] = [
   }
 ]
 
-export default function RelatedProducts() {
+export default function RelatedProducts({ relatedProducts }: { relatedProducts: IProduct[] }) {
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       <Box sx={{ mb: 4 }}>
@@ -86,68 +89,41 @@ export default function RelatedProducts() {
 
       <Grid container spacing={3}>
         {relatedProducts.map((product) => (
-          <Grid item xs={12} sm={6} md={4} key={product.id}>
+          <Grid item xs={12} sm={6} md={4} key={product.productId}>
             <Card>
               <CardMedia
                 component='img'
                 height='200'
-                image={product.image}
-                alt={product.name}
+                image={product.imageUrl || ''}
+                alt={product.productTitle}
                 sx={{ objectFit: 'contain', p: 2 }}
               />
               <CardContent>
                 <Typography gutterBottom variant='h6' component='div'>
-                  {product.name}
+                  {product.productTitle}
                 </Typography>
                 <Typography variant='h6' color='error.main' gutterBottom>
-                  {formatPrice(product.price)}₫
+                  {formatPrice(product.minPrice)}₫
                 </Typography>
                 <Typography
                   variant='body2'
                   color='text.secondary'
                   sx={{ textDecoration: 'line-through' }}
                 >
-                  {formatPrice(product.originalPrice)}₫
+                  {formatPrice(product.maxPrice)}₫
                 </Typography>
 
                 <Box sx={{ mt: 2 }}>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    gutterBottom
-                  >
-                    Trọng lượng: {product.specs.weight}
+                  <Typography variant='body2' color='text.secondary'>
+                    {product.brand}
                   </Typography>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    gutterBottom
-                  >
-                    Chất liệu: {product.specs.material}
+                  <Typography variant='body2' color='text.secondary'>
+                    {product.category}
                   </Typography>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    gutterBottom
-                  >
-                    CPU: {product.specs.cpu}
-                  </Typography>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    gutterBottom
-                  >
-                    RAM: {product.specs.ram}
-                  </Typography>
-                  <Typography
-                    variant='body2'
-                    color='text.secondary'
-                    gutterBottom
-                  >
-                    Màn hình: {product.specs.screen}
+                  <Typography variant='body2' color='text.secondary'>
+                    {product.rating || 0} ⭐
                   </Typography>
                 </Box>
-
                 <Button variant='outlined' fullWidth sx={{ mt: 2 }}>
                   So sánh chi tiết
                 </Button>

@@ -14,39 +14,30 @@ import {
 } from '@mui/material'
 import { ChevronRight, Heart, Play } from 'lucide-react'
 import { formatPrice } from '@shared/utils/formatPrice'
+import { IProduct } from '~/types/products.interface'
 
-interface Product {
-  id: string
-  name: string
-  image: string
-  price: number
-  originalPrice: number
-  discount: number
-  sold: number
-  isFavorite?: boolean
-  hasVideo?: boolean
-  tags?: string[]
-}
 
 interface ShopProductsProps {
-  shopProducts: Product[]
-  recommendedProducts: Product[]
+  shopProducts?: IProduct[]
+  recommendedProducts?: IProduct[]
 }
 
-function ProductCard({ product }: { product: Product }) {
+function ProductCard({ product }: { product: IProduct }) {
   return (
     <Card sx={{ height: '100%', position: 'relative' }}>
       <Box sx={{ position: 'relative' }}>
         <CardMedia
           component='img'
           height='200'
-          image={product.image}
-          alt={product.name}
+          image={
+            'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true'
+          }
+          alt={product.productTitle}
           sx={{ objectFit: 'cover' }}
         />
-        {product.discount > 0 && (
+        {true && (
           <Chip
-            label={`-${product.discount}%`}
+            label={`-30%`}
             color='error'
             size='small'
             sx={{
@@ -57,33 +48,9 @@ function ProductCard({ product }: { product: Product }) {
             }}
           />
         )}
-        {product.hasVideo && (
-          <IconButton
-            size='small'
-            sx={{
-              position: 'absolute',
-              bottom: 8,
-              right: 8,
-              bgcolor: 'rgba(0, 0, 0, 0.6)',
-              color: 'white',
-              '&:hover': { bgcolor: 'rgba(0, 0, 0, 0.8)' }
-            }}
-          >
-            <Play className='w-4 h-4' />
-          </IconButton>
-        )}
       </Box>
 
       <CardContent>
-        {product.isFavorite && (
-          <Chip
-            icon={<Heart className='w-4 h-4' />}
-            label='Yêu thích'
-            size='small'
-            sx={{ mb: 1, bgcolor: 'error.main', color: 'white' }}
-          />
-        )}
-
         <Typography
           variant='subtitle2'
           sx={{
@@ -94,35 +61,32 @@ function ProductCard({ product }: { product: Product }) {
             overflow: 'hidden'
           }}
         >
-          {product.name}
+          {product.productTitle}
         </Typography>
 
-        {product.tags &&
-          product.tags.map((tag) => (
-            <Chip
-              key={tag}
-              label={tag}
-              size='small'
-              variant='outlined'
-              sx={{ mr: 0.5, mb: 1 }}
-            />
-          ))}
+        <Chip
+          key={'Rẻ Vô Địch'}
+          label={'Rẻ Vô Địch'}
+          size='small'
+          variant='outlined'
+          sx={{ mr: 0.5, mb: 1 }}
+        />
 
         <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, mb: 1 }}>
           <Typography variant='h6' color='error'>
-            ₫{formatPrice(product.price)}
+            ₫{formatPrice(product.minPrice)}
           </Typography>
           <Typography
             variant='caption'
             color='text.secondary'
             sx={{ textDecoration: 'line-through' }}
           >
-            ₫{formatPrice(product.originalPrice)}
+            ₫{formatPrice(product.maxPrice)}
           </Typography>
         </Box>
 
         <Typography variant='caption' color='text.secondary'>
-          Đã bán {product.sold}
+          Đã bán {product.soldCount}
         </Typography>
       </CardContent>
     </Card>
@@ -144,7 +108,7 @@ export default function ShopProducts({
             mb: 2
           }}
         >
-          <Typography variant='h6'>CÁC SẢN PHẨM KHÁC CỦA SHOP</Typography>
+          <Typography variant='h6'>GỢI Ý TỪ NGƯỜI DÙNG KHÁC</Typography>
           <Link
             href='#'
             underline='none'
@@ -154,8 +118,8 @@ export default function ShopProducts({
           </Link>
         </Box>
         <Grid container spacing={2}>
-          {shopProducts.map((product) => (
-            <Grid item key={product.id} xs={6} sm={4} md={3} lg={2}>
+          {shopProducts && shopProducts.map((product) => (
+            <Grid item key={product.productId} xs={6} sm={4} md={3} lg={2}>
               <ProductCard product={product} />
             </Grid>
           ))}
@@ -167,8 +131,8 @@ export default function ShopProducts({
           CÓ THỂ BẠN CŨNG THÍCH
         </Typography>
         <Grid container spacing={2}>
-          {recommendedProducts.map((product) => (
-            <Grid item key={product.id} xs={6} sm={4} md={3} lg={2}>
+          {recommendedProducts?.map((product) => (
+            <Grid item key={product.productId} xs={6} sm={4} md={3} lg={2}>
               <ProductCard product={product} />
             </Grid>
           ))}

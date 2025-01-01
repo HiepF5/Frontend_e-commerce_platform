@@ -7,6 +7,13 @@ export enum OrderStatus {
   DA_HUY = 'DA_HUY',
   TRA_HANG = 'TRA_HANG'
 }
+export enum OrderAdminStatus {
+  UNKNOWN = '',
+  CHO_THANH_TOAN = 'CHO_THANH_TOAN',
+  DANG_XU_LY = 'DANG_XU_LY',
+  HOAN_THANH = 'HOAN_THANH',
+  DA_HUY = 'DA_HUY',
+}
 
 export enum DeliveryMethod {
   GHN = 'GHN',

@@ -12,3 +12,9 @@ export const formatDate = (dateString: string): string => {
     minute: '2-digit'
   }).format(date)
 }
+export const formatDateOrder = (dateString: string): string => {
+  const [day, month, yearAndTime] = dateString.split('/');
+  const [year, time] = yearAndTime.split(' ');
+  const formattedDate = new Date(`${year}-${month}-${day}T${time}`);
+  return formattedDate.toLocaleDateString('vi-VN'); // Hoặc thay đổi thành locale khác như 'en-US'
+};
