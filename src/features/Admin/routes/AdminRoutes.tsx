@@ -1,15 +1,15 @@
 import { lazy } from 'react'
-import { Route, Routes } from 'react-router-dom'
+import { Route, Router, Routes } from 'react-router-dom'
 import AdminLayout from '../layouts/AdminLayout'
 
 const Dashboard = lazy(() => import('../pages/Dashboard'))
 const UserManagement = lazy(() => import('../pages/UserManagement'))
 const ProductManagement = lazy(() => import('../pages/ProductManagement'))
 const OrderManagement = lazy(() => import('../pages/OrderManagement'))
-import AdminVoucherPage from '@features/Voucher/pages/admin/AdminVoucherPage'
-import AdminOrderPage from '@features/Order/page/admin/AdminOrderPage'
-import OrderAdminDetail from '@features/Order/components/admin/OrderAdminDetail'
-
+const PromptAI = lazy(() => import('../pages/PromptAI'))
+const AdminVoucherPage = lazy(() => import('@features/Voucher/pages/admin/AdminVoucherPage'))
+const AdminOrderPage = lazy(() => import('@features/Order/page/admin/AdminOrderPage'))
+const OrderAdminDetail = lazy(() => import('@features/Order/components/admin/OrderAdminDetail'))
 const AdminRoutes = (): JSX.Element => {
   return (
     <Routes>
@@ -24,6 +24,10 @@ const AdminRoutes = (): JSX.Element => {
         <Route
           path='orders-manager/detail/:orderId'
           element={<OrderAdminDetail />}
+        />
+        <Route
+          path='prompt-ai'
+          element={<PromptAI />}
         />
       </Route>
     </Routes>

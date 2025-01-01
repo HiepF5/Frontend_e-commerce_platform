@@ -61,3 +61,27 @@ export interface IChatImageResponse {
   usageMetadata: IUsageMetadata;
   modelVersion: string;
 }
+// Path: src/types/gemini.interface.ts
+//Interface cho yêu cầu Gemini Chat Text
+export interface PromptListData {
+  modifiedAt: string | null; // Thời gian chỉnh sửa, có thể null
+  id: number; // ID của prompt
+  promptName: string; // Tên của prompt
+  promptText: string; // Nội dung chi tiết của prompt
+}
+export interface ChatWithPromptFormData {
+  prompt_name: string; // Tên của prompt
+  message: string; // Tin nhắn
+}
+export interface UpdatePromptFormData {
+  prompt_name: string; // Tên của prompt
+  new_prompt_name: string; // Tin nhắn
+  prompt_text: string; // ID của prompt
+}
+export interface CreatePromptFormData {
+  prompt_name: string; // Tên của prompt
+  prompt_text: string; // Tin nhắn
+}
+export interface DeletePromptFormData {
+  prompt_name: string; // ID của prompt
+}

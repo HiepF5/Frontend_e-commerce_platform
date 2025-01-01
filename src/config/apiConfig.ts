@@ -32,7 +32,14 @@ export const API_ENDPOINTS_GHN = {
 export const API_ENDPOINTS_CHATBOT = {
   ApiChatBotText: `${EPATHS.ServiceGemini}/chat-text`,
   ApiChatBotImage: `${EPATHS.ServiceGemini}/chat-image`,
-  ApiChatBotStory: `${EPATHS.ServiceGemini}/chat-story`,//??
+  ApiChatBotPrompt: `${EPATHS.ServiceGemini}/get-prompt`,
+  ApiCreatePrompt: `${EPATHS.ServiceGemini}/create-prompt`,
+  ApiUpdatePrompt: `${EPATHS.ServiceGemini}/update-prompt`,
+  ApiDeletePrompt: `${EPATHS.ServiceGemini}/delete-prompt`,
+  ApiAnalysisPrompt: `${EPATHS.ServiceGemini}/product-analysis`,
+  ApiReviewWithPrompt: `${EPATHS.ServiceGemini}/product-review`,
+  ApiChatWithPrompt: `${EPATHS.ServiceGemini}/prompt-text`,
+
 };
 export const API_ENDPOINTS_SHOP = {
   ApiCreateSubscribe: 'customer/shop/subscribe',

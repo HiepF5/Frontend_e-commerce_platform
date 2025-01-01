@@ -1,5 +1,5 @@
 import { Box, CssBaseline, Drawer, AppBar, Toolbar, Typography, List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
-import { Dashboard, People, ShoppingCart, LocalShipping, LocalOffer } from '@mui/icons-material'
+import { Dashboard, People, ShoppingCart, LocalShipping, LocalOffer, SafetyDividerRounded } from '@mui/icons-material'
 import { Outlet, useNavigate } from 'react-router-dom'
 
 const drawerWidth = 240
@@ -13,7 +13,16 @@ const AdminLayout = (): JSX.Element => {
     { text: 'Products', icon: <ShoppingCart />, path: '/admin/products' },
     { text: 'Orders', icon: <LocalShipping />, path: '/admin/orders' },
     { text: 'Vouchers', icon: <LocalOffer />, path: '/admin/vouchers' },
-    { text: 'Orders Manager', icon: <LocalShipping />, path: '/admin/orders-manager' }
+    {
+      text: 'Orders Manager',
+      icon: <LocalShipping />,
+      path: '/admin/orders-manager'
+    },
+    {
+      text: 'Prompt AI',
+      icon: <SafetyDividerRounded />,
+      path: '/admin/prompt-ai'
+    }
   ]
 
   return (
