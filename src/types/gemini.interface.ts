@@ -68,6 +68,7 @@ export interface PromptListData {
   id: number; // ID của prompt
   promptName: string; // Tên của prompt
   promptText: string; // Nội dung chi tiết của prompt
+  isActive?: boolean; // Thêm trường này
 }
 export interface ChatWithPromptFormData {
   prompt_name: string; // Tên của prompt
