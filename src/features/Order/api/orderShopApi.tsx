@@ -68,13 +68,17 @@ export const orderShopApi = createApi({
       }),
       providesTags: ['OrderShop']
     }),
-    shopUpdateOrderByID: builder.mutation<IBaseResponse<String>, void>({
-      query: (id) => ({
-        url: `/owner/order/update/${id}`,
-        method: 'PUT'
+    shopUpdateOrderByID: builder.mutation<
+      IBaseResponse<string>,
+      { data: string; orderId: string }
+    >({
+      query: ({ orderId, data }) => ({
+        url: `/owner/order/update/${orderId}?status=${data}`,
+        method: 'PUT',
       }),
-      invalidatesTags: ['OrderShop']
+      invalidatesTags: ['OrderShop'] // Xóa cache liên quan đến tag 'OrderShop'
     }),
+
     getAdminOrderLists: builder.mutation<
       IBaseResponse<PaginationResponse<OrderDataAdmin>>,
       OrderAdminRequest
@@ -96,7 +100,6 @@ export const orderShopApi = createApi({
       }),
       providesTags: ['OrderShop']
     })
-    
   })
 })
 
@@ -106,6 +109,7 @@ export const {
   useCancelOrderByIDMutation,
   useGetShopOrderListsMutation,
   useGetShopOrderDetailQuery,
+  useLazyGetShopOrderDetailQuery,
   useShopUpdateOrderByIDMutation,
   useGetAdminOrderListsMutation,
   useGetAdminOrderDetailQuery
