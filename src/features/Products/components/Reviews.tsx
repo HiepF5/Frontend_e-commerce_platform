@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import {
   Box,
   Container,
@@ -7,13 +8,61 @@ import {
   Rating,
   LinearProgress,
   Grid,
-  Paper
+  Paper,
+  Button,
+  CircularProgress
 } from '@mui/material'
 import { FaRobot } from 'react-icons/fa6'
+import { analysisPromptApi, reviewWithPromptApi } from '@api/geminiApi'
+import { toast } from 'react-toastify'
+import ReactMarkdown from 'react-markdown'
+import { styled } from '@mui/system'
+
 interface ReviewImage {
   id: string
   url: string
 }
+
+interface ReviewsProps {
+  productId?: string
+}
+
+// Styled component cho markdown content
+const MarkdownContent = styled('div')(({ theme }) => ({
+  '& p': {
+    marginBottom: theme.spacing(2),
+    lineHeight: 1.6,
+  },
+  '& h1, h2, h3, h4, h5, h6': {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(1),
+    fontWeight: 600,
+  },
+  '& ul, ol': {
+    marginLeft: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+  },
+  '& li': {
+    marginBottom: theme.spacing(1),
+  },
+  '& strong': {
+    fontWeight: 600,
+  },
+  '& blockquote': {
+    borderLeft: `4px solid ${theme.palette.grey[300]}`,
+    paddingLeft: theme.spacing(2),
+    marginLeft: 0,
+    marginRight: 0,
+    marginBottom: theme.spacing(2),
+    color: theme.palette.text.secondary,
+  },
+  '& code': {
+    backgroundColor: theme.palette.grey[100],
+    padding: theme.spacing(0.5),
+    borderRadius: theme.shape.borderRadius,
+    fontSize: '0.875em',
+  },
+}))
 
 const reviewImages: ReviewImage[] = [
   { id: '1', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/1.jpg?raw=true' },
@@ -25,11 +74,56 @@ const reviewImages: ReviewImage[] = [
   { id: '7', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true' }
 ]
 
-export default function Reviews() {
+export default function Reviews({ productId }: ReviewsProps) {
+  const [loadingCustomerReviews, setLoadingCustomerReviews] = useState(false)
+  const [loadingAIAnalysis, setLoadingAIAnalysis] = useState(false)
+  const [aiAnalysis, setAiAnalysis] = useState('')
+  const [customerReviews, setCustomerReviews] = useState('')
+
+  const handleGetAIAnalysis = async () => {
+    try {
+      setLoadingAIAnalysis(true)
+      if (!productId) {
+        throw new Error('Product ID is required')
+      }
+      const response = await analysisPromptApi({ product_id: productId })
+      if (response.data) {
+        setAiAnalysis(response.data.toString())
+      }
+    } catch (error) {
+      toast.error('Lỗi khi lấy phân tích từ AI')
+      console.error(error)
+    } finally {
+      setLoadingAIAnalysis(false)
+    }
+  }
+
+  const handleGetCustomerReviews = async () => {
+    try {
+      setLoadingCustomerReviews(true)
+      if (!productId) {
+        throw new Error('Product ID is required')
+      }
+      const response = await reviewWithPromptApi({ product_id: productId })
+      if (response.data) {
+        setCustomerReviews(response.data.toString())
+      }
+    } catch (error) {
+      toast.error('Lỗi khi tải đánh giá khách hàng')
+      console.error(error)
+    } finally {
+      setLoadingCustomerReviews(false)
+    }
+  }
+
+  useEffect(() => {
+    handleGetCustomerReviews()
+  }, [])
+
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       <Typography variant='h5' gutterBottom fontWeight='bold'>
-        Khách hàng đánh giá
+        Đánh giá sản phẩm
       </Typography>
 
       <Grid container spacing={4}>
@@ -56,11 +150,7 @@ export default function Reviews() {
                   value={rating === 5 ? 100 : 0}
                   sx={{ flexGrow: 1, mx: 1 }}
                 />
-                <Typography
-                  variant='body2'
-                  color='text.secondary'
-                  sx={{ minWidth: 20 }}
-                >
+                <Typography variant='body2' color='text.secondary' sx={{ minWidth: 20 }}>
                   {rating === 5 ? 6 : 0}
                 </Typography>
               </Box>
@@ -70,53 +160,85 @@ export default function Reviews() {
 
         <Grid item xs={12} md={8}>
           <Paper sx={{ p: 3, mb: 4 }}>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <FaRobot className='w-5 h-5 mr-2' />
-              <Typography variant='subtitle1' fontWeight='bold'>
-                Trợ lý AI tổng hợp từ các đánh giá mới nhất
-              </Typography>
-            </Box>
-            <Typography variant='body2' paragraph>
-              Dữ liệu cho thấy tất cả 7 review đều đánh giá sản phẩm 5 sao. Nội
-              dung review chủ yếu là ngắn gọn, tích cực như "Sản phẩm đúng mô
-              tả", "Sản phẩm tốt!", "Hàng tốt!", "OK". Không có bất kỳ review
-              tiêu cực nào đó. Do đó, đánh giá trung bình là 5 sao.
+            <Typography variant="h6" gutterBottom>
+              Đánh giá từ khách hàng
             </Typography>
-            <Typography variant='body2' paragraph>
-              <strong>Phân tích chung:</strong> Dựa trên dữ liệu hiện có, sản
-              phẩm được đánh giá rất tốt. Tuy nhiên, số lượng review còn quá ít
-              để đưa ra kết luận chắc chắn về chất lượng sản phẩm trên diện
-              rộng. Tính khách quan của các review cũng cần được xem xét vì tất
-              cả đều đến từ cùng một người dùng. Cần thêm nhiều review từ nhiều
-              người dùng khác nhau để có đánh giá toàn diện hơn.
-            </Typography>
-            <Typography variant='body2'>
-              <strong>Kết luận:</strong> Dựa trên dữ liệu có hạn, sản phẩm có vẻ
-              đáng mua. Tuy nhiên, khuyến nghị nên tìm kiếm thêm thông tin và
-              review từ các nguồn khác để có quyết định mua hàng chính xác hơn.
-            </Typography>
+            
+            {loadingCustomerReviews ? (
+              <Box display="flex" justifyContent="center" p={3}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <MarkdownContent>
+                {customerReviews && <ReactMarkdown>{customerReviews}</ReactMarkdown>}
+              </MarkdownContent>
+            )}
           </Paper>
 
-          <Typography variant='subtitle1' gutterBottom fontWeight='bold'>
-            Tất cả hình ảnh ({reviewImages.length})
-          </Typography>
-          <Grid container spacing={1}>
-            {reviewImages.map((image) => (
-              <Grid item key={image.id} xs={4} sm={3} md={2}>
-                <img
-                  src={image.url}
-                  alt='Review'
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    aspectRatio: '1',
-                    objectFit: 'cover',
-                    borderRadius: '8px'
-                  }}
-                />
-              </Grid>
-            ))}
-          </Grid>
+          <Paper sx={{ p: 3, mb: 4 }}>
+            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2, justifyContent: 'space-between' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <FaRobot size={24} />
+                <Typography variant="h6">
+                  Phân tích từ AI
+                </Typography>
+              </Box>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleGetAIAnalysis}
+                disabled={loadingAIAnalysis}
+                startIcon={loadingAIAnalysis && <CircularProgress size={20} color="inherit" />}
+              >
+                Phân tích đánh giá
+              </Button>
+            </Box>
+
+            {loadingAIAnalysis ? (
+              <Box display="flex" justifyContent="center" p={3}>
+                <CircularProgress />
+              </Box>
+            ) : (
+              <MarkdownContent>
+                {aiAnalysis ? (
+                  <ReactMarkdown>{aiAnalysis}</ReactMarkdown>
+                ) : (
+                  <Typography color="text.secondary" align="center">
+                    Nhấn nút "Phân tích đánh giá" để xem phân tích chi tiết từ AI
+                  </Typography>
+                )}
+              </MarkdownContent>
+            )}
+          </Paper>
+
+          <Box sx={{ mt: 4 }}>
+            <Typography variant='h6' gutterBottom>
+              Hình ảnh từ khách hàng ({reviewImages.length})
+            </Typography>
+            <Grid container spacing={1}>
+              {reviewImages.map((image) => (
+                <Grid item key={image.id} xs={4} sm={3} md={2}>
+                  <Box
+                    component="img"
+                    src={image.url}
+                    alt='Review'
+                    sx={{
+                      width: '100%',
+                      height: 'auto',
+                      aspectRatio: '1',
+                      objectFit: 'cover',
+                      borderRadius: 1,
+                      transition: 'transform 0.2s',
+                      '&:hover': {
+                        transform: 'scale(1.05)',
+                        cursor: 'pointer'
+                      }
+                    }}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          </Box>
         </Grid>
       </Grid>
     </Container>

@@ -9,7 +9,8 @@ import {
   PromptListData,
   CreatePromptFormData,
   UpdatePromptFormData,
-  DeletePromptFormData
+  DeletePromptFormData,
+  AnalysisPromptFormData
 } from '~/types/gemini.interface'
 import { API_ENDPOINTS_CHATBOT } from '@config/apiConfig'
 export const chatTextApi = async (
@@ -135,12 +136,14 @@ export const deletePromptApi = async (
 }
 
 export const analysisPromptApi = async (
-  data: any
-): Promise<IBaseResponse<any>> => {
+  data: AnalysisPromptFormData
+): Promise<IBaseResponse<String>> => {
   try {
-    const response = await axios.post<IBaseResponse<any>>(
-      `${API_ENDPOINTS_CHATBOT.ApiAnalysisPrompt}`,
-      data
+    const form_data = new FormData()
+    form_data.append('product_id', data.product_id.toString())
+    const response = await axios.get<IBaseResponse<String>>(
+      `${API_ENDPOINTS_CHATBOT.ApiAnalysisPrompt}?product_id=${data.product_id}`,
+    
     )
     return response.data
   } catch (error) {
@@ -150,12 +153,13 @@ export const analysisPromptApi = async (
 }
 
 export const reviewWithPromptApi = async (
-  data: any
-): Promise<IBaseResponse<any>> => {
+  data: AnalysisPromptFormData
+): Promise<IBaseResponse<String>> => {
   try {
-    const response = await axios.post<IBaseResponse<any>>(
-      `${API_ENDPOINTS_CHATBOT.ApiReviewWithPrompt}`,
-      data
+    const form_data = new FormData()
+    form_data.append('product_id', data.product_id.toString())
+    const response = await axios.get<IBaseResponse<String>>(
+      `${API_ENDPOINTS_CHATBOT.ApiReviewWithPrompt}?product_id=${data.product_id}`,
     )
     return response.data
   } catch (error) {

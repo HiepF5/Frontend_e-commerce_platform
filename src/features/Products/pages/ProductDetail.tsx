@@ -227,7 +227,7 @@ const categories = [
       </div>
       <RelatedProducts relatedProducts={relatedProducts} />
       <ProductComparison />
-      <Reviews />
+      <Reviews productId={productId} />
       <ReviewToCustomer />
       <RecentlyViewed />
       <ShopProducts

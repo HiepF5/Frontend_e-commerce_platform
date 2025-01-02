@@ -86,3 +86,6 @@ export interface CreatePromptFormData {
 export interface DeletePromptFormData {
   prompt_name: string; // ID của prompt
 }
+export interface AnalysisPromptFormData {
+  product_id: string; // ID của prompt
+}
