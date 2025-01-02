@@ -14,6 +14,7 @@ import { formatPrice } from '@shared/utils/formatPrice'
 import { useGetProductRecommendContentBasedQuery } from '../api/productApi'
 import { useEffect, useState } from 'react'
 import { IProduct } from '~/types/products.interface'
+import { useNavigate } from 'react-router-dom'
 
 interface RelatedProduct {
   id: string
@@ -76,6 +77,7 @@ const relatedProducts: RelatedProduct[] = [
 ]
 
 export default function RelatedProducts({ relatedProducts }: { relatedProducts: IProduct[] }) {
+  const navigate = useNavigate()
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       <Box sx={{ mb: 4 }}>
@@ -90,7 +92,11 @@ export default function RelatedProducts({ relatedProducts }: { relatedProducts: 
       <Grid container spacing={3}>
         {relatedProducts.map((product) => (
           <Grid item xs={12} sm={6} md={4} key={product.productId}>
-            <Card>
+            <Card
+              onClick={() =>
+                navigate(`/products/product-detail/${product.productId}`)
+              }
+            >
               <CardMedia
                 component='img'
                 height='200'

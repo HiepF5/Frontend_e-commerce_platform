@@ -15,6 +15,7 @@ import {
 import { ChevronRight, Heart, Play } from 'lucide-react'
 import { formatPrice } from '@shared/utils/formatPrice'
 import { IProduct } from '~/types/products.interface'
+import { useNavigate } from 'react-router-dom'
 
 
 interface ShopProductsProps {
@@ -23,9 +24,10 @@ interface ShopProductsProps {
 }
 
 function ProductCard({ product }: { product: IProduct }) {
+  const navigate = useNavigate()
   return (
-    <Card sx={{ height: '100%', position: 'relative' }}>
-      <Box sx={{ position: 'relative' }}>
+    <Card sx={{ height: '100%', position: 'relative' }} onClick={() => {navigate(`/products/product-detail/${product.productId}`)}}>
+      <Box sx={{ position: 'relative' }}>navigate
         <CardMedia
           component='img'
           height='200'
