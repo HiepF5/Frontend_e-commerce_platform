@@ -13,10 +13,13 @@ import {
   CircularProgress
 } from '@mui/material'
 import { FaRobot } from 'react-icons/fa6'
-import { analysisPromptApi, reviewWithPromptApi } from '@api/geminiApi'
+import { analysisPromptApi, reviewWithPromptApi, chatWithPromptApi } from '@api/geminiApi'
 import { toast } from 'react-toastify'
 import ReactMarkdown from 'react-markdown'
 import { styled } from '@mui/system'
+import { useAppDispatch } from '@store/hook'
+import { addUserMessage, fetchChatResponse, toggleChat } from '@features/ChatBot/slices/ChatBotSlice'
+import { IProductData } from '../types/products.interface'
 
 interface ReviewImage {
   id: string
@@ -25,6 +28,7 @@ interface ReviewImage {
 
 interface ReviewsProps {
   productId?: string
+  productDetail?: IProductData
 }
 
 // Styled component cho markdown content
@@ -74,11 +78,12 @@ const reviewImages: ReviewImage[] = [
   { id: '7', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true' }
 ]
 
-export default function Reviews({ productId }: ReviewsProps) {
+export default function Reviews({ productId, productDetail }: ReviewsProps) {
   const [loadingCustomerReviews, setLoadingCustomerReviews] = useState(false)
   const [loadingAIAnalysis, setLoadingAIAnalysis] = useState(false)
   const [aiAnalysis, setAiAnalysis] = useState('')
   const [customerReviews, setCustomerReviews] = useState('')
+  const dispatch = useAppDispatch()
 
   const handleGetAIAnalysis = async () => {
     try {
@@ -113,6 +118,49 @@ export default function Reviews({ productId }: ReviewsProps) {
       console.error(error)
     } finally {
       setLoadingCustomerReviews(false)
+    }
+  }
+
+  const handleAIConsultation = async () => {
+    try {
+      
+      
+      // Mở ChatBot trước
+      dispatch(toggleChat(true))
+
+      // Lấy prompt_name từ localStorage
+      const promptName = localStorage.getItem('prompt_ai')
+      if (!promptName) {
+        toast.error('Vui lòng chọn prompt AI trong phần quản lý Prompt')
+        return
+      }
+
+      // Tạo message với thông tin sản phẩm
+      if (!productDetail) {
+        toast.error('Thông tin sản phẩm không khả dụng')
+        return
+      }
+      const message = `Tôi muốn được tư vấn về sản phẩm "${productDetail.title}"`
+      const productInfo = JSON.stringify(productDetail)
+
+      // Dispatch action để thêm tin nhắn người dùng
+      dispatch(addUserMessage({ text: message, isUser: true }))
+
+      // Gọi API chat với prompt
+      const response = await chatWithPromptApi({
+        prompt_name: promptName,
+        message: encodeURIComponent(`${message}\nThông tin sản phẩm: ${productInfo}`)
+      })
+      dispatch(addUserMessage({ text: response.data, isUser: false }))
+
+      // // Dispatch action để thêm phản hồi từ AI
+      // if (response.data) {
+      //   dispatch(fetchChatResponse(response.data.toString()))
+      // }
+
+    } catch (error) {
+      toast.error('Lỗi khi tư vấn với AI')
+      console.error(error)
     }
   }
 
@@ -160,9 +208,19 @@ export default function Reviews({ productId }: ReviewsProps) {
 
         <Grid item xs={12} md={8}>
           <Paper sx={{ p: 3, mb: 4 }}>
-            <Typography variant="h6" gutterBottom>
-              Đánh giá từ khách hàng
-            </Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+              <Typography variant="h6">
+                Đánh giá từ khách hàng
+              </Typography>
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={handleAIConsultation}
+                startIcon={<FaRobot />}
+              >
+                Tư vấn với AI
+              </Button>
+            </Box>
             
             {loadingCustomerReviews ? (
               <Box display="flex" justifyContent="center" p={3}>

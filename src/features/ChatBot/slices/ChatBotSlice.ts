@@ -9,16 +9,20 @@ interface ChatMessage {
   fileUrl?: string; // Optional property for file URLs
 }
 interface ChatState {
-  messages: ChatMessage[]; // Add fileUrl for file messages
-  loading: boolean;
-  error: string | null;
+  messages: Array<{
+    text: string
+    isUser: boolean
+    fileUrl?: string
+  }>
+  loading: boolean
+  isOpen: boolean // Thêm state để quản lý trạng thái mở/đóng của ChatBot
 }
 
 // Khởi tạo trạng thái ban đầu
 const initialState: ChatState = {
   messages: [],
   loading: false,
-  error: null,
+  isOpen: false // Thêm giá trị mặc định
 };
 
 // Tạo async thunk để gọi API chat bot
@@ -45,9 +49,12 @@ const ChatBotSlice = createSlice({
   name: 'chat',
   initialState,
   reducers: {
-    addUserMessage: (state, action: PayloadAction<ChatMessage>) => { // Update payload type
-      state.messages.push(action.payload);
+    addUserMessage: (state, action) => {
+      state.messages.push(action.payload)
     },
+    toggleChat: (state, action: PayloadAction<boolean>) => {
+      state.isOpen = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -80,5 +87,5 @@ const ChatBotSlice = createSlice({
   },
 });
 
-export const { addUserMessage } = ChatBotSlice.actions;
+export const { addUserMessage, toggleChat } = ChatBotSlice.actions;
 export default ChatBotSlice.reducer;

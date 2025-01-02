@@ -10,7 +10,8 @@ import {
   CreatePromptFormData,
   UpdatePromptFormData,
   DeletePromptFormData,
-  AnalysisPromptFormData
+  AnalysisPromptFormData,
+  ChatWithPromptFormData
 } from '~/types/gemini.interface'
 import { API_ENDPOINTS_CHATBOT } from '@config/apiConfig'
 export const chatTextApi = async (
@@ -139,8 +140,6 @@ export const analysisPromptApi = async (
   data: AnalysisPromptFormData
 ): Promise<IBaseResponse<String>> => {
   try {
-    const form_data = new FormData()
-    form_data.append('product_id', data.product_id.toString())
     const response = await axios.get<IBaseResponse<String>>(
       `${API_ENDPOINTS_CHATBOT.ApiAnalysisPrompt}?product_id=${data.product_id}`,
     
@@ -156,8 +155,6 @@ export const reviewWithPromptApi = async (
   data: AnalysisPromptFormData
 ): Promise<IBaseResponse<String>> => {
   try {
-    const form_data = new FormData()
-    form_data.append('product_id', data.product_id.toString())
     const response = await axios.get<IBaseResponse<String>>(
       `${API_ENDPOINTS_CHATBOT.ApiReviewWithPrompt}?product_id=${data.product_id}`,
     )
@@ -169,12 +166,17 @@ export const reviewWithPromptApi = async (
 }
 
 export const chatWithPromptApi = async (
-  data: any
-): Promise<IBaseResponse<any>> => {
+  data: ChatWithPromptFormData
+): Promise<IBaseResponse<String>> => {
   try {
-    const response = await axios.post<IBaseResponse<any>>(
+    const response = await axios.get<IBaseResponse<String>>(
       `${API_ENDPOINTS_CHATBOT.ApiChatWithPrompt}`,
-      data
+      {
+        params: {
+          prompt_name: data.prompt_name,
+          message: data.message
+        }
+      }
     )
     return response.data
   } catch (error) {
