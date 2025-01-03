@@ -199,6 +199,7 @@ const categories = [
   const [recomenedProducts, setRecomnedProducts] = useState<IProduct[]>()
   const [userRecomenedProducts, setUserRecomenedProducts] = useState<IProduct[]>()
   const [relatedProducts, setRelatedProducts] = useState<IProduct[]>([])
+  const isShopOwner = products?.shopCode === user.shop_code
   useEffect(() => {
     if (data) {
       setProducts(data.data)
@@ -227,11 +228,8 @@ const categories = [
       </div>
       <RelatedProducts relatedProducts={relatedProducts} />
       <ProductComparison />
-      <Reviews 
-        productId={productId} 
-        productDetail={products}
-      />
-      <ReviewToCustomer />
+      <Reviews productId={productId} productDetail={products} />
+      <ReviewToCustomer productId={productId} isShopOwner={isShopOwner} />
       <RecentlyViewed />
       <ShopProducts
         shopProducts={userRecomenedProducts}
