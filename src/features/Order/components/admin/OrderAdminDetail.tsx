@@ -23,6 +23,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping'
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import DoneIcon from '@mui/icons-material/Done'
 import PendingIcon from '@mui/icons-material/Pending'
+import { formatCurrency } from '@shared/utils/formatPrice'
 
 export default function OrderAdminDetail() {
   const { orderId } = useParams()
@@ -123,9 +124,8 @@ export default function OrderAdminDetail() {
                       <TableCell>{payment.method}</TableCell>
                       <TableCell>
                         <Chip
-                          label={`$${payment.amount}`}
+                          label={`${payment.amount}VND`}
                           color='success'
-                          icon={<AttachMoneyIcon />}
                         />
                       </TableCell>
                       <TableCell>
@@ -194,11 +194,13 @@ export default function OrderAdminDetail() {
                           }
                         />
                       </TableCell>
-                      <TableCell>${shop.shopShippingFee}</TableCell>
-                      <TableCell>${shop.shopDiscount}</TableCell>
+                      <TableCell>
+                        {formatCurrency(shop.shopShippingFee)}
+                      </TableCell>
+                      <TableCell>{formatCurrency(shop.shopDiscount)}</TableCell>
                       <TableCell>
                         <Typography variant='body1' sx={{ fontWeight: 'bold' }}>
-                          ${shop.shopTotalAmount}
+                          {formatCurrency(shop.shopTotalAmount)}
                         </Typography>
                       </TableCell>
                     </TableRow>

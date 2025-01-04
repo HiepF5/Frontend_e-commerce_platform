@@ -83,7 +83,7 @@ const ShopReviews: React.FC = () => {
      }
     await dispatch(
       createReview({
-        shopCode: 'SH00000001',
+        shopCode: shopId || '',
         rating,
         comment
       })

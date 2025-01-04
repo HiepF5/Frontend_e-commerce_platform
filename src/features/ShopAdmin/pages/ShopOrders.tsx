@@ -29,9 +29,10 @@ import {
   DialogContent,
   CardContent,
   Card,
-  DialogActions
+  DialogActions,
+  Avatar
 } from '@mui/material'
-import { Search as SearchIcon } from '@mui/icons-material'
+import { ImageAspectRatio, Search as SearchIcon } from '@mui/icons-material'
 import { useOrders } from '../hooks/useOrders'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -199,6 +200,7 @@ const ShopOrders = (): JSX.Element => {
 
   // Define table headers
   const headCells = [
+    { id: 'checkbox', label: '', sortable: true, align: undefined },
     { id: 'id', label: 'Order ID', sortable: true, align: undefined },
     { id: 'customerName', label: 'Customer', sortable: true, align: undefined },
     { id: 'date', label: 'Date', sortable: true, align: undefined },
@@ -315,7 +317,16 @@ const ShopOrders = (): JSX.Element => {
                     }
                   />
                 </TableCell>
-                <TableCell>{order.id}</TableCell>
+                <TableCell>
+                  <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <Avatar
+                      src={order.shopLogo}
+                      alt={order.shopLogo}
+                      sx={{ width: 32, height: 32 }}
+                    />
+                    {order.orderShopCode}
+                  </div>
+                </TableCell>
                 <TableCell>{order.clientInfo}</TableCell>
                 <TableCell>{order.createdAt}</TableCell>
                 <TableCell>
@@ -528,6 +539,7 @@ const ShopOrders = (): JSX.Element => {
                     <Table size='small'>
                       <TableHead>
                         <TableRow>
+                          <TableCell></TableCell>
                           <TableCell>Sản phẩm</TableCell>
                           <TableCell>Số lượng</TableCell>
                           <TableCell>Giá</TableCell>
@@ -537,6 +549,19 @@ const ShopOrders = (): JSX.Element => {
                       <TableBody>
                         {selectedOrder.itemDtoList.map((item, index) => (
                           <TableRow key={index}>
+                            <TableCell>
+                              <img
+                                src={
+                                  JSON.parse(item.productImage)[0]
+                                
+                                }
+                                alt={item.productTitle}
+                                width={50}
+                                height={50}
+                                
+
+                              />
+                            </TableCell>
                             <TableCell>{item.productTitle}</TableCell>
                             <TableCell>{item.quantity}</TableCell>
                             <TableCell>

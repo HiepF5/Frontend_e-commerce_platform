@@ -83,7 +83,7 @@ const ProductManagement = (): JSX.Element => {
               <TableRow key={product.id}>
                 <TableCell>{product.name}</TableCell>
                 <TableCell>{product.shopName}</TableCell>
-                <TableCell>${product.price}</TableCell>
+                <TableCell>{product.price}</TableCell>
                 <TableCell>
                   <Chip
                     label={product.status}
@@ -149,7 +149,7 @@ const ProductManagement = (): JSX.Element => {
                       Shop: {selectedProduct.shopName}
                     </Typography>
                     <Typography variant="h6" color="primary">
-                      ${selectedProduct.price}
+                      {selectedProduct.price}
                     </Typography>
                     <Typography variant="body2" sx={{ mt: 2 }}>
                       {selectedProduct.description}

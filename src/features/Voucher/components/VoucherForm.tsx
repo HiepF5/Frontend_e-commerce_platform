@@ -61,12 +61,6 @@ const validationSchema = Yup.object({
     .required('Remaining count is required')
     .min(0)
     .max(Yup.ref('voucherCount'), 'Cannot exceed voucher count'),
-  startedAt: Yup.date()
-    .required('Start date is required')
-    .min(new Date(), 'Start date must be in the future'),
-  expiredAt: Yup.date()
-    .required('Expiry date is required')
-    .min(Yup.ref('startedAt'), 'Expiry date must be after start date'),
   status: Yup.string()
   .required('Status is required')
   .oneOf(['ENABLE', 'DISABLE'], 'Status must be ENABLE or DISABLE')

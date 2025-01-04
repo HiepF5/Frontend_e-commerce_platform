@@ -122,7 +122,7 @@ const OrderManagement = (): JSX.Element => {
                     }
                   />
                 </TableCell>
-                <TableCell>${order.total}</TableCell>
+                <TableCell>{order.total}</TableCell>
                 <TableCell>
                   <Button
                     startIcon={<ViewIcon />}

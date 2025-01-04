@@ -60,10 +60,10 @@ const OrderRoutes = (): JSX.Element => {
               path: 'detail/:orderId',
               element: <OrderDetail />
             },
-            {
-              path: 'cancel/:orderId',
-              element: <OrderCancel />
-            },
+            // {
+            //   path: 'cancel/:orderId',
+            //   element: <OrderCancel />
+            // },
             {
               path: 'history',
               element: <OrderHistory />
