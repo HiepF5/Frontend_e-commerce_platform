@@ -10,6 +10,9 @@ export interface IGetReviewByPageRequest {
 export interface IReview {
   [x: string]: any;
   id: number;
+  userCode: string;
+  username: string;
+  userAvatar: string;
   rating: number;
   comment: string;
   isReply: boolean;

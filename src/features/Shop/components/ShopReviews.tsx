@@ -123,7 +123,7 @@ const ShopReviews: React.FC = () => {
   const filteredReviews = selectedStar
     ? { [selectedStar]: reviews[selectedStar] }
     : reviews
-
+    console.log(filteredReviews)
   return (
     <Box p={4}>
       <Box textAlign='center' mb={6}>
@@ -166,10 +166,13 @@ const ShopReviews: React.FC = () => {
                     <Card>
                       <CardContent>
                         <Box display='flex' alignItems='center' mb={1}>
-                          <Avatar src={review.userAvatar} alt={review.user} />
+                          <Avatar
+                            src={review.userAvatar}
+                            alt={review.userName}
+                          />
                           <Box ml={2}>
                             <Typography variant='subtitle1' fontWeight='medium'>
-                              {review.user || 'Anonymous'}
+                              {review.username || 'Anonymous'}
                             </Typography>
                             <Rating
                               value={review.rating}
