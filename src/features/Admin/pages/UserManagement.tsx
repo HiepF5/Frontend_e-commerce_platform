@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import {
   Box,
   Paper,
@@ -11,89 +11,193 @@ import {
   Typography,
   Button,
   Chip,
+  TextField,
+  Stack,
+  CircularProgress,
   Dialog,
   DialogTitle,
   DialogContent,
-  DialogActions,
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
+  DialogContentText,
+  DialogActions
 } from '@mui/material'
-import { Edit as EditIcon, Block as BlockIcon } from '@mui/icons-material'
+import { Edit as EditIcon, Block as BlockIcon, AdminPanelSettings as AdminIcon } from '@mui/icons-material'
+import { useGetUsersMutation, useChangeAdminRoleMutation } from '../api/userApi'
+import { formatDate } from '@shared/utils/formatDate'
+import PaginationComponent from '@shared/components/Pagination/PaginationComponent'
+import { IUser } from '~/types/users.interface'
+import { debounce } from 'lodash'
+import { toast } from 'react-toastify'
 
-interface User {
-  id: number
-  name: string
-  email: string
-  role: string
-  status: string
-}
+const UserManagement = () => {
+  const [page, setPage] = useState(1)
+  const [filters, setFilters] = useState({
+    active: null,
+    userCode: '',
+    email: '',
+    telephone: ''
+  })
+  const [selectedUser, setSelectedUser] = useState<IUser | null>(null)
+  const [openDialog, setOpenDialog] = useState(false)
 
-const UserManagement = (): JSX.Element => {
-  const [open, setOpen] = useState(false)
-  const [users] = useState<User[]>([
-    { id: 1, name: 'John Doe', email: 'john@example.com', role: 'Admin', status: 'Active' },
-    { id: 2, name: 'Jane Smith', email: 'jane@example.com', role: 'Shop Owner', status: 'Active' },
-    { id: 3, name: 'Bob Wilson', email: 'bob@example.com', role: 'Customer', status: 'Blocked' },
-  ])
+  const [getUsers, { data: response, isLoading }] = useGetUsersMutation()
+  const [changeAdminRole, { isLoading: isChangingRole }] = useChangeAdminRoleMutation()
+
+  const debouncedFetch = useCallback(
+    debounce((filters) => {
+      getUsers({
+        ...filters,
+        userCode: filters.userCode || null,
+        email: filters.email || null,
+        telephone: filters.telephone || null,
+        pageNumber: page,
+        pageSize: 20
+      })
+    }, 500),
+    [getUsers, page]
+  )
+
+  useEffect(() => {
+    debouncedFetch(filters)
+    return () => {
+      debouncedFetch.cancel()
+    }
+  }, [filters, page, debouncedFetch])
+
+  const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
+    setPage(value)
+  }
+
+  const handleFilterChange = (field: string, value: string) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value
+    }))
+    setPage(1)
+  }
+
+  const handleChangeAdminRole = async (user: IUser) => {
+    setSelectedUser(user)
+    setOpenDialog(true)
+  }
+
+  const handleConfirmChangeRole = async () => {
+    if (!selectedUser) return
+
+    try {
+      const isManager = selectedUser.list_role.includes('QUANLY')
+      await changeAdminRole({
+        user_code: selectedUser.user_code,
+        is_admin: !isManager
+      }).unwrap()
+
+      toast.success(`Đã ${isManager ? 'gỡ' : 'thêm'} quyền quản lý`)
+      debouncedFetch(filters)
+    } catch (error) {
+      toast.error('Lỗi khi thay đổi quyền quản lý')
+    } finally {
+      setOpenDialog(false)
+      setSelectedUser(null)
+    }
+  }
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" p={4}>
+        <CircularProgress />
+      </Box>
+    )
+  }
 
   return (
-    <Box>
+    <Box p={3}>
       <Typography variant="h5" gutterBottom>
-        User Management
+        Quản lý người dùng
       </Typography>
+
+      <Stack direction="row" spacing={2} mb={3}>
+        <TextField
+          label="Mã người dùng"
+          size="small"
+          value={filters.userCode}
+          onChange={(e) => handleFilterChange('userCode', e.target.value)}
+        />
+        <TextField
+          label="Email"
+          size="small"
+          value={filters.email}
+          onChange={(e) => handleFilterChange('email', e.target.value)}
+        />
+        <TextField
+          label="Số điện thoại"
+          size="small"
+          value={filters.telephone}
+          onChange={(e) => handleFilterChange('telephone', e.target.value)}
+        />
+      </Stack>
 
       <TableContainer component={Paper}>
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell>Name</TableCell>
+              <TableCell>Mã người dùng</TableCell>
+              <TableCell>Họ tên</TableCell>
               <TableCell>Email</TableCell>
-              <TableCell>Role</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Actions</TableCell>
+              <TableCell>Số điện thoại</TableCell>
+              <TableCell>Vai trò</TableCell>
+              <TableCell>Trạng thái</TableCell>
+              <TableCell>Thao tác</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {users.map((user) => (
-              <TableRow key={user.id}>
-                <TableCell>{user.name}</TableCell>
+            {response?.data.data.map((user: IUser) => (
+              <TableRow key={user.user_code}>
+                <TableCell>{user.user_code}</TableCell>
+                <TableCell>{`${user.first_name} ${user.last_name}`}</TableCell>
                 <TableCell>{user.email}</TableCell>
+                <TableCell>{user.phone_number}</TableCell>
                 <TableCell>
-                  <Chip
-                    label={user.role}
-                    color={
-                      user.role === 'Admin'
-                        ? 'primary'
-                        : user.role === 'Shop Owner'
-                        ? 'secondary'
-                        : 'default'
-                    }
-                  />
+                  {user.list_role.map((role) => (
+                    <Chip
+                      key={role}
+                      label={role}
+                      size="small"
+                      color="primary"
+                      sx={{ mr: 1 }}
+                    />
+                  ))}
                 </TableCell>
                 <TableCell>
                   <Chip
-                    label={user.status}
-                    color={user.status === 'Active' ? 'success' : 'error'}
+                    label={user.active ? 'Hoạt động' : 'Khóa'}
+                    color={user.active ? 'success' : 'error'}
                   />
                 </TableCell>
                 <TableCell>
-                  <Button
-                    startIcon={<EditIcon />}
-                    size="small"
-                    onClick={() => setOpen(true)}
-                  >
-                    Edit
-                  </Button>
-                  <Button
-                    startIcon={<BlockIcon />}
-                    size="small"
-                    color={user.status === 'Active' ? 'error' : 'primary'}
-                  >
-                    {user.status === 'Active' ? 'Block' : 'Unblock'}
-                  </Button>
+                  <Stack direction="row" spacing={1}>
+                    <Button
+                      startIcon={<EditIcon />}
+                      size="small"
+                    >
+                      Sửa
+                    </Button>
+                    <Button
+                      startIcon={<BlockIcon />}
+                      size="small"
+                      color={user.active ? 'error' : 'primary'}
+                    >
+                      {user.active ? 'Khóa' : 'Mở khóa'}
+                    </Button>
+                    <Button
+                      startIcon={<AdminIcon />}
+                      size="small"
+                      color="warning"
+                      onClick={() => handleChangeAdminRole(user)}
+                    >
+                      {user.list_role.includes('QUANLY') 
+                        ? 'Gỡ Quản lý' 
+                        : 'Thêm Quản lý'}
+                    </Button>
+                  </Stack>
                 </TableCell>
               </TableRow>
             ))}
@@ -101,36 +205,43 @@ const UserManagement = (): JSX.Element => {
         </Table>
       </TableContainer>
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>Edit User</DialogTitle>
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+      >
+        <DialogTitle>Xác nhận thay đổi quyền</DialogTitle>
         <DialogContent>
-          <Box sx={{ mt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-            <TextField label="Name" fullWidth />
-            <TextField label="Email" fullWidth />
-            <FormControl fullWidth>
-              <InputLabel>Role</InputLabel>
-              <Select label="Role" defaultValue="customer">
-                <MenuItem value="admin">Admin</MenuItem>
-                <MenuItem value="shop_owner">Shop Owner</MenuItem>
-                <MenuItem value="customer">Customer</MenuItem>
-              </Select>
-            </FormControl>
-            <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select label="Status" defaultValue="active">
-                <MenuItem value="active">Active</MenuItem>
-                <MenuItem value="blocked">Blocked</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
+          <DialogContentText>
+            {selectedUser?.list_role.includes('QUANLY')
+              ? `Bạn có chắc muốn gỡ quyền quản lý của người dùng ${selectedUser?.first_name} ${selectedUser?.last_name}?`
+              : `Bạn có chắc muốn thêm quyền quản lý cho người dùng ${selectedUser?.first_name} ${selectedUser?.last_name}?`}
+          </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={() => setOpen(false)}>
-            Save Changes
+          <Button 
+            onClick={() => setOpenDialog(false)}
+            disabled={isChangingRole}
+          >
+            Hủy
+          </Button>
+          <Button 
+            onClick={handleConfirmChangeRole}
+            variant="contained"
+            color="primary"
+            disabled={isChangingRole}
+          >
+            Xác nhận
           </Button>
         </DialogActions>
       </Dialog>
+
+      <Box display="flex" justifyContent="center" mt={2}>
+        <PaginationComponent
+          currentPage={page}
+          totalPage={response?.data.totalPage || 1}
+          onPageChange={handlePageChange}
+        />
+      </Box>
     </Box>
   )
 }

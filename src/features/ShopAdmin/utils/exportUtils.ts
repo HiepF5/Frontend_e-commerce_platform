@@ -38,7 +38,7 @@ export const exportToPDF = async (orders: Order[], fileName: string): Promise<vo
     doc.text(`Customer: ${order.customerName}`, 20, 40)
     doc.text(`Date: ${order.date}`, 20, 50)
     doc.text(`Status: ${order.status}`, 20, 60)
-    doc.text(`Total: $${order.total}`, 20, 70)
+    doc.text(`Total: ${order.total}`, 20, 70)
     doc.text(`Address: ${order.address}`, 20, 80)
     doc.text(`Phone: ${order.phone}`, 20, 90)
 

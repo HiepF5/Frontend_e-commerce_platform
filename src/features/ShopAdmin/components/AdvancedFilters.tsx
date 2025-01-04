@@ -137,8 +137,8 @@ export const AdvancedFilters = ({
               step={100}
             />
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography variant='body2'>${filters.minAmount}</Typography>
-              <Typography variant='body2'>${filters.maxAmount}</Typography>
+              <Typography variant='body2'>{filters.minAmount}</Typography>
+              <Typography variant='body2'>{filters.maxAmount}</Typography>
             </Box>
           </Grid>
           <Grid item xs={12}>

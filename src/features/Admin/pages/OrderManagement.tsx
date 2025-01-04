@@ -22,6 +22,7 @@ import {
   InputAdornment,
 } from '@mui/material'
 import { Search as SearchIcon, Visibility as ViewIcon } from '@mui/icons-material'
+import { formatCurrency } from '@shared/utils/formatPrice'
 
 interface OrderItem {
   productName: string
@@ -76,16 +77,16 @@ const OrderManagement = (): JSX.Element => {
   return (
     <Box>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
-        <Typography variant="h5">Order Management</Typography>
+        <Typography variant='h5'>Order Management</Typography>
         <TextField
-          placeholder="Search orders..."
-          size="small"
+          placeholder='Search orders...'
+          size='small'
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <SearchIcon />
               </InputAdornment>
-            ),
+            )
           }}
         />
       </Box>
@@ -117,8 +118,8 @@ const OrderManagement = (): JSX.Element => {
                       order.status === 'Delivered'
                         ? 'success'
                         : order.status === 'Processing'
-                        ? 'warning'
-                        : 'error'
+                          ? 'warning'
+                          : 'error'
                     }
                   />
                 </TableCell>
@@ -126,7 +127,7 @@ const OrderManagement = (): JSX.Element => {
                 <TableCell>
                   <Button
                     startIcon={<ViewIcon />}
-                    size="small"
+                    size='small'
                     onClick={() => handleView(order)}
                   >
                     View Details
@@ -138,7 +139,12 @@ const OrderManagement = (): JSX.Element => {
         </Table>
       </TableContainer>
 
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="md" fullWidth>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        maxWidth='md'
+        fullWidth
+      >
         <DialogTitle>Order Details</DialogTitle>
         <DialogContent>
           {selectedOrder && (
@@ -146,9 +152,11 @@ const OrderManagement = (): JSX.Element => {
               <Grid item xs={12} md={6}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">Order Information</Typography>
+                    <Typography variant='h6'>Order Information</Typography>
                     <Typography>Order ID: {selectedOrder.id}</Typography>
-                    <Typography>Customer: {selectedOrder.customerName}</Typography>
+                    <Typography>
+                      Customer: {selectedOrder.customerName}
+                    </Typography>
                     <Typography>Shop: {selectedOrder.shopName}</Typography>
                     <Typography>Date: {selectedOrder.date}</Typography>
                     <Typography>Status: {selectedOrder.status}</Typography>
@@ -158,8 +166,8 @@ const OrderManagement = (): JSX.Element => {
               <Grid item xs={12} md={6}>
                 <Card>
                   <CardContent>
-                    <Typography variant="h6">Order Items</Typography>
-                    <Table size="small">
+                    <Typography variant='h6'>Order Items</Typography>
+                    <Table size='small'>
                       <TableHead>
                         <TableRow>
                           <TableCell>Product</TableCell>
@@ -172,12 +180,18 @@ const OrderManagement = (): JSX.Element => {
                           <TableRow key={index}>
                             <TableCell>{item.productName}</TableCell>
                             <TableCell>{item.quantity}</TableCell>
-                            <TableCell>${item.price}</TableCell>
+                            <TableCell>{formatCurrency(item.price)}</TableCell>
                           </TableRow>
                         ))}
                         <TableRow>
-                          <TableCell colSpan={2}><strong>Total</strong></TableCell>
-                          <TableCell><strong>${selectedOrder.total}</strong></TableCell>
+                          <TableCell colSpan={2}>
+                            <strong>Total</strong>
+                          </TableCell>
+                          <TableCell>
+                            <strong>
+                              {formatCurrency(selectedOrder.total)}
+                            </strong>
+                          </TableCell>
                         </TableRow>
                       </TableBody>
                     </Table>
