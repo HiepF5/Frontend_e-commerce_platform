@@ -3,6 +3,8 @@ import { useRoutes } from 'react-router-dom'
 import LayoutPage from '@layouts/LayoutPage'
 import { ThreadsPage } from '../pages/ThreadsPage'
 import ThreadForMePage from '../components/threads-for-me'
+import UserProfilePage from '../pages/UserProfilePage'
+
 const ThreadsRoutes = (): JSX.Element => {
   const routes = [
     {
@@ -16,6 +18,10 @@ const ThreadsRoutes = (): JSX.Element => {
         {
           path: '/me',
           element: <ThreadForMePage />
+        },
+        {
+          path: '/:id',
+          element: <UserProfilePage />
         }
       ]
     }

@@ -44,6 +44,7 @@ export interface IPostResponse {
   post_role: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
   post_avatar: string;
   post_name: string;
+  user_code: string;
   content: string;
   visibility: 'PUBLIC' | 'PRIVATE' | 'FRIENDS';
   media_url: string[] | null;

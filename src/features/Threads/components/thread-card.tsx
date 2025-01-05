@@ -30,6 +30,7 @@ import { useDeleteThreadMutation, useShareThreadMutation } from '../api/threadsA
 import { toast } from 'react-toastify'
 import { CommentSection } from './comment-section'
 import { ReactionBar } from './reaction-bar'
+import { useNavigate } from 'react-router-dom'
 
 interface ThreadCardProps {
   post: IPostResponse
@@ -42,6 +43,7 @@ const ThreadCard = ({ post, onPostUpdated, onClick }: ThreadCardProps) => {
   const [showComments, setShowComments] = useState(false)
   const [deleteThread] = useDeleteThreadMutation()
   const [shareThread] = useShareThreadMutation()
+  const navigate = useNavigate()
 
   // Visibility icon mapping
   const visibilityIcons = {
@@ -101,10 +103,22 @@ const ThreadCard = ({ post, onPostUpdated, onClick }: ThreadCardProps) => {
     setShowComments(!showComments)
   }
 
+  const handleAvatarClick = (e: React.MouseEvent) => {
+    e.stopPropagation() // Prevent card click
+    navigate(`/threads/${post.user_code}`) // Navigate to user profile
+  }
+
   return (
     <Card sx={{ mb: 2 }} onClick={onClick}>
       <CardHeader
-        avatar={<Avatar src={post.post_avatar} alt={post.post_name} />}
+        avatar={
+          <Avatar
+            src={post.post_avatar}
+            alt={post.post_name}
+            onClick={handleAvatarClick}
+            sx={{ cursor: 'pointer' }}
+          />
+        }
         action={
           <Box display='flex' alignItems='center'>
             <Tooltip title={`Visibility: ${post.visibility}`}>

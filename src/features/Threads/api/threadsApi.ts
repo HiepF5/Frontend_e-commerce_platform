@@ -58,6 +58,22 @@ export const threadsApi = createApi({
       }),
       providesTags: ['Posts']
     }),
+    getUserPosts: builder.query<
+      IBaseResponse<PaginationResponse<IPostResponse>>,
+      GetUserPostsRequest
+    >({
+      query: ({ hash_tag, user_code_other, page_number, page_size }) => ({
+        url: API_ENDPOINTS_THREAD.ApiGetUserListThread,
+        method: 'GET',
+        params: {
+          hash_tag,
+          user_code_other,
+          page_number,
+          page_size
+        }
+      }),
+      providesTags: ['Posts']
+    }),
 
     // Tạo bài viết mới
     createThread: builder.mutation<
@@ -184,6 +200,7 @@ export const threadsApi = createApi({
 export const {
   useGetNewPostsQuery,
   useGetMyPostsQuery,
+  useGetUserPostsQuery,
   useCreateThreadMutation,
   useUpdateThreadMutation,
   useDeleteThreadMutation,
