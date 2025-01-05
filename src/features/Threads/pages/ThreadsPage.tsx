@@ -1,4 +1,4 @@
-import ThreadPage from '../components/thread-page'
+import ThreadPage from "../components/thread-page"
 
 export const ThreadsPage = () => {
   return (

@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { Container, Box, CircularProgress, Typography } from '@mui/material'
 import { LeftSidebar } from './left-sidebar'
 import { RightSidebar } from './right-sidebar'
 import { PostModal } from './post-modal'
 import { SearchBar } from './search-bar'
 import { ICreatePostJsonRequest, IPostResponse } from '../types/threads.interface'
-import { useCreateThreadMutation, useGetNewPostsQuery, useUpdateThreadMutation } from '../api/threadsApi'
+import { useCreateThreadMutation, useGetNewPostsQuery } from '../api/threadsApi'
 import { PostDialog } from './post-dialog'
 import ThreadCard from './thread-card'
 import { toast } from 'react-toastify'
@@ -16,51 +16,63 @@ export default function ThreadPage() {
   const [hashTag, setHashTag] = useState<string | null>(null)
   const [selectedPost, setSelectedPost] = useState<IPostResponse | null>(null)
   const [isPostDialogOpen, setIsPostDialogOpen] = useState(false)
-  const [viewedPosts, setViewedPosts] = useState<IPostResponse[]>([])
+  const [posts, setPosts] = useState<IPostResponse[]>([])
+  const [hasMore, setHasMore] = useState(true)
+  const [viewedPosts, setViewedPosts] = useState<IPostResponse[]>(() => {
+    const saved = localStorage.getItem('viewedPosts')
+    return saved ? JSON.parse(saved) : []
+  })
+
+  const observer = useRef<IntersectionObserver>()
+  const lastPostElementRef = useCallback(
+    (node: HTMLDivElement) => {
+      if (!hasMore) return
+      if (observer.current) observer.current.disconnect()
+      observer.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prevPage) => prevPage + 1)
+        }
+      })
+      if (node) observer.current.observe(node)
+    },
+    [hasMore]
+  )
+
   const {
     data: response,
     isLoading,
-    error,
     refetch
-  } = useGetNewPostsQuery({ hashTag, page_number: page, page_size: 5 })
-  const [
-    createThread,
-    { isLoading: isCreatingThread }
-  ] = useCreateThreadMutation()
-  const [updateThread, { isLoading: isUpdatingThread }] =
-    useUpdateThreadMutation()
+  } = useGetNewPostsQuery({ hashTag, page_number: page, page_size: 7 })
 
-  const fetchPosts = () => {
-    try {
-      const response = useGetNewPostsQuery({
-        hashTag,
-        page_number: page,
-        page_size: 5
-      })
-      // Handle the response if needed
-    } catch (error) {
-      toast.error('Có lỗi khi tải bài viết')
+  const [createThread] = useCreateThreadMutation()
+
+  useEffect(() => {
+    if (response?.data.data) {
+      if (page === 1) {
+        setPosts(response.data.data)
+      } else {
+        setPosts((prev) => [...prev, ...response.data.data])
+      }
+      setHasMore(page < (response.data.totalPage || 1))
     }
-  }
+  }, [response, page])
 
-  useEffect(
-    () => {
-      refetch()
-    },
-    [page, hashTag, refetch]
-    
-  )
+  useEffect(() => {
+    localStorage.setItem('viewedPosts', JSON.stringify(viewedPosts))
+  }, [viewedPosts])
 
   const handlePostClick = (post: IPostResponse) => {
     setSelectedPost(post)
-    if (!viewedPosts.some((p) => p.post_id === post.post_id)) {
-      setViewedPosts([...viewedPosts, post])
-    }
+    setViewedPosts((prevPosts) => {
+      const filteredPosts = prevPosts.filter((p) => p.post_id !== post.post_id)
+      return [post, ...filteredPosts]
+    })
   }
 
   const handleSearch = (searchTerm: string) => {
     setHashTag(searchTerm || null)
     setPage(1)
+    setPosts([])
   }
 
   const handlePostCreated = async (post: ICreatePostJsonRequest) => {
@@ -73,20 +85,21 @@ export default function ThreadPage() {
       if (response && response.code === 403) {
         toast.error(response.message)
       }
-      refetch() 
+      refetch()
     } catch (error) {
       toast.error('Failed to create post')
     }
   }
+
   const user = JSON.parse(localStorage.getItem('user') || '{}')
 
   if (isLoading && page === 1) {
     return (
       <Box
-        display='flex'
-        justifyContent='center'
-        alignItems='center'
-        minHeight='100vh'
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        minHeight="100vh"
       >
         <CircularProgress />
       </Box>
@@ -94,10 +107,10 @@ export default function ThreadPage() {
   }
 
   return (
-    <Box display='flex'>
+    <Box display="flex">
       <LeftSidebar />
-      
-      <Container maxWidth='md' sx={{ py: 4, flex: 1 }}>
+
+      <Container maxWidth="md" sx={{ py: 4, flex: 1 }}>
         <Box mb={3}>
           <SearchBar onSearch={handleSearch} />
           <PostTrigger
@@ -114,62 +127,45 @@ export default function ThreadPage() {
           />
         </Box>
 
-        <SearchBar onSearch={handleSearch} />
-
-        {response?.data.data.length === 0 ? (
-          <Typography textAlign='center' color='text.secondary'>
+        {posts.length === 0 && !isLoading ? (
+          <Typography textAlign="center" color="text.secondary">
             Không có bài viết nào
           </Typography>
         ) : (
-          response?.data.data.map((post: IPostResponse) => (
-            <ThreadCard
-              key={post.post_id}
-              post={post}
-              onPostUpdated={refetch}
-              onClick={() => handlePostClick(post)}
-            />
-          ))
+          posts.map((post, index) => {
+            if (posts.length === index + 1) {
+              return (
+                <Box ref={lastPostElementRef} key={post.post_id}>
+                  <ThreadCard
+                    post={post}
+                    onPostUpdated={refetch}
+                    onClick={() => handlePostClick(post)}
+                  />
+                </Box>
+              )
+            } else {
+              return (
+                <ThreadCard
+                  key={post.post_id}
+                  post={post}
+                  onPostUpdated={refetch}
+                  onClick={() => handlePostClick(post)}
+                />
+              )
+            }
+          })
         )}
 
-        {isLoading && page > 1 && (
-          <Box display='flex' justifyContent='center' my={2}>
+        {isLoading && (
+          <Box display="flex" justifyContent="center" my={2}>
             <CircularProgress />
-          </Box>
-        )}
-
-        {response?.data.totalPage && response.data.totalPage > page && (
-          <Box display='flex' justifyContent='center' mt={3}>
-            <button
-              onClick={() => setPage((prev) => prev + 1)}
-              disabled={isLoading}
-              style={{
-                padding: '8px 16px',
-                background: '#1976d2',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
-            >
-              Xem thêm
-            </button>
           </Box>
         )}
       </Container>
 
       <RightSidebar
-        trendingPosts={
-          response?.data.data.slice(0, 3).map((post) => ({
-            ...post,
-            id: post.post_id.toString(),
-            reactions: Array.isArray(post.like_count) ? post.like_count : []
-          })) || []
-        }
-        viewedPosts={viewedPosts.slice(0, 3).map((post) => ({
-          ...post,
-          id: post.post_id.toString(),
-          reactions: Array.isArray(post.like_count) ? post.like_count : []
-        }))}
+        trendingPosts={posts.slice(0, 3)}
+        viewedPosts={viewedPosts}
         onPostClick={handlePostClick}
       />
 
@@ -177,7 +173,7 @@ export default function ThreadPage() {
         open={!!selectedPost}
         onClose={() => setSelectedPost(null)}
         post={selectedPost}
-        onSuccess={fetchPosts}
+        onSuccess={refetch}
       />
     </Box>
   )
