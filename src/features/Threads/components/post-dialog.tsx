@@ -8,7 +8,7 @@ import {
 } from '@mui/material'
 import { Close } from '@mui/icons-material'
 import PostForm from './post-form'
-import { ICreatePostJsonRequest, Post } from '../types/threads.interface'
+import { ICreatePostJsonRequest } from '../types/threads.interface'
 
 interface PostDialogProps {
   open: boolean

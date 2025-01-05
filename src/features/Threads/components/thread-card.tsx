@@ -25,7 +25,7 @@ import {
   People as PeopleIcon,
   LocationOn
 } from '@mui/icons-material'
-import { IPostResponse } from '../types/threads.interface'
+import { IPostResponse, ReactionType } from '../types/threads.interface'
 import { useDeleteThreadMutation, useShareThreadMutation } from '../api/threadsApi'
 import { toast } from 'react-toastify'
 import { CommentSection } from './comment-section'
@@ -288,11 +288,8 @@ const ThreadCard = forwardRef<HTMLDivElement, ThreadCardProps>(
             postId={post.post_id}
             likeCount={post.like_count}
             isLiked={post.is_my_like}
+            myReaction={post.my_reaction as ReactionType}
             onReactionChange={onPostUpdated}
-            reactions={[]}
-            onReact={function (type, e) {
-              throw new Error('Function not implemented.')
-            }}
           />
 
           <IconButton onClick={handleCommentClick}>

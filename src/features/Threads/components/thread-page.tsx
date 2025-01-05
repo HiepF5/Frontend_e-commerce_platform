@@ -42,7 +42,7 @@ export default function ThreadPage() {
     data: response,
     isLoading,
     refetch
-  } = useGetNewPostsQuery({ hashTag, page_number: page, page_size: 7 })
+  } = useGetNewPostsQuery({ hashTag, page_number: page, page_size: 10 })
 
   const [createThread] = useCreateThreadMutation()
 

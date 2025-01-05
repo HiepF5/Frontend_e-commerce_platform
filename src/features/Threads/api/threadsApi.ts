@@ -9,7 +9,8 @@ import {
   ISharePostRequest,
   ICreatePostJsonRequest,
   ICommentResponse,
-  ICommentRequest
+  ICommentRequest,
+  ReactionType
 } from '../types/threads.interface'
 import { API_ENDPOINTS_THREAD } from '@config/apiConfig'
 
@@ -48,13 +49,13 @@ export const threadsApi = createApi({
       GetMyPostsRequest
     >({
       query: ({ hash_tag, page_number, page_size }) => ({
-        url: API_ENDPOINTS_THREAD.ApiGetMyListThread,
-        method: 'GET',
-        params: {
-          hash_tag,
-          page_number,
-          page_size
-        }
+      url: API_ENDPOINTS_THREAD.ApiGetMyListThread,
+      method: 'GET',
+      params: {
+        hash_tag,
+        page_number,
+        page_size
+      }
       }),
       providesTags: ['Posts']
     }),
@@ -63,16 +64,35 @@ export const threadsApi = createApi({
       GetUserPostsRequest
     >({
       query: ({ hash_tag, user_code_other, page_number, page_size }) => ({
-        url: API_ENDPOINTS_THREAD.ApiGetUserListThread,
-        method: 'GET',
-        params: {
-          hash_tag,
-          user_code_other,
-          page_number,
-          page_size
-        }
+      url: API_ENDPOINTS_THREAD.ApiGetUserListThread,
+      method: 'GET',
+      params: {
+        hash_tag,
+        user_code_other,
+        page_number,
+        page_size
+      }
       }),
       providesTags: ['Posts']
+    }),
+
+    userReactions: builder.mutation<
+      IBaseResponse<string>,
+      { post_id: number; reaction: ReactionType }
+    >({
+      query: ({ post_id, reaction }) => {
+        const formData = new FormData()
+        console.log('post_id', post_id)
+        console.log('reaction', reaction)
+        formData.append('post_id', post_id.toString())
+        formData.append('reaction', reaction.toString())
+        return {
+          url: API_ENDPOINTS_THREAD.ApiReactionThread,
+          method: 'POST',
+          data: formData
+        }
+      },
+      invalidatesTags: (result, error, { post_id }) => [{ type: 'Posts', id: post_id }]
     }),
 
     // Tạo bài viết mới
@@ -201,6 +221,7 @@ export const {
   useGetNewPostsQuery,
   useGetMyPostsQuery,
   useGetUserPostsQuery,
+  useUserReactionsMutation,
   useCreateThreadMutation,
   useUpdateThreadMutation,
   useDeleteThreadMutation,

@@ -71,6 +71,7 @@ export const API_ENDPOINTS_THREAD = {
   ApiUserReactionThread: 'all/post/reaction',
   ApiAdminActiveThread: 'admin/post/active',
   ApiGetListThread: 'guest/post/new',
+  ApiReactionThread: 'all/post/reaction',
 }
 export const API_ENDPOINTS_THREAD_COMMENT = {
   ApiGetCommentThread: 'guest/post/get-comment',

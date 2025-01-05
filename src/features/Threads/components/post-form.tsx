@@ -23,7 +23,7 @@ import {
   LocationOn,
   EmojiEmotions
 } from '@mui/icons-material'
-import { ICreatePostJsonRequest, Post } from '../types/threads.interface'
+import { ICreatePostJsonRequest } from '../types/threads.interface'
 import SelectAddress from '@shared/components/SelectAddress/SelectAddress'
 import { useAppSelector } from '@store/hook'
 

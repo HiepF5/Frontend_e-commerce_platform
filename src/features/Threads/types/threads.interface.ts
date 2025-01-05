@@ -1,7 +1,18 @@
 export interface Reaction {
-  type: 'like' | 'love' | 'haha' | 'wow' | 'sad' | 'angry';
+  type: ReactionType;
   count: number;
 }
+
+export enum ReactionType {
+  NONE = "NONE",
+  LIKE = "LIKE",
+  LOVE = "LOVE",
+  HAHA = "HAHA",
+  WOW = "WOW",
+  SAD = "SAD",
+  ANGRY = "ANGRY",
+}
+
 
 export interface Comment {
   id: string;
@@ -12,20 +23,6 @@ export interface Comment {
   replies: Comment[];
 }
 
-export interface Post {
-  id: string;
-  postRole: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
-  visibility: 'PUBLIC' | 'PRIVATE' | 'FRIENDS';
-  content: string;
-  location?: string;
-  hashTag: string[];
-  author: string;
-  avatar: string;
-  timestamp: string;
-  reactions: Reaction[];
-  comments: Comment[];
-  image?: string;
-}
 export interface ICreatePostJsonRequest {
   post_json: ICreatePostJson;
   files: File[] | null;
