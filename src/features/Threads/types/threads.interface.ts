@@ -13,16 +13,6 @@ export enum ReactionType {
   ANGRY = "ANGRY",
 }
 
-
-export interface Comment {
-  id: string;
-  author: string;
-  avatar: string;
-  content: string;
-  timestamp: string;
-  replies: Comment[];
-}
-
 export interface ICreatePostJsonRequest {
   post_json: ICreatePostJson;
   files: File[] | null;
@@ -107,11 +97,17 @@ export interface ICommentResponse {
   mediaUrl: string | null;
   lever: number;
   createdAt: string;
-  children: ICommentResponse[] | null;
+  childrenCount: number;
+  children: null;
 }
 
 export interface ICommentRequest {
-  post_id: number;
+  comment_json: ICreateCommentJson;
+  file: File | null;
+}
+export interface ICreateCommentJson {
+  postId: number;
+  parentId: number | null;
+  role: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
   content: string;
-  parent_id?: number;
 }

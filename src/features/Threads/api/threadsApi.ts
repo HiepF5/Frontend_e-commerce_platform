@@ -170,12 +170,12 @@ export const threadsApi = createApi({
     // Lấy danh sách bình luận
     getComments: builder.query<
       IBaseResponse<ICommentResponse[]>,
-      { post_id: number; page_number: number; page_size?: number }
+      {comment_id?:number, post_id: number; page_number: number; }
     >({
-      query: ({ post_id, page_number, page_size = 10 }) => ({
+      query: ({ post_id, page_number, comment_id }) => ({
         url: '/guest/post/get-comment',
         method: 'GET',
-        params: { post_id, page_number, page_size }
+        params: { post_id, page_number, comment_id }
       }),
       providesTags: ['Comments']
     }),
@@ -209,7 +209,7 @@ export const threadsApi = createApi({
     // Xóa bình luận
     deleteComment: builder.mutation<IBaseResponse<null>, number>({
       query: (comment_id) => ({
-        url: `/all/post/update-comment/${comment_id}`,
+        url: `/all/post/delete-comment/${comment_id}`,
         method: 'DELETE'
       }),
       invalidatesTags: ['Comments']
