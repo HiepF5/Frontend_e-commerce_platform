@@ -96,7 +96,7 @@ export default function ThreadPage() {
   return (
     <Box display='flex'>
       <LeftSidebar />
-
+      
       <Container maxWidth='md' sx={{ py: 4, flex: 1 }}>
         <Box mb={3}>
           <SearchBar onSearch={handleSearch} />
@@ -113,6 +113,8 @@ export default function ThreadPage() {
             onSubmit={(post) => handlePostCreated(post)}
           />
         </Box>
+
+        <SearchBar onSearch={handleSearch} />
 
         {response?.data.data.length === 0 ? (
           <Typography textAlign='center' color='text.secondary'>

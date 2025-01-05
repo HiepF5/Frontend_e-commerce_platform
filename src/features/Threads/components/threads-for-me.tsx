@@ -1,139 +1,190 @@
 import { useState, useEffect } from 'react'
-import { Container, Box, Fab, IconButton, Badge } from '@mui/material'
-import {
-  Add,
-  Close,
-  Notifications as NotificationsIcon
-} from '@mui/icons-material'
+import { Container, Box, CircularProgress, Typography } from '@mui/material'
 import { LeftSidebar } from './left-sidebar'
 import { RightSidebar } from './right-sidebar'
 import { PostModal } from './post-modal'
 import { UserProfile } from './user-profile'
-import { Notifications } from './notifications'
 import { SearchBar } from './search-bar'
-import { Post } from '../types/threads.interface'
-import PostForm from './post-form'
+import { ICreatePostJsonRequest, IPostResponse } from '../types/threads.interface'
+import { useCreateThreadMutation, useGetMyPostsQuery } from '../api/threadsApi'
+import { PostDialog } from './post-dialog'
+import ThreadCard from './thread-card'
+import { toast } from 'react-toastify'
+import { PostTrigger } from './post-trigger'
 
 export default function ThreadForMePage() {
-  const [posts, setPosts] = useState<Post[]>([])
-  const [selectedPost, setSelectedPost] = useState<Post | null>(null)
-  const [isCreatePostOpen, setIsCreatePostOpen] = useState(false)
-  const [viewedPosts, setViewedPosts] = useState<Post[]>([])
-  const [isNotificationsOpen, setIsNotificationsOpen] = useState(false)
-  const [notifications, setNotifications] = useState<any[]>([])
+  const [page, setPage] = useState(1)
+  const [hashTag, setHashTag] = useState<string | null>(null)
+  const [selectedPost, setSelectedPost] = useState<IPostResponse | null>(null)
+  const [isPostDialogOpen, setIsPostDialogOpen] = useState(false)
+  const [viewedPosts, setViewedPosts] = useState<IPostResponse[]>([])
+
+  // Sử dụng useGetMyPostsQuery thay vì useGetNewPostsQuery
+  const {
+    data: response,
+    isLoading,
+    error,
+    refetch
+  } = useGetMyPostsQuery({ 
+    hash_tag: hashTag,
+    page_number: page, 
+    page_size: 5 
+  })
+
+  const [createThread] = useCreateThreadMutation()
 
   useEffect(() => {
-    // Simulating initial post fetch
-    fetchMorePosts()
-  }, [])
+    refetch()
+  }, [page, hashTag, refetch])
 
-  const fetchMorePosts = () => {
-    // In a real application, this would be an API call
-    const newPosts: Post[] = Array(10)
-      .fill(null)
-      .map((_, index) => ({
-        id: Date.now().toString() + index,
-        author: `User ${index}`,
-        avatar: '/placeholder.svg',
-        content: `This is post number ${posts.length + index + 1}`,
-        image: index % 2 === 0 ? '/placeholder.svg' : undefined,
-        timestamp: 'Just now',
-        reactions: [
-          { type: 'like', count: Math.floor(Math.random() * 10) },
-          { type: 'love', count: Math.floor(Math.random() * 5) },
-          { type: 'haha', count: Math.floor(Math.random() * 3) },
-          { type: 'wow', count: Math.floor(Math.random() * 2) },
-          { type: 'sad', count: Math.floor(Math.random() * 2) },
-          { type: 'angry', count: Math.floor(Math.random() * 1) }
-        ],
-        comments: [],
-        postRole: 'KHACHHANG',
-        visibility: 'PUBLIC',
-        location: '',
-        hashTag: [`tag${index + 1}`]
-      }))
-
-    setPosts([...posts, ...newPosts])
-  }
-
-  const handlePostClick = (post: Post) => {
+  const handlePostClick = (post: IPostResponse) => {
     setSelectedPost(post)
-    if (!viewedPosts.some((p) => p.id === post.id)) {
+    if (!viewedPosts.some((p) => p.post_id === post.post_id)) {
       setViewedPosts([...viewedPosts, post])
     }
+  }
+
+  const handleSearch = (searchTerm: string) => {
+    setHashTag(searchTerm || null)
+    setPage(1)
+  }
+
+  const handlePostCreated = async (post: ICreatePostJsonRequest) => {
+    setIsPostDialogOpen(false)
+    try {
+      const response = await createThread(post).unwrap()
+      if (response && response.code === 200) {
+        toast.success('Bài viết đã được tạo')
+      }
+      if (response && response.code === 403) {
+        toast.error(response.message)
+      }
+      refetch()
+    } catch (error) {
+      toast.error('Failed to create post')
+    }
+  }
+
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
+
+  // Format posts data for UserProfile
+  const myPosts = response?.data.data || []
+  const userStats = {
+    postsCount: response?.data.totalAmount || 0,
+    followers: user.followers || 0,
+    following: user.following || 0
+  }
+
+  if (isLoading && page === 1) {
+    return (
+      <Box
+        display='flex'
+        justifyContent='center'
+        alignItems='center'
+        minHeight='100vh'
+      >
+        <CircularProgress />
+      </Box>
+    )
   }
 
   return (
     <Box display='flex'>
       <LeftSidebar />
-      <Container
-        maxWidth='md'
-        sx={{ py: 4, flex: 1, overflowY: 'auto', height: '100vh' }}
-      >
-        <SearchBar />
-        <UserProfile
-          username='Current User'
-          avatar='/placeholder.svg'
-          bio='This is a sample bio for the current user.'
-          followers={100}
-          following={50}
-          posts={posts.filter((post) => post.author === 'Current User')}
-        />
+
+      <Container maxWidth='md' sx={{ py: 4, flex: 1 }}>
+        <Box mb={3}>
+          <SearchBar onSearch={handleSearch} />
+          
+          <Box mb={4}>
+            <UserProfile
+              username={user.full_name || 'User'}
+              avatar={user.image_url || '/placeholder.svg'}
+              bio={user.bio || 'No bio yet'}
+              followers={userStats.followers}
+              following={userStats.following}
+              posts={myPosts}
+              postsCount={userStats.postsCount}
+            />
+          </Box>
+
+          <PostTrigger
+            onOpenPostForm={() => setIsPostDialogOpen(true)}
+            currentUser={{
+              name: user.full_name,
+              avatar: user.image_url
+            }}
+          />
+          <PostDialog
+            open={isPostDialogOpen}
+            onClose={() => setIsPostDialogOpen(false)}
+            onSubmit={(post) => handlePostCreated(post)}
+          />
+        </Box>
+
+        {response?.data.data.length === 0 ? (
+          <Typography textAlign='center' color='text.secondary'>
+            Bạn chưa có bài viết nào
+          </Typography>
+        ) : (
+          response?.data.data.map((post: IPostResponse) => (
+            <ThreadCard
+              key={post.post_id}
+              post={post}
+              onPostUpdated={refetch}
+              onClick={() => handlePostClick(post)}
+            />
+          ))
+        )}
+
+        {isLoading && page > 1 && (
+          <Box display='flex' justifyContent='center' my={2}>
+            <CircularProgress />
+          </Box>
+        )}
+
+        {response?.data.totalPage && response.data.totalPage > page && (
+          <Box display='flex' justifyContent='center' mt={3}>
+            <button
+              onClick={() => setPage((prev) => prev + 1)}
+              disabled={isLoading}
+              style={{
+                padding: '8px 16px',
+                background: '#1976d2',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                cursor: 'pointer'
+              }}
+            >
+              Xem thêm
+            </button>
+          </Box>
+        )}
       </Container>
+
       <RightSidebar
-        trendingPosts={posts.slice(0, 3)}
-        viewedPosts={viewedPosts.slice(0, 3)}
+        trendingPosts={
+          response?.data.data.slice(0, 3).map((post) => ({
+            ...post,
+            id: post.post_id.toString(),
+            reactions: Array.isArray(post.like_count) ? post.like_count : []
+          })) || []
+        }
+        viewedPosts={viewedPosts.slice(0, 3).map((post) => ({
+          ...post,
+          id: post.post_id.toString(),
+          reactions: Array.isArray(post.like_count) ? post.like_count : []
+        }))}
         onPostClick={handlePostClick}
       />
-      <PostModal post={selectedPost} onClose={() => setSelectedPost(null)} />
-      <Fab
-        color='primary'
-        aria-label='add'
-        sx={{ position: 'fixed', bottom: 16, right: 16 }}
-        onClick={() => setIsCreatePostOpen(!isCreatePostOpen)}
-      >
-        {isCreatePostOpen ? <Close /> : <Add />}
-      </Fab>
-      <IconButton
-        color='primary'
-        aria-label='notifications'
-        sx={{ position: 'fixed', bottom: 16, left: 16 }}
-        onClick={() => setIsNotificationsOpen(true)}
-      >
-        <Badge badgeContent={notifications.length} color='error'>
-          <NotificationsIcon />
-        </Badge>
-      </IconButton>
-      {isCreatePostOpen && (
-        <PostForm
-          onSubmit={(newPost) => {
-            const post: Post = {
-              id: Date.now().toString(),
-              author: 'Current User',
-              avatar: '/placeholder.svg',
-              timestamp: 'Just now',
-              comments: [],
-              ...newPost,
-              reactions: []
-            }
-            setPosts([post, ...posts])
-            setIsCreatePostOpen(false)
-            setNotifications([
-              {
-                id: Date.now(),
-                message: 'New post created',
-                timestamp: new Date().toISOString()
-              },
-              ...notifications
-            ])
-          }}
-          currentUser={{
-            name: 'Current User',
-            avatar: '/placeholder.svg'
-          }}
-        />
-      )}
-      {isNotificationsOpen && <Notifications notifications={notifications} />}
+
+      <PostModal
+        open={!!selectedPost}
+        onClose={() => setSelectedPost(null)}
+        post={selectedPost}
+        onSuccess={refetch}
+      />
     </Box>
   )
 }

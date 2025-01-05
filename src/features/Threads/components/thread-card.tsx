@@ -63,7 +63,12 @@ const ThreadCard = ({ post, onPostUpdated, onClick }: ThreadCardProps) => {
     e.stopPropagation()
     
     try {
-      await deleteThread(post.post_id.toString()).unwrap()
+      const response = await deleteThread(post.post_id.toString()).unwrap()
+      if (response.code === 403) {
+        toast.error('Bạn không có quyền xóa bài viết này')
+        return
+      }
+      
       toast.success('Xóa bài viết thành công')
       onPostUpdated()
     } catch (error) {

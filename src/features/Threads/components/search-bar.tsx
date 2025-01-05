@@ -1,65 +1,86 @@
-import React, { useState } from 'react';
-import { TextField, InputAdornment, List, ListItem, ListItemText, ListItemAvatar, Avatar } from '@mui/material';
-import { Search as SearchIcon } from '@mui/icons-material';
-
-interface SearchResult {
-  id: string;
-  type: 'user' | 'post';
-  title: string;
-  subtitle: string;
-  avatar?: string;
-}
+import { useState } from 'react'
+import {
+  Box,
+  InputBase,
+  IconButton,
+  Paper,
+  Popper,
+  List,
+  ListItem,
+  ListItemText,
+  ClickAwayListener
+} from '@mui/material'
+import { Search as SearchIcon, Close as CloseIcon } from '@mui/icons-material'
 
 interface SearchBarProps {
-  onSearch: (searchTerm: string) => void
+  onSearch: (term: string) => void
 }
-export function SearchBar(props: SearchBarProps) {
-  const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    // In a real application, this would make an API call to get search results
-    // For now, we'll just simulate some results
-    const searchTerm = event.target.value;
-    if (searchTerm) {
-      setSearchResults([
-        { id: '1', type: 'user', title: 'John Doe', subtitle: '@johndoe', avatar: '/placeholder.svg' },
-        { id: '2', type: 'post', title: 'Hello world!', subtitle: 'Posted by @janedoe' },
-      ]);
-    } else {
-      setSearchResults([]);
-    }
-  };
+export function SearchBar({ onSearch }: SearchBarProps) {
+  const [searchTerm, setSearchTerm] = useState('')
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+
+  const handleSearch = (event: React.FormEvent) => {
+    event.preventDefault()
+    onSearch(searchTerm)
+  }
+
+  const handleClear = () => {
+    setSearchTerm('')
+    onSearch('')
+  }
 
   return (
-    <div>
-      <TextField
-        fullWidth
-        variant="outlined"
-        placeholder="Search..."
-        onChange={handleSearch}
-        InputProps={{
-          startAdornment: (
-            <InputAdornment position="start">
-              <SearchIcon />
-            </InputAdornment>
-          ),
+    <Box
+      component='form'
+      onSubmit={handleSearch}
+      sx={{
+        position: 'fixed',
+        top: 11,
+        left: '50%',
+        transform: 'translateX(-50%)',
+        zIndex: 1100,
+        width: 'auto',
+        maxWidth: 600
+      }}
+    >
+      <Paper
+        elevation={2}
+        sx={{
+          p: '2px 2px',
+          display: 'flex',
+          alignItems: 'center',
+          width: 370,
+          height: 35,
+          borderRadius: 50,
+          bgcolor: 'background.paper',
+          '&:hover': {
+            boxShadow: 3
+          }
         }}
-      />
-      {searchResults.length > 0 && (
-        <List>
-          {searchResults.map((result) => (
-            <ListItem key={result.id}>
-              {result.type === 'user' && result.avatar && (
-                <ListItemAvatar>
-                  <Avatar src={result.avatar} />
-                </ListItemAvatar>
-              )}
-              <ListItemText primary={result.title} secondary={result.subtitle} />
-            </ListItem>
-          ))}
-        </List>
-      )}
-    </div>
-  );
+      >
+        <IconButton type='submit' sx={{ p: '10px' }}>
+          <SearchIcon />
+        </IconButton>
+        <InputBase
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          placeholder='Tìm kiếm bài viết...'
+          sx={{
+            ml: 1,
+            flex: 1,
+            '& input': {
+              padding: '4px 0'
+            }
+          }}
+        />
+        {searchTerm && (
+          <IconButton sx={{ p: '10px' }} onClick={handleClear}>
+            <CloseIcon />
+          </IconButton>
+        )}
+      </Paper>
+    </Box>
+  )
 }
 

@@ -60,7 +60,7 @@ const Navbar = () => {
             className='flex justify-between
            items-center gap-4'
           >
-            <div className='relative group hidden sm:block'>
+            {/* <div className='relative group hidden sm:block'>
               <input
                 type='text'
                 placeholder='search'
@@ -79,7 +79,7 @@ const Navbar = () => {
               absolute top-1/2 -translate-y-1/2 right-3
               '
               />
-            </div>
+            </div> */}
             {/* order button */}
             <button
               className='bg-gradient-to-r from-orange-400

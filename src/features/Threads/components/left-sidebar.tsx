@@ -28,7 +28,6 @@ export function LeftSidebar() {
       elevation={3}
       sx={{
         width: 280,
-        height: '100vh',
         borderRadius: 4,
         overflow: 'hidden',
         display: 'flex',
