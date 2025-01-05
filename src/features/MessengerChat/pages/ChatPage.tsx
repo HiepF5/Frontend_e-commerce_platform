@@ -5,7 +5,7 @@ import Chat from '../components/Chat/Chat'
 
 const ChatPage: React.FC = () => {
   return (
-    <Box sx={{ height: '100vh', display: 'flex' }}>
+    <Box sx={{ height: '87vh', display: 'flex' }}>
       <Box sx={{ width: 320, borderRight: 1, borderColor: 'divider' }}>
         <ChatList />
       </Box>

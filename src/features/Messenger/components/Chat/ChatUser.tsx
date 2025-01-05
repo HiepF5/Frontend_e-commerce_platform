@@ -201,21 +201,19 @@ const ChatUser: React.FC = () => {
       setSending(false)
     }
   }
-    const [messageMenuAnchor, setMessageMenuAnchor] = useState<null | HTMLElement>(
-      null
-    )
-    const [selectedMessage, setSelectedMessage] = useState<any>(null)
-      const seenMessage = useCallback(() => {
-        if (!connected) {
-          // console.error('Cannot mark as seen. WebSocket is not connected.')
-          return
-        }
+  const [messageMenuAnchor, setMessageMenuAnchor] =
+    useState<null | HTMLElement>(null)
+  const [selectedMessage, setSelectedMessage] = useState<any>(null)
+  const seenMessage = useCallback(() => {
+    if (!connected) {
+      // console.error('Cannot mark as seen. WebSocket is not connected.')
+      return
+    }
 
-        if (!currentChat) {
-          // console.error('Cannot mark as seen. No current chat available.')
-          return
-        }
-
+    if (!currentChat) {
+      // console.error('Cannot mark as seen. No current chat available.')
+      return
+    }
 
     const message = {
       body: {
@@ -244,9 +242,9 @@ const ChatUser: React.FC = () => {
     }
     seenMessage()
   }, [chatStory, seenMessage])
-const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(
-  null
-)
+  const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(
+    null
+  )
   if (isLoading) return <CircularProgress />
   if (fetchError)
     return <Typography color='error'>Error loading chat story</Typography>
@@ -259,7 +257,6 @@ const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(
     }
     reader.readAsDataURL(file)
   }
-  
 
   const handleMessageMenu = (
     event: React.MouseEvent<HTMLElement>,
@@ -269,7 +266,6 @@ const [hoveredMessageIndex, setHoveredMessageIndex] = useState<number | null>(
     setSelectedMessage(message)
     setMessageMenuAnchor(event.currentTarget)
   }
-  
 
   return (
     <Box

@@ -19,7 +19,7 @@ export function LeftSidebar() {
     { icon: <Home />, text: 'Trang chủ', path: '/threads/home' },
     { icon: <Search />, text: 'Khám phá', path: '/explore' },
     { icon: <Notifications />, text: 'Thông báo', path: '/notifications' },
-    { icon: <Mail />, text: 'Tin nhắn', path: '/messages' },
+    { icon: <Mail />, text: 'Tin nhắn', path: '/messenger-user/chat' },
     { icon: <Person />, text: 'Hồ sơ', path: '/threads/me' }
   ]
 
