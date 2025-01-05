@@ -77,7 +77,7 @@ export default function PostForm({ onSubmit }: PostFormProps) {
    }, [provinceId, districtId, wardId, provinces, districts, wards])
   const [content, setContent] = useState('')
   const [postRole, setPostRole] = useState<
-    'KHACHHANG' | 'ADMIN' | 'CHUCUAHANG'
+    'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG'
   >('KHACHHANG')
   const [visibility, setVisibility] = useState<
     'PUBLIC' | 'PRIVATE' | 'FRIENDS'
@@ -185,14 +185,14 @@ export default function PostForm({ onSubmit }: PostFormProps) {
                   value={postRole}
                   onChange={(e) =>
                     setPostRole(
-                      e.target.value as 'KHACHHANG' | 'ADMIN' | 'CHUCUAHANG'
+                      e.target.value as 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG'
                     )
                   }
                   displayEmpty
                 >
                   <MenuItem value='KHACHHANG'>Khách hàng</MenuItem>
-                  <MenuItem value='ADMIN'>Admin</MenuItem>
-                  <MenuItem value='CHUCUAHANG'>Staff</MenuItem>
+                  <MenuItem value='QUANLY'>Quản lý</MenuItem>
+                  <MenuItem value='CHUCUAHANG'>Chủ cửa hàng</MenuItem>
                 </Select>
               </FormControl>
               <FormControl size='small'>

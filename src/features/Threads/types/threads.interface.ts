@@ -14,7 +14,7 @@ export interface Comment {
 
 export interface Post {
   id: string;
-  postRole: 'KHACHHANG' | 'ADMIN' | 'CHUCUAHANG';
+  postRole: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
   visibility: 'PUBLIC' | 'PRIVATE' | 'FRIENDS';
   content: string;
   location?: string;
@@ -32,7 +32,7 @@ export interface ICreatePostJsonRequest {
 }
 export interface ICreatePostJson {
   id?: number;
-  postRole: 'KHACHHANG' | 'ADMIN' | 'CHUCUAHANG';
+  postRole: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
   visibility: 'PUBLIC' | 'PRIVATE' | 'FRIENDS';
   content: string;
   location?: string;
@@ -41,7 +41,7 @@ export interface ICreatePostJson {
 export interface IPostResponse {
   post_id: number;
   is_shared: boolean;
-  post_role: 'KHACHHANG' | 'ADMIN' | 'CHUCUAHANG';
+  post_role: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
   post_avatar: string;
   post_name: string;
   content: string;
@@ -60,7 +60,7 @@ export interface IPostResponse {
 }
 export interface ISharedPost {
   shared_post_id: number;
-  post_role: 'KHACHHANG' | 'ADMIN' | 'CHUCUAHANG';
+  post_role: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
   shared_post_avatar: string;
   shared_post_name: string;
   content: string;
@@ -71,7 +71,7 @@ export interface ISharedPost {
 
 export interface ISharePostRequest {
   sharedId: number;
-  postRole: 'KHACHHANG' | 'ADMIN' | 'CHUCUAHANG';
+  postRole: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
   visibility: 'PUBLIC' | 'PRIVATE' | 'FRIENDS';
   content: string;
   location?: string;
@@ -104,7 +104,7 @@ export interface ICommentResponse {
   shopCode: string | null;
   userAvatar: string;
   username: string;
-  role: 'KHACHHANG' | 'ADMIN' | 'CHUCUAHANG';
+  role: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
   content: string;
   mediaUrl: string | null;
   lever: number;
