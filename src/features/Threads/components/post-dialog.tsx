@@ -8,29 +8,21 @@ import {
 } from '@mui/material'
 import { Close } from '@mui/icons-material'
 import PostForm from './post-form'
-import { Post } from '../types/threads.interface'
+import { ICreatePostJsonRequest, Post } from '../types/threads.interface'
 
 interface PostDialogProps {
   open: boolean
   onClose: () => void
-  currentUser: {
-    name: string
-    avatar: string
-  }
-  onSubmit: (
-    post: Omit<
-      Post,
-      'id' | 'author' | 'avatar' | 'timestamp' | 'reactions' | 'comments'
-    >
-  ) => void
+  onSubmit: (post: ICreatePostJsonRequest) => void
+  onSuccess?: () => void
 }
 
 export function PostDialog({
   open,
   onClose,
-  currentUser,
-  onSubmit
+  onSubmit,
 }: PostDialogProps) {
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
   return (
     <Dialog
       open={open}
@@ -80,7 +72,6 @@ export function PostDialog({
             onSubmit(post)
             onClose()
           }}
-          currentUser={currentUser}
         />
       </DialogContent>
     </Dialog>

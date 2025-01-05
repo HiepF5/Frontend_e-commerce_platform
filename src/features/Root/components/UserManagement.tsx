@@ -18,7 +18,8 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  DialogActions
+  DialogActions,
+  Avatar
 } from '@mui/material'
 import {
   Edit as EditIcon,
@@ -157,7 +158,15 @@ const UserManagement = () => {
             {response?.data.data.map((user: IUser) => (
               <TableRow key={user.user_code}>
                 <TableCell>{user.user_code}</TableCell>
-                <TableCell>{`${user.first_name} ${user.last_name}`}</TableCell>
+                <TableCell>
+                  <div style={{ display: 'flex', alignItems: 'center', gap:1}}>
+                    <Avatar
+                      src={user.image_url}
+                      sx={{ width: 32, height: 32 }}
+                    />
+                    <div> {`${user.first_name} ${user.last_name}`}</div>
+                  </div>
+                </TableCell>
                 <TableCell>{user.email}</TableCell>
                 <TableCell>{user.phone_number}</TableCell>
                 <TableCell>

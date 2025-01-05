@@ -1,11 +1,11 @@
-import { useCreateThreadMutation, useUpdateThreadMutation, useDeleteThreadMutation, useShareThreadMutation } from '../api/threadsApi';
+import { useCreateThreadMutation, useUpdateThreadMutation, useDeleteThreadMutation } from '../api/threadsApi';
 import { Post } from '../types/threads.interface';
 
 export const useThreadActions = (setPosts: React.Dispatch<React.SetStateAction<Post[]>>) => {
   const [createThread] = useCreateThreadMutation();
   const [updateThread] = useUpdateThreadMutation();
   const [deleteThread] = useDeleteThreadMutation();
-  const [shareThread] = useShareThreadMutation();
+  // const [shareThread] = useShareThreadMutation();
 
   const handleCreateThread = async (
     newPost: Omit<Post, 'id' | 'author' | 'avatar' | 'timestamp' | 'reactions' | 'comments'>
@@ -26,7 +26,7 @@ export const useThreadActions = (setPosts: React.Dispatch<React.SetStateAction<P
           visibility: post.visibility,
           content: post.content,
           location: post.location,
-          hashTags: post.hashTags
+          hashTag: post.hashTag
         },
         file: null // Replace with actual file if needed
       }).unwrap();
@@ -45,7 +45,7 @@ export const useThreadActions = (setPosts: React.Dispatch<React.SetStateAction<P
           visibility: 'PUBLIC',
           content,
           location: 'Hà Nội',
-          hashTags: ['updated', 'content']
+          hashTag: ['updated', 'content']
         },
         file: null
       }).unwrap();
@@ -66,25 +66,25 @@ export const useThreadActions = (setPosts: React.Dispatch<React.SetStateAction<P
     }
   };
 
-  const handleShareThread = async (id: string) => {
-    try {
-      const response = await shareThread({
-        sharedId: Number(id),
-        postRole: 'KHACHHANG',
-        visibility: 'PUBLIC',
-        content: 'shared bài viết',
-        location: 'Hà Nội'
-      }).unwrap();
-      console.log('Thread shared:', response);
-    } catch (error) {
-      console.error('Failed to share thread:', error);
-    }
-  };
+  // const handleShareThread = async (id: string) => {
+  //   try {
+  //     const response = await shareThread({
+  //       sharedId: Number(id),
+  //       postRole: 'KHACHHANG',
+  //       visibility: 'PUBLIC',
+  //       content: 'shared bài viết',
+  //       location: 'Hà Nội'
+  //     }).unwrap();
+  //     console.log('Thread shared:', response);
+  //   } catch (error) {
+  //     console.error('Failed to share thread:', error);
+  //   }
+  // };
 
   return {
     handleCreateThread,
     handleUpdateThread,
     handleDeleteThread,
-    handleShareThread
+    // handleShareThread
   };
 };

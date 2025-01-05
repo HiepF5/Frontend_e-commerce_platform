@@ -9,7 +9,6 @@ import ghnReducer from '@features/User/slices/GhnSlice'
 import chatBotReducer from '@features/ChatBot/slices/ChatBotSlice'
 import shopReducer from '@features/User/slices/ShopSlice'
 import shopReviewReducer from '@features/Shop/slices/ShopReviewSlice'
-import { threadsApi } from '@features/Threads/api/threadsApi'
 import chatReducer from '@features/MessengerChat/slices/ChatSlice'
 import { chatMessage } from '@features/MessengerChat/service/chatMessage'
 import chatUserReducer from '@features/Messenger/slices/ChatUserSlice'
@@ -24,6 +23,7 @@ import { checkoutApi } from '@features/Checkout/api/checkoutApi'
 import { orderShopApi } from '@features/Order/api/orderShopApi'
 import { reviewApi } from '@features/Products/api/reviewApi'
 import { userApi } from '@features/Admin/api/userApi'
+import { threadsApi } from '@features/Threads/api/threadsApi'
 
 export const store = configureStore({
   reducer: {

@@ -13,6 +13,9 @@ import { Comment } from '../types/threads.interface'
 
 interface CommentSectionProps {
   comments: Comment[]
+    postId: number
+
+  commentCount: number
   onAddComment: (content: string, parentId?: string) => void
   onUpdateComment: (id: string, content: string) => void
   onDeleteComment: (id: string) => void
@@ -20,6 +23,9 @@ interface CommentSectionProps {
 
 export function CommentSection({
   comments,
+    postId,
+
+  commentCount,
   onAddComment,
   onUpdateComment,
   onDeleteComment

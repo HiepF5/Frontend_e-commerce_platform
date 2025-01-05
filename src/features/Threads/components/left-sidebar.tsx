@@ -1,52 +1,76 @@
-import { List, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import React from 'react'
+import {
+  List,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Paper,
+  Typography,
+  Box
+} from '@mui/material'
 import { Home, Search, Notifications, Mail, Person } from '@mui/icons-material'
-import {  useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation } from 'react-router-dom'
 
 export function LeftSidebar() {
   const navigate = useNavigate()
+  const location = useLocation()
+
+  const menuItems = [
+    { icon: <Home />, text: 'Trang chủ', path: '/threads/home' },
+    { icon: <Search />, text: 'Khám phá', path: '/explore' },
+    { icon: <Notifications />, text: 'Thông báo', path: '/notifications' },
+    { icon: <Mail />, text: 'Tin nhắn', path: '/messages' },
+    { icon: <Person />, text: 'Hồ sơ', path: '/threads/me' }
+  ]
+
   return (
-    <List
+    <Paper
+      elevation={3}
       sx={{
-        width: 250,
+        width: 280,
         height: '100vh',
-        borderRight: 1,
-        borderColor: 'divider'
+        borderRadius: 4,
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        bgcolor: 'background.paper'
       }}
     >
-      <ListItemButton component='a'>
-        <ListItemIcon>
-          <Home />
-        </ListItemIcon>
-        <ListItemText
-          primary='Trang chủ'
-          onClick={() => navigate('/threads/home')}
-        />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <Search />
-        </ListItemIcon>
-        <ListItemText primary='Khám phá' />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <Notifications />
-        </ListItemIcon>
-        <ListItemText primary='Thông báo' />
-      </ListItemButton>
-      <ListItemButton>
-        <ListItemIcon>
-          <Mail />
-        </ListItemIcon>
-        <ListItemText primary='Tin nhắn' />
-      </ListItemButton>
-
-      <ListItemButton component='a'>
-        <ListItemIcon>
-          <Person />
-        </ListItemIcon>
-        <ListItemText primary='Hồ sơ' onClick={() => navigate('/threads/me')} />
-      </ListItemButton>
-    </List>
+      <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
+        <Typography variant='h6' fontWeight='bold'>
+          Menu
+        </Typography>
+      </Box>
+      <List sx={{ flexGrow: 1, py: 0 }}>
+        {menuItems.map((item, index) => (
+          <ListItemButton
+            key={index}
+            selected={location.pathname === item.path}
+            onClick={() => navigate(item.path)}
+            sx={{
+              borderRadius: 2,
+              mx: 1,
+              my: 0.5,
+              '&.Mui-selected': {
+                bgcolor: 'primary.main',
+                color: 'primary.contrastText',
+                '&:hover': {
+                  bgcolor: 'primary.dark'
+                },
+                '& .MuiListItemIcon-root': {
+                  color: 'inherit'
+                }
+              }
+            }}
+          >
+            <ListItemIcon sx={{ minWidth: 40 }}>{item.icon}</ListItemIcon>
+            <ListItemText
+              primary={item.text}
+              primaryTypographyProps={{ fontWeight: 'medium' }}
+            />
+          </ListItemButton>
+        ))}
+      </List>
+    </Paper>
   )
 }

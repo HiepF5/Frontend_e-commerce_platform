@@ -50,7 +50,7 @@ export default function ThreadForMePage() {
         postRole: 'KHACHHANG',
         visibility: 'PUBLIC',
         location: '',
-        hashTags: [`tag${index + 1}`]
+        hashTag: [`tag${index + 1}`]
       }))
 
     setPosts([...posts, ...newPosts])

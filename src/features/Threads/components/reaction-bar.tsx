@@ -12,7 +12,13 @@ import { Reaction } from '../types/threads.interface'
 
 interface ReactionBarProps {
   reactions: Reaction[]
+  postId: number
 
+  likeCount: number
+
+  isLiked: boolean | null
+
+  onReactionChange: () => void
   onReact: (type: Reaction['type'], e: React.MouseEvent) => void
 }
 

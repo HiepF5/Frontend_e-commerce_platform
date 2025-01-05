@@ -6,12 +6,12 @@ import {
   Avatar,
   Button
 } from '@mui/material'
-import { Post } from '../types/threads.interface'
+import { IPostResponse, Post } from '../types/threads.interface'
 
 interface RightSidebarProps {
-  trendingPosts: Post[]
-  viewedPosts: Post[]
-  onPostClick: (post: Post) => void
+  trendingPosts: IPostResponse[]
+  viewedPosts: IPostResponse[]
+  onPostClick: (post: IPostResponse) => void
 }
 
 export function RightSidebar({
@@ -34,14 +34,14 @@ export function RightSidebar({
         <CardContent>
           {trendingPosts.map((post) => (
             <Button
-              key={post.id}
+              key={post.post_id}
               fullWidth
               sx={{ justifyContent: 'flex-start', mb: 1 }}
               onClick={() => onPostClick(post)}
             >
-              <Avatar src={post.avatar} sx={{ mr: 1 }} />
+              <Avatar src={post.post_avatar} sx={{ mr: 1 }} />
               <div style={{ textAlign: 'left' }}>
-                <Typography variant='subtitle2'>{post.author}</Typography>
+                <Typography variant='subtitle2'>{post.post_name}</Typography>
                 <Typography variant='body2' color='text.secondary' noWrap>
                   {post.content}
                 </Typography>
@@ -55,14 +55,14 @@ export function RightSidebar({
         <CardContent>
           {viewedPosts.map((post) => (
             <Button
-              key={post.id}
+              key={post.post_id}
               fullWidth
               sx={{ justifyContent: 'flex-start', mb: 1 }}
               onClick={() => onPostClick(post)}
             >
-              <Avatar src={post.avatar} sx={{ mr: 1 }} />
+              <Avatar src={post.post_avatar} sx={{ mr: 1 }} />
               <div style={{ textAlign: 'left' }}>
-                <Typography variant='subtitle2'>{post.author}</Typography>
+                <Typography variant='subtitle2'>{post.post_name}</Typography>
                 <Typography variant='body2' color='text.secondary' noWrap>
                   {post.content}
                 </Typography>

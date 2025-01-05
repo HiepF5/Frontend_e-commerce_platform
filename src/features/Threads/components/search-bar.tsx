@@ -10,7 +10,10 @@ interface SearchResult {
   avatar?: string;
 }
 
-export function SearchBar() {
+interface SearchBarProps {
+  onSearch: (searchTerm: string) => void
+}
+export function SearchBar(props: SearchBarProps) {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
