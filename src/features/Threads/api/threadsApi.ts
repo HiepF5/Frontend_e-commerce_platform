@@ -103,7 +103,7 @@ export const threadsApi = createApi({
         return {
           url: API_ENDPOINTS_THREAD.ApiUpdateThread,
           method: 'PUT',
-          body: formData
+          data: formData
         }
       },
       invalidatesTags: (result, error, { post_json }) => [
@@ -114,7 +114,7 @@ export const threadsApi = createApi({
     // Xóa bài viết
     deleteThread: builder.mutation<IBaseResponse<null>, string>({
       query: (id) => ({
-        url: `${API_ENDPOINTS_THREAD.ApiUpdateThread}/${id}`,
+        url: `${API_ENDPOINTS_THREAD.ApiDeleteThread}/${id}`,
         method: 'DELETE'
       }),
       invalidatesTags: (result, error, id) => [{ type: 'Posts', id }]
@@ -127,7 +127,7 @@ export const threadsApi = createApi({
       query: (data) => ({
         url: API_ENDPOINTS_THREAD.ApiSharedThread,
         method: 'POST',
-        body: data
+        data
       })
     }),
 

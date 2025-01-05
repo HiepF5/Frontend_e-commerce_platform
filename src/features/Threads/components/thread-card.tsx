@@ -59,7 +59,9 @@ const ThreadCard = ({ post, onPostUpdated, onClick }: ThreadCardProps) => {
     setAnchorEl(null)
   }
 
-  const handleDelete = async () => {
+  const handleDelete = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    
     try {
       await deleteThread(post.post_id.toString()).unwrap()
       toast.success('Xóa bài viết thành công')
@@ -70,7 +72,9 @@ const ThreadCard = ({ post, onPostUpdated, onClick }: ThreadCardProps) => {
     handleMenuClose()
   }
 
-  const handleShare = async () => {
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    console.log(post.post_id)
     try {
       await shareThread({
         sharedId: post.post_id,
@@ -310,8 +314,8 @@ const ThreadCard = ({ post, onPostUpdated, onClick }: ThreadCardProps) => {
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleDelete}>Xóa bài viết</MenuItem>
-        <MenuItem onClick={handleShare}>Chia sẻ bài viết</MenuItem>
+        <MenuItem onClick={(e) => handleDelete(e)}>Xóa bài viết</MenuItem>
+        <MenuItem onClick={(e) => handleShare(e)}>Chia sẻ bài viết</MenuItem>
       </Menu>
     </Card>
   )

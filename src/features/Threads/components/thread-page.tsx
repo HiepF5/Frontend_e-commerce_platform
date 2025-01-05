@@ -5,7 +5,7 @@ import { RightSidebar } from './right-sidebar'
 import { PostModal } from './post-modal'
 import { SearchBar } from './search-bar'
 import { ICreatePostJsonRequest, IPostResponse } from '../types/threads.interface'
-import { useCreateThreadMutation, useGetNewPostsQuery } from '../api/threadsApi'
+import { useCreateThreadMutation, useGetNewPostsQuery, useUpdateThreadMutation } from '../api/threadsApi'
 import { PostDialog } from './post-dialog'
 import ThreadCard from './thread-card'
 import { toast } from 'react-toastify'
@@ -27,6 +27,8 @@ export default function ThreadPage() {
     createThread,
     { isLoading: isCreatingThread }
   ] = useCreateThreadMutation()
+  const [updateThread, { isLoading: isUpdatingThread }] =
+    useUpdateThreadMutation()
 
   const fetchPosts = () => {
     try {
@@ -64,8 +66,14 @@ export default function ThreadPage() {
   const handlePostCreated = async (post: ICreatePostJsonRequest) => {
     setIsPostDialogOpen(false)
     try {
-      await createThread(post).unwrap()
-      refetch() // Re-fetch the posts after creating a new post
+      const response = await createThread(post).unwrap()
+      if (response && response.code === 200) {
+        toast.success('Bài viết đã được tạo')
+      }
+      if (response && response.code === 403) {
+        toast.error(response.message)
+      }
+      refetch() 
     } catch (error) {
       toast.error('Failed to create post')
     }
@@ -115,7 +123,7 @@ export default function ThreadPage() {
             <ThreadCard
               key={post.post_id}
               post={post}
-              onPostUpdated={fetchPosts}
+              onPostUpdated={refetch}
               onClick={() => handlePostClick(post)}
             />
           ))
