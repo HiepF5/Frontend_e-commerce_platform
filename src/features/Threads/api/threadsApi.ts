@@ -49,13 +49,13 @@ export const threadsApi = createApi({
       GetMyPostsRequest
     >({
       query: ({ hash_tag, page_number, page_size }) => ({
-      url: API_ENDPOINTS_THREAD.ApiGetMyListThread,
-      method: 'GET',
-      params: {
-        hash_tag,
-        page_number,
-        page_size
-      }
+        url: API_ENDPOINTS_THREAD.ApiGetMyListThread,
+        method: 'GET',
+        params: {
+          hash_tag,
+          page_number,
+          page_size
+        }
       }),
       providesTags: ['Posts']
     }),
@@ -64,14 +64,14 @@ export const threadsApi = createApi({
       GetUserPostsRequest
     >({
       query: ({ hash_tag, user_code_other, page_number, page_size }) => ({
-      url: API_ENDPOINTS_THREAD.ApiGetUserListThread,
-      method: 'GET',
-      params: {
-        hash_tag,
-        user_code_other,
-        page_number,
-        page_size
-      }
+        url: API_ENDPOINTS_THREAD.ApiGetUserListThread,
+        method: 'GET',
+        params: {
+          hash_tag,
+          user_code_other,
+          page_number,
+          page_size
+        }
       }),
       providesTags: ['Posts']
     }),
@@ -82,8 +82,6 @@ export const threadsApi = createApi({
     >({
       query: ({ post_id, reaction }) => {
         const formData = new FormData()
-        console.log('post_id', post_id)
-        console.log('reaction', reaction)
         formData.append('post_id', post_id.toString())
         formData.append('reaction', reaction.toString())
         return {
@@ -92,7 +90,9 @@ export const threadsApi = createApi({
           data: formData
         }
       },
-      invalidatesTags: (result, error, { post_id }) => [{ type: 'Posts', id: post_id }]
+      invalidatesTags: (result, error, { post_id }) => [
+        { type: 'Posts', id: post_id }
+      ]
     }),
 
     // Tạo bài viết mới
@@ -105,18 +105,18 @@ export const threadsApi = createApi({
         formData.append('post_json', JSON.stringify(data.post_json))
         if (data.files && Array.isArray(data.files)) {
           data.files.forEach((file) => {
-            formData.append('file', file) 
+            formData.append('file', file)
           })
         }
         for (const pair of formData.entries()) {
           console.log(`${pair[0]}: ${pair[1]}`)
         }
         return {
-          url: API_ENDPOINTS_THREAD.ApiCreateThread, 
+          url: API_ENDPOINTS_THREAD.ApiCreateThread,
           method: 'POST',
           data: formData,
           headers: {
-            // 'Content-Type': 'multipart/form-data' 
+            // 'Content-Type': 'multipart/form-data'
           }
         }
       },
@@ -170,7 +170,7 @@ export const threadsApi = createApi({
     // Lấy danh sách bình luận
     getComments: builder.query<
       IBaseResponse<ICommentResponse[]>,
-      {comment_id?:number, post_id: number; page_number: number; }
+      { comment_id?: number; post_id: number; page_number: number }
     >({
       query: ({ post_id, page_number, comment_id }) => ({
         url: '/guest/post/get-comment',
@@ -185,11 +185,19 @@ export const threadsApi = createApi({
       IBaseResponse<ICommentResponse>,
       ICommentRequest
     >({
-      query: (data) => ({
-        url: '/all/post/create-comment',
-        method: 'POST',
-        body: data
-      }),
+      query: (data) => {
+        const formData = new FormData()
+        formData.append('comment_json', JSON.stringify(data.comment_json))
+        if (data.file) {
+          formData.append('file', data.file)
+        }
+
+        return {
+          url: '/all/post/create-comment',
+          method: 'POST',
+          data: formData // Sử dụng `body` thay vì `data`
+        }
+      },
       invalidatesTags: ['Comments']
     }),
 
@@ -198,16 +206,23 @@ export const threadsApi = createApi({
       IBaseResponse<ICommentResponse>,
       ICommentRequest
     >({
-      query: (data) => ({
-        url: '/all/post/update-comment',
-        method: 'PUT',
-        body: data
-      }),
-      invalidatesTags: ['Comments']
+      query: (data) => {
+        const formData = new FormData()
+        formData.append('comment_json', JSON.stringify(data.comment_json))
+        if (data.file) {
+          formData.append('file', data.file) // Chỉ thêm file nếu tồn tại
+        }
+        return {
+          url: '/all/post/update-comment',
+          method: 'PUT',
+          data: formData // Sử dụng FormData để gửi dữ liệu
+        }
+      },
+      invalidatesTags: ['Comments'] // Làm mới cache của tag 'Comments'
     }),
 
     // Xóa bình luận
-    deleteComment: builder.mutation<IBaseResponse<null>, number>({
+    deleteComment: builder.mutation<IBaseResponse<String>, number>({
       query: (comment_id) => ({
         url: `/all/post/delete-comment/${comment_id}`,
         method: 'DELETE'

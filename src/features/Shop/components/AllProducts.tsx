@@ -19,7 +19,7 @@ import {
 } from '@mui/icons-material'
 import ProductItem from '@features/Products/components/ProductItem'
 import { useParams } from 'react-router-dom'
-import { useGetListProductQuery } from '@features/Products/api/productApi'
+import { useGetListProductQuery, useListProductOfShopMutation } from '@features/Products/api/productApi'
 import { ProductSkeleton } from './common/ProductSkeleton'
 import { ProductFilters } from './common/ProductFilters'
 import { useInView } from 'react-intersection-observer'
@@ -39,16 +39,22 @@ const AllProducts = () => {
   })
 
   const [products, setProducts] = useState<IProduct[]>([])
-  const { data, isLoading, refetch } = useGetListProductQuery({
-    pageNumber: page,
-    pageSize: 40
-  })
+  const [listProductOfShop, { data, isLoading, isError }] =
+    useListProductOfShopMutation()
 
   useEffect(() => {
-    if (data && data.data) {
+    listProductOfShop({
+      shopId: shopId || '',
+      pageNumber: page,
+      pageSize: 40
+    })
+  }, [shopId, page, sortBy, searchTerm])
+  console.log(data)
+  useEffect(() => {
+    if (data && data.data.data) {
       setProducts((prevProducts) => [
         ...prevProducts,
-        ...(Array.isArray(data.data) ? data.data : [])
+        ...(Array.isArray(data.data.data) ? data.data.data : [])
       ])
     }
   }, [data])
@@ -56,7 +62,7 @@ const AllProducts = () => {
   useEffect(() => {
     if (inView) {
       setPage((prev) => prev + 1) // Tăng số trang khi cuộn xuống
-      refetch()
+      // refetch()
     }
   }, [inView])
 

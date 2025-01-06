@@ -106,8 +106,9 @@ export interface ICommentRequest {
   file: File | null;
 }
 export interface ICreateCommentJson {
-  postId: number;
-  parentId: number | null;
+  commentId?: number ;
+  postId?: number;
+  parentId?: number | null;
   role: 'KHACHHANG' | 'QUANLY' | 'CHUCUAHANG';
   content: string;
 }

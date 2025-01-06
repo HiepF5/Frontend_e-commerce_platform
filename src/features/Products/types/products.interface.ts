@@ -61,3 +61,12 @@ export interface ProductRecommend {
   soldCount: number;
   stockCount: number;
 }
+export interface ProductRequest {
+  shopCode: string;       // Mã cửa hàng
+  title: string | null;    // Tiêu đề sản phẩm, có thể là null
+  brandId: number | null;  // ID của thương hiệu, có thể là null
+  category: string | null; // Danh mục sản phẩm, có thể là null
+  shopCategoryId: number | null; // ID danh mục cửa hàng, có thể là null
+  pageNumber: number;      // Số trang
+  pageSize: number;        // Số lượng sản phẩm trên mỗi trang
+}

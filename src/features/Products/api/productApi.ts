@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
 import { axiosBaseQuery } from '@shared/libs/rtk-query/axiosBaseQuery'
-import { IBaseResponse } from '~/types/base.interface'
+import { IBaseResponse, PaginationResponse } from '~/types/base.interface'
 import { IProduct } from '~/types/products.interface'
 import { IProductData } from '../types/products.interface'
 
@@ -31,7 +31,7 @@ export const productApi = createApi({
       IBaseResponse<IProduct[]>,
       { productId: number; count: number }
     >({
-      query: ({ productId, count}) => ({
+      query: ({ productId, count }) => ({
         url: `/guest/recommend/item-based?product_id=${productId}&count=${count}`,
         method: 'GET'
       })
@@ -53,6 +53,24 @@ export const productApi = createApi({
         url: `/guest/recommend/content-based?product_id=${productId}&count=${count}`,
         method: 'GET'
       })
+    }),
+    listProductOfShop: builder.mutation<
+      IBaseResponse<PaginationResponse<IProduct>>,
+      { shopId: string; pageNumber: number; pageSize: number }
+    >({
+      query: ({ shopId, pageNumber = 1, pageSize = 20 }) => ({
+        url: `/guest/product/get-shop-product`,
+        method: 'POST',
+        data: {
+          shopCode: shopId,
+          title: null,
+          brandId: null,
+          category: null,
+          shopCategoryId: null,
+          pageNumber,
+          pageSize
+        }
+      })
     })
   })
 })
@@ -62,5 +80,6 @@ export const {
   useGetProductDetailQuery,
   useGetProductRecommendItemBasedQuery,
   useGetProductRecommendUserBasedQuery,
-  useGetProductRecommendContentBasedQuery
+  useGetProductRecommendContentBasedQuery,
+  useListProductOfShopMutation
 } = productApi

@@ -107,10 +107,10 @@ export default function ThreadPage() {
   }
 
   return (
-    <Box display="flex">
+    <Box display='flex'>
       <LeftSidebar />
 
-      <Container maxWidth="md" sx={{ py: 4, flex: 1 }}>
+      <Container maxWidth='md' sx={{ py: 4, flex: 1 }}>
         <Box mb={3}>
           <SearchBar onSearch={handleSearch} />
           <PostTrigger
@@ -128,7 +128,7 @@ export default function ThreadPage() {
         </Box>
 
         {posts.length === 0 && !isLoading ? (
-          <Typography textAlign="center" color="text.secondary">
+          <Typography textAlign='center' color='text.secondary'>
             Không có bài viết nào
           </Typography>
         ) : (
@@ -157,7 +157,7 @@ export default function ThreadPage() {
         )}
 
         {isLoading && (
-          <Box display="flex" justifyContent="center" my={2}>
+          <Box display='flex' justifyContent='center' my={2}>
             <CircularProgress />
           </Box>
         )}
@@ -169,12 +169,15 @@ export default function ThreadPage() {
         onPostClick={handlePostClick}
       />
 
-      <PostModal
-        open={!!selectedPost}
-        onClose={() => setSelectedPost(null)}
-        post={selectedPost}
-        onSuccess={refetch}
-      />
+      {selectedPost && (
+        <PostModal
+          open={!!selectedPost}
+          onClose={() => setSelectedPost(null)}
+          post={selectedPost}
+          onSuccess={refetch}
+        />
+      )}
+      
     </Box>
   )
 }

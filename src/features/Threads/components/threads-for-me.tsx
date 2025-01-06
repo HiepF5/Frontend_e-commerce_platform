@@ -95,7 +95,7 @@ export default function ThreadForMePage() {
       <Container maxWidth='md' sx={{ py: 4, flex: 1 }}>
         <Box mb={3}>
           <SearchBar onSearch={handleSearch} />
-          
+
           <Box mb={4}>
             <UserProfile
               username={user.full_name || 'User'}
@@ -179,12 +179,14 @@ export default function ThreadForMePage() {
         onPostClick={handlePostClick}
       />
 
-      <PostModal
-        open={!!selectedPost}
-        onClose={() => setSelectedPost(null)}
-        post={selectedPost}
-        onSuccess={refetch}
-      />
+      {selectedPost && (
+        <PostModal
+          open={!!selectedPost}
+          onClose={() => setSelectedPost(null)}
+          post={selectedPost}
+          onSuccess={refetch}
+        />
+      )}
     </Box>
   )
 }

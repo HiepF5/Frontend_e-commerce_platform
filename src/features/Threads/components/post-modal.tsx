@@ -32,12 +32,12 @@ import { IPostResponse, ReactionType } from '../types/threads.interface'
 import { toast } from 'react-toastify'
 import { ReactionBar } from './reaction-bar'
 import { CommentSection } from './comment-section'
-import { useShareThreadMutation } from '../api/threadsApi'
+import { useAddCommentMutation, useDeleteCommentMutation, useGetCommentsQuery, useShareThreadMutation, useUpdateCommentMutation } from '../api/threadsApi'
 import { useNavigate } from 'react-router-dom'
 
 interface PostModalProps {
   open: boolean
-  post: IPostResponse | null
+  post: IPostResponse 
   onClose: () => void
   onSuccess?: () => void
 }
@@ -48,11 +48,15 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
   const navigate = useNavigate()
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'))
-
+  const { data: responseData } = useGetCommentsQuery({
+    post_id: post.post_id,
+    page_number: 1,
+    comment_id: undefined
+  })
   const visibilityIcons = {
-    PUBLIC: <PublicIcon fontSize="small" />,
-    PRIVATE: <LockIcon fontSize="small" />,
-    FRIENDS: <PeopleIcon fontSize="small" />
+    PUBLIC: <PublicIcon fontSize='small' />,
+    PRIVATE: <LockIcon fontSize='small' />,
+    FRIENDS: <PeopleIcon fontSize='small' />
   }
 
   if (!post) return null
@@ -82,15 +86,47 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
     navigate(`/threads/${post.user_code}`)
     onClose()
   }
+  const [createComment] = useAddCommentMutation()
+  const [updateCommnent] = useUpdateCommentMutation()
+  const [deleteComment] = useDeleteCommentMutation()
+  const handleAddComment = (content: string, parentId?: number) => {
+    createComment({
+      comment_json: {
+        postId: post.post_id,
+        parentId: parentId,
+        role: 'KHACHHANG',
+        content
+      },
+      file: null
+    })
+  }
 
+  const handleUpdateComment = (id: number, content: string) => {
+    updateCommnent({
+      comment_json: {
+        commentId: id,
+        role: 'KHACHHANG',
+        content
+      },
+      file: null
+    })
+  }
+
+  const handleDeleteComment = (id: number) => {
+    deleteComment(id)
+  }
+
+  
+
+  console.log(responseData)
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="md"
+      maxWidth='md'
       fullWidth
       fullScreen={fullScreen}
-      scroll="paper"
+      scroll='paper'
       PaperProps={{
         sx: {
           borderRadius: fullScreen ? 0 : 2,
@@ -109,15 +145,15 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
           borderColor: 'divider'
         }}
       >
-        <Box display="flex" alignItems="center" gap={1}>
-          <Typography variant="h6">Chi tiết bài viết</Typography>
+        <Box display='flex' alignItems='center' gap={1}>
+          <Typography variant='h6'>Chi tiết bài viết</Typography>
           <Tooltip title={`Visibility: ${post.visibility}`}>
             {visibilityIcons[post.visibility]}
           </Tooltip>
         </Box>
         <Box>
           <IconButton onClick={handleSave} sx={{ mr: 1 }}>
-            {isSaved ? <Bookmark color="primary" /> : <BookmarkBorder />}
+            {isSaved ? <Bookmark color='primary' /> : <BookmarkBorder />}
           </IconButton>
           <IconButton onClick={onClose}>
             <CloseIcon />
@@ -128,8 +164,8 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
       <DialogContent sx={{ p: 0 }}>
         <Box sx={{ p: 3 }}>
           <Box
-            display="flex"
-            alignItems="center"
+            display='flex'
+            alignItems='center'
             mb={2}
             sx={{ cursor: 'pointer' }}
             onClick={handleUserClick}
@@ -140,24 +176,24 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
               sx={{ width: 48, height: 48, mr: 2 }}
             />
             <Box>
-              <Box display="flex" alignItems="center" gap={1}>
-                <Typography variant="subtitle1" fontWeight="bold">
+              <Box display='flex' alignItems='center' gap={1}>
+                <Typography variant='subtitle1' fontWeight='bold'>
                   {post.post_role === 'QUANLY' ? 'Admin' : post.post_name}
                 </Typography>
                 <Chip
                   label={post.post_role}
-                  size="small"
+                  size='small'
                   color={post.post_role === 'QUANLY' ? 'primary' : 'default'}
                 />
               </Box>
-              <Box display="flex" alignItems="center" gap={2}>
-                <Typography variant="caption" color="text.secondary">
+              <Box display='flex' alignItems='center' gap={2}>
+                <Typography variant='caption' color='text.secondary'>
                   {post.created_at}
                 </Typography>
                 {post.location && (
-                  <Box display="flex" alignItems="center" gap={0.5}>
-                    <LocationOn fontSize="small" color="action" />
-                    <Typography variant="caption" color="text.secondary">
+                  <Box display='flex' alignItems='center' gap={0.5}>
+                    <LocationOn fontSize='small' color='action' />
+                    <Typography variant='caption' color='text.secondary'>
                       {post.location}
                     </Typography>
                   </Box>
@@ -166,7 +202,7 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
             </Box>
           </Box>
 
-          <Typography variant="body1" paragraph>
+          <Typography variant='body1' paragraph>
             {post.content}
           </Typography>
 
@@ -194,7 +230,7 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
                         borderRadius: '8px',
                         objectFit: 'cover'
                       }}
-                      loading="lazy"
+                      loading='lazy'
                     />
                   </ImageListItem>
                 ))}
@@ -207,7 +243,7 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
               <Chip
                 key={index}
                 label={`#${tag}`}
-                size="small"
+                size='small'
                 sx={{ mr: 0.5, mb: 0.5 }}
                 clickable
               />
@@ -215,24 +251,24 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
           </Box>
 
           {post.is_shared && post.shared_post && (
-            <Card variant="outlined" sx={{ mb: 2 }}>
+            <Card variant='outlined' sx={{ mb: 2 }}>
               <CardContent>
-                <Box display="flex" alignItems="center" mb={1}>
+                <Box display='flex' alignItems='center' mb={1}>
                   <Avatar
                     src={post.shared_post.shared_post_avatar}
                     alt={post.shared_post.shared_post_name}
                     sx={{ width: 32, height: 32, mr: 1 }}
                   />
                   <Box>
-                    <Typography variant="subtitle2">
+                    <Typography variant='subtitle2'>
                       {post.shared_post.shared_post_name}
                     </Typography>
-                    <Typography variant="caption" color="text.secondary">
+                    <Typography variant='caption' color='text.secondary'>
                       {post.shared_post.created_at}
                     </Typography>
                   </Box>
                 </Box>
-                <Typography variant="body2" sx={{ mt: 1 }}>
+                <Typography variant='body2' sx={{ mt: 1 }}>
                   {post.shared_post.content}
                 </Typography>
                 {post.shared_post.media_url?.map((url, index) => (
@@ -256,9 +292,9 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
           <Divider sx={{ my: 2 }} />
 
           <Box
-            display="flex"
-            alignItems="center"
-            justifyContent="space-between"
+            display='flex'
+            alignItems='center'
+            justifyContent='space-between'
             mb={2}
           >
             <ReactionBar
@@ -271,8 +307,8 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
             <Button
               startIcon={<ShareIcon />}
               onClick={handleShare}
-              variant="outlined"
-              size="small"
+              variant='outlined'
+              size='small'
             >
               Chia sẻ
             </Button>
@@ -283,15 +319,15 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
           <CommentSection
             postId={post.post_id}
             commentCount={post.comment_count}
-            comments={[]}
-            onAddComment={(content: string) => {
-              console.log('Add comment:', content)
+            comments={responseData?.data || []}
+            onAddComment={(content: string, parentId? :number) => {
+              handleAddComment(content, parentId)
             }}
-            onUpdateComment={(id: string, content: string) => {
-              console.log('Update comment:', id, content)
+            onUpdateComment={(id: number, content: string) => {
+              handleUpdateComment(Number(id), content)
             }}
-            onDeleteComment={(id: string) => {
-              console.log('Delete comment:', id)
+            onDeleteComment={(id: number) => {
+              handleDeleteComment(Number(id))
             }}
           />
         </Box>
