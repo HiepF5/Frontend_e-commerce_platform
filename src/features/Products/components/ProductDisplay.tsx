@@ -112,6 +112,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
       setQuantity(quantity - 1)
     }
   }
+  console.log(variantGroups)
 
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
@@ -257,7 +258,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                 <ToggleButtonGroup
                   value={selectedVariant}
                   exclusive
-                  onChange={(_, value) => setSelectedVariant(value)}
+                  onChange={(_, value) => setSelectedVariant(value as number)}
                   sx={{ flexWrap: 'wrap' }}
                 >
                   {(values as string[]).map((value) => {

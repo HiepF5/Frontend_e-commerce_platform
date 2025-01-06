@@ -16,7 +16,7 @@ import { toast } from 'react-toastify'
 import { Menu, MenuDropdownLinks } from '@config/constants/paths'
 import Cookies from 'js-cookie'
 import { useGetCartCountQuery } from '@features/Cart/api/cartApi'
-
+import { RiAdminFill } from 'react-icons/ri'
 const Navbar = () => {
   const navigate = useNavigate()
    const dispatch = useAppDispatch() 
@@ -33,10 +33,25 @@ const Navbar = () => {
   const handleRegister = () => {
     navigate('/auth/signup')
   }
+
+  const user = JSON.parse(localStorage.getItem('user') || 'null')
+  const handleAdminClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!user || Object.keys(user).length === 0) {
+      e.preventDefault()
+      toast.error('You need to sign in')
+      return
+    }
+
+    if (user.role && user.role.includes('QUANLY')) {
+      navigate('/admin')
+    } else {
+      e.preventDefault()
+      toast.error('You need to be an admin')
+    }
+  }
   const { data: countItem } = useGetCartCountQuery() || { data: 0 }
 
 
-  const user = JSON.parse(localStorage.getItem('user') || 'null')
   return (
     <div
       className='shadow-md bg-white
@@ -102,6 +117,7 @@ const Navbar = () => {
                cursor-pointer
              '
               />
+
               <span
                 className='absolute -top-2 -right-2 bg-red-500
               text-white rounded-full w-5 h-5 flex items-center
@@ -109,6 +125,28 @@ const Navbar = () => {
               >
                 {countItem || 0}
               </span>
+            </button>
+            <button
+              onClick={(e) => handleAdminClick(e)}
+              className='bg-gradient-to-r from-orange-400
+          to-lime-400 transition-all duration-200
+          text-white py-1 px-4 rounded-full flex 
+          items-center gap-3 group'
+            >
+              <span
+                className='group-hover:block 
+            hidden transition-all
+            duration-200'
+              >
+                Admin
+              </span>
+              <RiAdminFill
+                className='text-xl
+             text-white
+               drop-shadow-sm 
+               cursor-pointer
+             '
+              />
             </button>
             {!user?.full_name ? (
               <>
