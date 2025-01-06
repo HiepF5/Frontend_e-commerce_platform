@@ -21,7 +21,7 @@ interface AuthState {
     full_name: string
     email: string
     image_url: string
-    role: string[]
+    list_role: string[]
     user_code: string
     shop_code: string
     gender: string
@@ -142,7 +142,7 @@ const authSlice = createSlice({
           full_name: action.payload.data.full_name,
           email: action.payload.data.email,
           image_url: action.payload.data.image_url,
-          role: action.payload.data.role,
+          list_role: action.payload.data.list_role,
           gender: action.payload.data.gender,
           user_code: action.payload.data.user_code,
           shop_code: action.payload.data.shop_code,

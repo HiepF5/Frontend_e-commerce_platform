@@ -42,7 +42,7 @@ const Navbar = () => {
       return
     }
 
-    if (user.role && user.role.includes('QUANLY')) {
+    if (user.list_role && user.list_role.includes('QUANLY')) {
       navigate('/admin')
     } else {
       e.preventDefault()

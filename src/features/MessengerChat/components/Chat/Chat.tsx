@@ -185,7 +185,7 @@ const Chat: React.FC = () => {
         setSelectedImage(null)
         setInput('')
         dispatch(addMessageToChatStory(message))
-        if (user.role.includes('CHUCUAHANG')) {
+        if (user.list_role.includes('CHUCUAHANG')) {
           const updatedChatStoryOwner = await refetchChatStoryOwner()
           if (updatedChatStoryOwner.data) {
             dispatch(setChatStory(updatedChatStoryOwner.data.data))

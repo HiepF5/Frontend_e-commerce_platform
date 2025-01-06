@@ -11,7 +11,7 @@ export interface ILoginResponse {
   date_of_birth: string
   phone_number: string
   email: string
-  role: string[]
+  list_role: string[]
   issued_at: string
   expire_at: string
   shop_id: string

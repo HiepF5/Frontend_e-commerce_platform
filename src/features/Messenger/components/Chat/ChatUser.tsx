@@ -185,7 +185,7 @@ const ChatUser: React.FC = () => {
         dispatch(addMessageToChatStory(message))
 
         // Fetch the latest chat messages to ensure state is in sync with the server
-        if (user.role.includes('KHACHHANG')) {
+        if (user.list_role.includes('KHACHHANG')) {
           const updatedChatStoryCustomer = await refetchChatStoryCustomer()
           if (updatedChatStoryCustomer.data) {
             dispatch(setChatStory(updatedChatStoryCustomer.data.data))
