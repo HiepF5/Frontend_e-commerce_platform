@@ -1,6 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseElk } from '@shared/libs/rtk-query/axiosBaseElk';
-import { IBaseResponse } from '~/types/base.interface';
+
 
 export interface IProductSearchRequest {
   id: number;

@@ -7,11 +7,8 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Breadcrumbs,
-  Link,
   Container
 } from '@mui/material'
-import { ChevronRight } from 'lucide-react'
 import { IProductData } from '../types/products.interface'
 import ReactMarkdown from 'react-markdown'
 interface ProductDetailProps {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import {
   Box,
   Button,
@@ -9,7 +9,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+
   Dialog,
   DialogTitle,
   DialogContent,
@@ -19,24 +19,23 @@ import {
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
+
   IconButton,
-  InputAdornment
+  
 } from '@mui/material'
 import {
   Add as AddIcon,
   Edit as EditIcon,
   Delete as DeleteIcon,
-  Search as SearchIcon
 } from '@mui/icons-material'
 import { useListProductOfShopMutation } from '@features/Products/api/productApi'
 
 const ShopProducts = (): JSX.Element => {
   const [open, setOpen] = useState(false)
-  const [isEdit, setIsEdit] = useState(false)
-  const [products, setProducts] = useState<any[]>([])
+  const [isEdit] = useState(false)
+  // const [products, setProducts] = useState<any[]>([])
   const user = JSON.parse(localStorage.getItem('user') || '{}')
-    const [listProductOfShop, { data, isLoading }] =
+    const [listProductOfShop, { data }] =
       useListProductOfShopMutation()
  useEffect(() => {
     listProductOfShop({
@@ -64,7 +63,7 @@ const ShopProducts = (): JSX.Element => {
       ]
     }
   ])
-
+console.log(variantDTOS)
   // Hàm tạo hoán vị
   const generatePermutations = (attributes: Record<string, string[]>) => {
     const keys = Object.keys(attributes)
@@ -104,35 +103,35 @@ const ShopProducts = (): JSX.Element => {
   }
 
   // Hàm thay đổi thuộc tính của biến thể
-  const handleVariantChange = (
-    index: number,
-    field: keyof typeof variantDTOS[number],
-    value: any
-  ) => {
-    const newVariants = [...variantDTOS]
-    newVariants[index] = {
-      ...newVariants[index],
-      [field]: value
-    }
-    setVariantDTOS(newVariants)
-  }
-  const addAttribute = (index: number) => {
-    const updatedVariants = [...variantDTOS]
-    updatedVariants[index].attributeDTOList.push({ name: '', value: '' })
-    setVariantDTOS(updatedVariants)
-  }
+  // const handleVariantChange = (
+  //   index: number,
+  //   field: keyof typeof variantDTOS[number],
+  //   value: any
+  // ) => {
+  //   const newVariants = [...variantDTOS]
+  //   newVariants[index] = {
+  //     ...newVariants[index],
+  //     [field]: value
+  //   }
+  //   setVariantDTOS(newVariants)
+  // }
+  // const addAttribute = (index: number) => {
+  //   const updatedVariants = [...variantDTOS]
+  //   updatedVariants[index].attributeDTOList.push({ name: '', value: '' })
+  //   setVariantDTOS(updatedVariants)
+  // }
 
-  // Hàm thay đổi giá trị thuộc tính
-  const handleAttributeChange = (
-    variantIndex: number,
-    attributeIndex: number,
-    field: 'name' | 'value',
-    value: string
-  ) => {
-    const newVariants = [...variantDTOS]
-    newVariants[variantIndex].attributeDTOList[attributeIndex][field] = value
-    setVariantDTOS(newVariants)
-  }
+  // // Hàm thay đổi giá trị thuộc tính
+  // const handleAttributeChange = (
+  //   variantIndex: number,
+  //   attributeIndex: number,
+  //   field: 'name' | 'value',
+  //   value: string
+  // ) => {
+  //   const newVariants = [...variantDTOS]
+  //   newVariants[variantIndex].attributeDTOList[attributeIndex][field] = value
+  //   setVariantDTOS(newVariants)
+  // }
 
   // Hàm để tính toán hoán vị mới khi người dùng thay đổi thuộc tính
   const handleGenerateVariants = () => {

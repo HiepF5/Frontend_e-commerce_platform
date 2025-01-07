@@ -27,18 +27,8 @@ const sellerStats = {
   products: 46
 }
 
-const productSpecs = {
-  sku: '9476',
-  material: 'Nhựa ABS, Nhôm',
-  origin: 'Nước ngoài'
-}
 
-const categories = [
-  'Shopee',
-  'Máy Tính & Laptop',
-  'Phụ Kiện Máy Tính',
-  'Bàn Laptop'
-]
+
 
   const { productId } = useParams<{ productId: string }>() 
   const { data, isFetching, isError } = useGetProductDetailQuery({

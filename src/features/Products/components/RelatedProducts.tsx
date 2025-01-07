@@ -20,7 +20,7 @@ import { formatPrice } from '@shared/utils/formatPrice'
 import { IProduct } from '~/types/products.interface'
 import { useNavigate } from 'react-router-dom'
 import { compareProduct } from '@api/geminiApi'
-import { ReactElement, useState } from 'react'
+import {  useState } from 'react'
 
 export default function RelatedProducts({
   relatedProducts,

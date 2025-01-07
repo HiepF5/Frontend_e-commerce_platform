@@ -5,8 +5,7 @@ import {
   Box,
   Container,
   Typography,
-  Rating,
-  LinearProgress,
+
   Grid,
   Paper,
   Button,
