@@ -13,7 +13,7 @@ const UserInfoPage = () => {
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem('user') || 'null')
     dispatch(getInfo({ email: user.email }))
-    // dispatch(setInfoUserLocalstorage())
+    dispatch(setInfoUserLocalstorage())
   }, [dispatch, shouldUpdate])
   const handleDialogOpen = () => {
     setDialogOpen(true)

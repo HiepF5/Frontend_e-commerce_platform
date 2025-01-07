@@ -1,6 +1,6 @@
 import { BaseQueryFn } from '@reduxjs/toolkit/query';
 import { AxiosRequestConfig, AxiosError } from 'axios';
-import axiosInstance from '@shared/libs/axios/axiosInstance';
+import axiosInstance2 from '@shared/libs/axios/axiosInstanceElk';
 
 // Tạo custom baseQuery sử dụng Axios
 export const axiosBaseElk =
@@ -12,7 +12,7 @@ export const axiosBaseElk =
   }> =>
   async ({ url, method, data, params }) => {
     try {
-      const result = await axiosInstance({
+      const result = await axiosInstance2({
         url,
         method,
         data,
