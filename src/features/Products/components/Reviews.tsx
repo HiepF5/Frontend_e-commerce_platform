@@ -18,7 +18,7 @@ import { toast } from 'react-toastify'
 import ReactMarkdown from 'react-markdown'
 import { styled } from '@mui/system'
 import { useAppDispatch } from '@store/hook'
-import { addUserMessage, fetchChatResponse, toggleChat } from '@features/ChatBot/slices/ChatBotSlice'
+import { addUserMessage, toggleChat } from '@features/ChatBot/slices/ChatBotSlice'
 import { IProductData } from '../types/products.interface'
 
 interface ReviewImage {
@@ -148,7 +148,7 @@ export default function Reviews({ productId, productDetail }: ReviewsProps) {
 
       // Gọi API chat với prompt
       const response = await chatWithPromptApi({
-        prompt_name: promptName,
+        promptName: promptName,
         message: encodeURIComponent(`${message}\nThông tin sản phẩm: ${productInfo}`)
       })
       dispatch(addUserMessage({ text: response.data, isUser: false }))

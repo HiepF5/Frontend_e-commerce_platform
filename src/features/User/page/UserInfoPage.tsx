@@ -2,7 +2,7 @@ import UserInfo from '../components/UserInfo'
 import ChangeInfoDialog from '../components/ChangeInfoDialog'
 import { useEffect, useState } from 'react'
 import { IChangeInfoRequest } from '~/types/users.interface'
-import { changeAvatar, changeInfo, getInfo, setInfoUserLocalstorage } from '../slices/UserSlice'
+import { changeAvatar, changeInfo, getInfo } from '../slices/UserSlice'
 import { useAppDispatch, useAppSelector } from '@store/hook'
 import { toast } from 'react-toastify'
 

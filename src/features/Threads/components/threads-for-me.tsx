@@ -23,7 +23,6 @@ export default function ThreadForMePage() {
   const {
     data: response,
     isLoading,
-    error,
     refetch
   } = useGetMyPostsQuery({ 
     hash_tag: hashTag,

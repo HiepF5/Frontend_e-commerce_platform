@@ -14,11 +14,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Chip,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem
+  Chip
 } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
@@ -81,7 +77,7 @@ export default function OrderDetail() {
   const navigate = useNavigate()
   console.log(orderId)
   // const [orderDetail, setOrderDetail] = useState<OrderDetail | null>(null)
-  const { data: getData, isLoading } = useGetOrderDetailQuery({
+  const { data: getData } = useGetOrderDetailQuery({
     orderId: orderId!
   })
   console.log(getData)
@@ -113,6 +109,7 @@ export default function OrderDetail() {
     toast.success('Đã gửi yêu cầu hủy đơn hàng')
     console.log(refundData)
     const respone = cancelOrder({ orderId: orderId! })
+    console.log(respone)
   }
   useEffect(() => {
     const unsubscribe = subscribeToOrderUpdates(orderId!, async (update) => {

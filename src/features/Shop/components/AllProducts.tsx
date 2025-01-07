@@ -19,7 +19,7 @@ import {
 } from '@mui/icons-material'
 import ProductItem from '@features/Products/components/ProductItem'
 import { useParams } from 'react-router-dom'
-import { useGetListProductQuery, useListProductOfShopMutation } from '@features/Products/api/productApi'
+import { useListProductOfShopMutation } from '@features/Products/api/productApi'
 import { ProductSkeleton } from './common/ProductSkeleton'
 import { ProductFilters } from './common/ProductFilters'
 import { useInView } from 'react-intersection-observer'
@@ -39,7 +39,7 @@ const AllProducts = () => {
   })
 
   const [products, setProducts] = useState<IProduct[]>([])
-  const [listProductOfShop, { data, isLoading, isError }] =
+  const [listProductOfShop, { data, isLoading }] =
     useListProductOfShopMutation()
 
   useEffect(() => {

@@ -35,7 +35,7 @@ export default function PostForm({ onSubmit }: PostFormProps) {
   const [provinceId, setProvinceId] = useState('')
   const [districtId, setDistrictId] = useState('')
   const [wardId, setWardId] = useState('')
-  const [status, setStatus] = useState(false) 
+  const [status] = useState(false) 
   const [address, setAddress] = useState('')
   const { provinces, districts, wards } = useAppSelector((state) => state.ghn)
   const handleProvinceChange = (provinceId: string) => {
@@ -43,7 +43,7 @@ export default function PostForm({ onSubmit }: PostFormProps) {
     setDistrictId('') // Khi tỉnh thay đổi, quận cần được reset lại
     setWardId('') // Phường cũng cần reset lại
   }
-
+  console.log()
   const handleDistrictChange = (districtId: string) => {
     setDistrictId(districtId)
     setWardId('') // Khi quận thay đổi, phường cũng cần reset lại
@@ -61,6 +61,7 @@ export default function PostForm({ onSubmit }: PostFormProps) {
      const newLocation = [province, district, ward].filter(Boolean).join(', ')
      setLocation(newLocation)
    }
+   console.log(updateLocation)
    useEffect(() => {
      if (provinceId && districtId && wardId) {
        const province = provinces?.find((p) => p.ProvinceID === Number(provinceId))

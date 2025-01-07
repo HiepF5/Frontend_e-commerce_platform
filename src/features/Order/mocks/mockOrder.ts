@@ -4,7 +4,7 @@ import { OrderDetail } from "../types/order.interface";
 export const mockOrder: OrderDetail = {
   id: 1,
   orderShopCode: "ORD-2024-001",
-  orderStatus: OrderStatus.DANG_GIAO,
+  orderStatus: OrderStatus.DANG_LAY_HANG,
   totalProduct: 3,
   shopShippingFee: 30000,
   shopDiscount: 50000,
@@ -56,7 +56,7 @@ export const mockOrder: OrderDetail = {
   historyDtoList: [
     {
       id: 1,
-      event: OrderStatus.DA_GIAO,
+      event: OrderStatus.DANG_GIAO_HANG,
       description: "Đơn hàng được tạo",
       note: "2024-01-30T10:00:00Z"
     },

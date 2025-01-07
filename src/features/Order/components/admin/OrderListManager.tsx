@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { OrderAdminRequest, OrderListItem } from '../../types/order.interface'
+import { OrderAdminRequest } from '../../types/order.interface'
 import { OrderListManagerProps } from '../../types/order.interface'
 import OrderTable from './OrderTable'
 import { Box, Tab, Tabs, Typography } from '@mui/material'
@@ -23,7 +23,7 @@ const OrderListManager = ({
   const currentPath = location.pathname.split('/').pop() || ''
   const [tabValue, setTabValue] = useState(tabPaths.indexOf(currentPath))
   const { currentPage, handlePageChange } = usePagination({ initialPage: 1 })
-  const [selectedStatus, setSelectedStatus] = useState(status)
+  const [selectedStatus] = useState(status)
   const [getOrders, { data: orderData, isLoading }] = useGetDashboardMutation()
   console.log(orderData)
   useEffect(() => {

@@ -26,7 +26,6 @@ import {
   Block as BlockIcon,
   AdminPanelSettings as AdminIcon
 } from '@mui/icons-material'
-import { formatDate } from '@shared/utils/formatDate'
 import PaginationComponent from '@shared/components/Pagination/PaginationComponent'
 import { IUser } from '~/types/users.interface'
 import { debounce } from 'lodash'

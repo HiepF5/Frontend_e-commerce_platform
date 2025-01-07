@@ -43,7 +43,7 @@ const OrderTableShop = ({ data, isLoading, onPageChange, pagination }: OrderTabl
             {data.map((order) => (
               <TableRow key={order.id}>
                 <TableCell>{order.orderCode}</TableCell>
-                <TableCell>{order.customerName}</TableCell>
+                <TableCell>{order.clientInfo}</TableCell>
                 <TableCell>{order.totalAmount.toLocaleString()}đ</TableCell>
                 <TableCell>{order.status}</TableCell>
                 <TableCell>{new Date(order.createdAt).toLocaleDateString()}</TableCell>
@@ -65,7 +65,7 @@ const OrderTableShop = ({ data, isLoading, onPageChange, pagination }: OrderTabl
       <Box display="flex" justifyContent="center" mt={2}>
         <PaginationComponent
           currentPage={pagination.currentPage}
-          totalPages={pagination.totalPages}
+          totalPage={pagination.totalPages}
           onPageChange={onPageChange}
         />
       </Box>

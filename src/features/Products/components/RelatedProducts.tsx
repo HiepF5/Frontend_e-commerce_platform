@@ -11,70 +11,9 @@ import {
   CardContent
 } from '@mui/material'
 import { formatPrice } from '@shared/utils/formatPrice'
-import { useGetProductRecommendContentBasedQuery } from '../api/productApi'
-import { useEffect, useState } from 'react'
+
 import { IProduct } from '~/types/products.interface'
 import { useNavigate } from 'react-router-dom'
-
-interface RelatedProduct {
-  id: string
-  name: string
-  price: number
-  originalPrice: number
-  image: string
-  specs: {
-    weight: string
-    material: string
-    cpu: string
-    ram: string
-    screen: string
-  }
-}
-
-const relatedProducts: RelatedProduct[] = [
-  {
-    id: '1',
-    name: 'Samsung Galaxy S24 Plus 5G 256GB',
-    price: 19990000,
-    originalPrice: 26990000,
-    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true',
-    specs: {
-      weight: '196 g',
-      material: 'Hợp kim nhôm',
-      cpu: 'Exynos 2400',
-      ram: '12 GB',
-      screen: '6.7 inch'
-    }
-  },
-  {
-    id: '2',
-    name: 'Samsung Galaxy Z Flip6 256GB',
-    price: 22990000,
-    originalPrice: 28990000,
-    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true',
-    specs: {
-      weight: '187 g',
-      material: 'Armor aluminum',
-      cpu: 'Snapdragon 8 Gen 3',
-      ram: '12 GB',
-      screen: '6.7 inch'
-    }
-  },
-  {
-    id: '3',
-    name: 'Samsung Galaxy S24 5G 512GB',
-    price: 21490000,
-    originalPrice: 26490000,
-    image: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
-    specs: {
-      weight: '167 g',
-      material: 'Hợp kim nhôm',
-      cpu: 'Exynos 2400',
-      ram: '8 GB',
-      screen: '6.2 inch'
-    }
-  }
-]
 
 export default function RelatedProducts({ relatedProducts }: { relatedProducts: IProduct[] }) {
   const navigate = useNavigate()

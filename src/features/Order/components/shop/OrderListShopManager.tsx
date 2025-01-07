@@ -1,16 +1,15 @@
 import { useState, useEffect } from 'react';
-import { OrderShopRequest, OrderListItem } from '../../types/order.interface';
 import { OrderListManagerProps } from '../../types/order.interface';
 import OrderTableShop from './OrderTableShop';
 import { Box, Tab, Tabs } from '@mui/material';
-import { ORDER_STATUS } from '../../types/order.enum';
+import { OrderStatus } from '../../types/order.enum';
 
 const OrderListShopManager = ({ useGetDashboardMutation, status }: OrderListManagerProps): JSX.Element => {
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedStatus, setSelectedStatus] = useState(status);
   const [getOrders, { data: orderData, isLoading }] = useGetDashboardMutation();
 
-  const handlePageChange = (page: number) => {
+  const handlePageChange = (_: React.ChangeEvent<unknown>, page: number) => {
     setCurrentPage(page);
   };
 
@@ -21,7 +20,7 @@ const OrderListShopManager = ({ useGetDashboardMutation, status }: OrderListMana
 
   useEffect(() => {
     const fetchOrders = async () => {
-      const params: OrderShopRequest = {
+      const params = {
         page: currentPage,
         limit: 10,
         status: selectedStatus
@@ -41,11 +40,11 @@ const OrderListShopManager = ({ useGetDashboardMutation, status }: OrderListMana
         aria-label="order status tabs"
       >
         <Tab label="Tất cả" value="" />
-        <Tab label="Chờ xác nhận" value={ORDER_STATUS.PENDING} />
-        <Tab label="Đã xác nhận" value={ORDER_STATUS.CONFIRMED} />
-        <Tab label="Đang giao" value={ORDER_STATUS.DELIVERING} />
-        <Tab label="Hoàn thành" value={ORDER_STATUS.COMPLETED} />
-        <Tab label="Đã hủy" value={ORDER_STATUS.CANCELLED} />
+        <Tab label="Chờ xác nhận" value={OrderStatus.CHO_XAC_NHAN} />
+        <Tab label="Đã xác nhận" value={OrderStatus.DANG_GIAO_HANG} />
+        <Tab label="Đang giao" value={OrderStatus.DA_HUY} />
+        <Tab label="Hoàn thành" value={OrderStatus.GH_THANH_CONG} />
+        <Tab label="Đã hủy" value={OrderStatus.DA_HUY} />
       </Tabs>
 
       <OrderTableShop

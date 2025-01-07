@@ -8,12 +8,11 @@ import {
   Chip,
   Avatar,
   CircularProgress,
-  Pagination
 } from '@mui/material'
 import { formatCurrency } from '@shared/utils/formatPrice'
 import { useNavigate } from 'react-router-dom'
 import { useGetOrderListsMutation } from '../api/orderShopApi'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { IFilters, OrderListItem } from '../types/order.interface'
 import { getOrderStatusColor, getOrderStatusText } from '../helper/orderHelper'
 import useCreateMessage from '@hooks/useCreateMessage'

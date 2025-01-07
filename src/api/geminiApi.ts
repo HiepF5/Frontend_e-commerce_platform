@@ -169,14 +169,9 @@ export const chatWithPromptApi = async (
   data: ChatWithPromptFormData
 ): Promise<IBaseResponse<String>> => {
   try {
-    const response = await axios.get<IBaseResponse<String>>(
+    const response = await axios.post<IBaseResponse<String>>(
       `${API_ENDPOINTS_CHATBOT.ApiChatWithPrompt}`,
-      {
-        params: {
-          prompt_name: data.prompt_name,
-          message: data.message
-        }
-      }
+      data
     )
     return response.data
   } catch (error) {

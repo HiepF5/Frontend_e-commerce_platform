@@ -205,7 +205,17 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
           <Typography variant='body1' paragraph>
             {post.content}
           </Typography>
-
+          <Box mb={2}>
+            {post.hash_tag?.map((tag, index) => (
+              <Chip
+                key={index}
+                label={`#${tag}`}
+                size='small'
+                sx={{ mr: 0.5, mb: 0.5 }}
+                clickable
+              />
+            ))}
+          </Box>
           {post.media_url && post.media_url.length > 0 && (
             <Box mb={2}>
               <ImageList
@@ -226,7 +236,6 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
                       alt={`Post content ${index + 1}`}
                       style={{
                         width: '100%',
-                        height: '300px',
                         borderRadius: '8px',
                         objectFit: 'cover'
                       }}
@@ -237,18 +246,6 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
               </ImageList>
             </Box>
           )}
-
-          <Box mb={2}>
-            {post.hash_tag?.map((tag, index) => (
-              <Chip
-                key={index}
-                label={`#${tag}`}
-                size='small'
-                sx={{ mr: 0.5, mb: 0.5 }}
-                clickable
-              />
-            ))}
-          </Box>
 
           {post.is_shared && post.shared_post && (
             <Card variant='outlined' sx={{ mb: 2 }}>
@@ -320,7 +317,7 @@ export function PostModal({ open, post, onClose, onSuccess }: PostModalProps) {
             postId={post.post_id}
             commentCount={post.comment_count}
             comments={responseData?.data || []}
-            onAddComment={(content: string, parentId? :number) => {
+            onAddComment={(content: string, parentId?: number) => {
               handleAddComment(content, parentId)
             }}
             onUpdateComment={(id: number, content: string) => {

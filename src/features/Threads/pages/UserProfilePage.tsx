@@ -23,7 +23,6 @@ import { IPostResponse } from '../types/threads.interface'
 import { PostModal } from '../components/post-modal'
 import {
   CameraAlt,
-  Edit,
   GridView,
   BookmarkBorder,
   PersonAdd,
@@ -97,21 +96,25 @@ export default function UserProfilePage() {
   const userInfo = response?.data.data[0] || null
 
   return (
-    <Box display="flex">
+    <Box display='flex'>
       <LeftSidebar />
 
-      <Container maxWidth="md" sx={{ py: 4, flex: 1 }}>
+      <Container maxWidth='md' sx={{ py: 4, flex: 1 }}>
         <SearchBar onSearch={handleSearch} />
 
         {userInfo && (
-          <Paper elevation={0} sx={{ borderRadius: 3, overflow: 'hidden', mb: 3 }}>
+          <Paper
+            elevation={0}
+            sx={{ borderRadius: 3, overflow: 'hidden', mb: 3 }}
+          >
             {/* Cover Photo */}
             <Box
               sx={{
                 height: 250,
                 bgcolor: 'grey.200',
                 position: 'relative',
-                backgroundImage: 'linear-gradient(to bottom right, #1976d2, #64b5f6)',
+                backgroundImage:
+                  'linear-gradient(to bottom right, #1976d2, #64b5f6)',
                 backgroundSize: 'cover',
                 backgroundPosition: 'center'
               }}
@@ -131,7 +134,7 @@ export default function UserProfilePage() {
 
             {/* Profile Info */}
             <Box sx={{ px: 4, pt: 2, pb: 3, position: 'relative' }}>
-              <Grid container spacing={2} alignItems="flex-end">
+              <Grid container spacing={2} alignItems='flex-end'>
                 <Grid item>
                   <Avatar
                     src={userInfo.post_avatar}
@@ -144,7 +147,7 @@ export default function UserProfilePage() {
                     }}
                   >
                     <Box
-                      className="overlay"
+                      className='overlay'
                       sx={{
                         position: 'absolute',
                         bottom: 0,
@@ -166,34 +169,40 @@ export default function UserProfilePage() {
                   </Avatar>
                 </Grid>
                 <Grid item xs>
-                  <Box display="flex" justifyContent="space-between" alignItems="center">
+                  <Box
+                    display='flex'
+                    justifyContent='space-between'
+                    alignItems='center'
+                  >
                     <Box>
-                      <Typography variant="h4" fontWeight="bold">
+                      <Typography variant='h4' fontWeight='bold'>
                         {userInfo.post_name}
                       </Typography>
-                      <Typography variant="body1" color="text.secondary" mt={1}>
+                      <Typography variant='body1' color='text.secondary' mt={1}>
                         {userInfo.location || 'Chưa có địa chỉ'}
                       </Typography>
                     </Box>
-                    <Box display="flex" gap={1}>
-                      <Button variant="contained" startIcon={<PersonAdd />}>
+                    <Box display='flex' gap={1}>
+                      <Button variant='contained' startIcon={<PersonAdd />}>
                         Theo dõi
                       </Button>
-                      <Button variant="outlined" startIcon={<Message />}>
+                      <Button variant='outlined' startIcon={<Message />}>
                         Nhắn tin
                       </Button>
                     </Box>
                   </Box>
 
-                  <Box display="flex" gap={4} mt={3}>
+                  <Box display='flex' gap={4} mt={3}>
                     <Typography>
-                      <strong>{response?.data.totalAmount || 0}</strong> bài viết
+                      <strong>{response?.data.totalAmount || 0}</strong> bài
+                      viết
                     </Typography>
                     <Typography>
                       <strong>{userInfo.like_count || 0}</strong> người theo dõi
                     </Typography>
                     <Typography>
-                      Đang theo dõi <strong>{userInfo.shared_count || 0}</strong> người
+                      Đang theo dõi{' '}
+                      <strong>{userInfo.shared_count || 0}</strong> người
                     </Typography>
                   </Box>
                 </Grid>
@@ -215,8 +224,8 @@ export default function UserProfilePage() {
                 }
               }}
             >
-              <Tab icon={<GridView />} label="Bài viết" />
-              <Tab icon={<BookmarkBorder />} label="Đã lưu" />
+              <Tab icon={<GridView />} label='Bài viết' />
+              <Tab icon={<BookmarkBorder />} label='Đã lưu' />
             </Tabs>
           </Paper>
         )}
@@ -224,7 +233,7 @@ export default function UserProfilePage() {
         {/* Tab Panels */}
         <TabPanel value={tabValue} index={0}>
           {response?.data.data.length === 0 ? (
-            <Typography textAlign="center" color="text.secondary" mt={4}>
+            <Typography textAlign='center' color='text.secondary' mt={4}>
               Chưa có bài viết nào
             </Typography>
           ) : (
@@ -239,9 +248,9 @@ export default function UserProfilePage() {
           )}
 
           {response?.data.totalPage && response.data.totalPage > page && (
-            <Box display="flex" justifyContent="center" mt={3}>
+            <Box display='flex' justifyContent='center' mt={3}>
               <Button
-                variant="outlined"
+                variant='outlined'
                 onClick={() => setPage((prev) => prev + 1)}
                 disabled={isLoading}
               >
@@ -252,7 +261,7 @@ export default function UserProfilePage() {
         </TabPanel>
 
         <TabPanel value={tabValue} index={1}>
-          <Typography textAlign="center" color="text.secondary" mt={4}>
+          <Typography textAlign='center' color='text.secondary' mt={4}>
             Chưa có bài viết nào được lưu
           </Typography>
         </TabPanel>
@@ -263,13 +272,20 @@ export default function UserProfilePage() {
         viewedPosts={viewedPosts.slice(0, 3)}
         onPostClick={handlePostClick}
       />
-
-      <PostModal
+      {selectedPost && (
+        <PostModal
+          open={!!selectedPost}
+          onClose={() => setSelectedPost(null)}
+          post={selectedPost}
+          onSuccess={refetch}
+        />
+      )}
+      {/* <PostModal
         open={!!selectedPost}
         onClose={() => setSelectedPost(null)}
         post={selectedPost}
         onSuccess={refetch}
-      />
+      /> */}
     </Box>
   )
 } 

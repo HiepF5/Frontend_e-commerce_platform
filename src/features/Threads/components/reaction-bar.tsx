@@ -30,19 +30,18 @@ const reactionIcons = {
   [ReactionType.ANGRY]: <Mood sx={{ color: '#e41e3f' }} />
 }
 
-const reactionLabels = {
-  [ReactionType.LIKE]: 'Thích',
-  [ReactionType.LOVE]: 'Yêu thích',
-  [ReactionType.HAHA]: 'Haha',
-  [ReactionType.WOW]: 'Wow',
-  [ReactionType.SAD]: 'Buồn',
-  [ReactionType.ANGRY]: 'Phẫn nộ'
-}
+// const reactionLabels = {
+//   [ReactionType.LIKE]: 'Thích',
+//   [ReactionType.LOVE]: 'Yêu thích',
+//   [ReactionType.HAHA]: 'Haha',
+//   [ReactionType.WOW]: 'Wow',
+//   [ReactionType.SAD]: 'Buồn',
+//   [ReactionType.ANGRY]: 'Phẫn nộ'
+// }
 
 export function ReactionBar({
   postId,
   likeCount,
-  isLiked,
   myReaction,
   onReactionChange
 }: ReactionBarProps) {

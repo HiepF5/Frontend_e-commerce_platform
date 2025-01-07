@@ -4,11 +4,6 @@ import {
   InputBase,
   IconButton,
   Paper,
-  Popper,
-  List,
-  ListItem,
-  ListItemText,
-  ClickAwayListener
 } from '@mui/material'
 import { Search as SearchIcon, Close as CloseIcon } from '@mui/icons-material'
 
@@ -18,7 +13,6 @@ interface SearchBarProps {
 
 export function SearchBar({ onSearch }: SearchBarProps) {
   const [searchTerm, setSearchTerm] = useState('')
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleSearch = (event: React.FormEvent) => {
     event.preventDefault()

@@ -1,5 +1,4 @@
 import Logo from '@assets/logo.png'
-import { IoMdSearch } from 'react-icons/io'
 import {
   FaCaretDown,
   FaCartShopping,

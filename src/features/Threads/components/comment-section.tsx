@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Box,
   Avatar,
@@ -23,7 +23,6 @@ interface CommentSectionProps {
 export function CommentSection({
   comments,
   postId,
-  commentCount,
   onAddComment,
   onUpdateComment,
   onDeleteComment
@@ -44,7 +43,6 @@ export function CommentSection({
 
   const {
     data: replyData,
-    isLoading,
     refetch
   } = useGetCommentsQuery({
     post_id: postId,

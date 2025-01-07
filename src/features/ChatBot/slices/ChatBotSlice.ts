@@ -8,12 +8,6 @@ import {
   IChatImageResponse
 } from '~/types/gemini.interface'
 
-interface ChatMessage {
-  text: string
-  isUser: boolean
-  fileUrl?: string // Optional property for file URLs
-  error?: string | null
-}
 interface ChatState {
   messages: Array<{
     text: string

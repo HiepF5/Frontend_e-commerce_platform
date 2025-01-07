@@ -25,7 +25,6 @@ import {
   handleWebSocketMessage
   // addMessageAndSetChatStory
 } from '../../slices/ChatSlice'
-import AttachFileIcon from '@mui/icons-material/AttachFile'
 import ChatService from '../../service/ChatService'
 import { dateMapper } from '@shared/utils/dateMapper'
 import {
@@ -75,8 +74,10 @@ const Chat: React.FC = () => {
   const messageBoxRef = useRef<HTMLDivElement | null>(null)
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [selectedMessage, setSelectedMessage] = useState<any>(null)
+  console.log(selectedMessage)
   const [messageMenuAnchor, setMessageMenuAnchor] =
     useState<null | HTMLElement>(null)
+  console.log(messageMenuAnchor)
   const { refetch: refetchChatList } = useFetchChatListOwnerQuery({
     shopCode: null,
     userCode: null,

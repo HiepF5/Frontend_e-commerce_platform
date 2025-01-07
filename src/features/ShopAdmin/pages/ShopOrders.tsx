@@ -32,7 +32,7 @@ import {
   DialogActions,
   Avatar
 } from '@mui/material'
-import { ImageAspectRatio, Search as SearchIcon } from '@mui/icons-material'
+import {  Search as SearchIcon } from '@mui/icons-material'
 import { useOrders } from '../hooks/useOrders'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
@@ -45,8 +45,7 @@ import { AdvancedFilters } from '../components/AdvancedFilters'
 import { BulkActions } from '../components/BulkActions'
 import { OrdersAnalytics } from '../components/OrdersAnalytics'
 import { ViewIcon } from 'lucide-react'
-import { Order } from '../types/order'
-import { useGetShopOrderDetailQuery, useGetShopOrderListsMutation, useLazyGetShopOrderDetailQuery, useShopUpdateOrderByIDMutation } from '@features/Order/api/orderShopApi'
+import { useGetShopOrderListsMutation, useLazyGetShopOrderDetailQuery, useShopUpdateOrderByIDMutation } from '@features/Order/api/orderShopApi'
 import { getOrderStatusColor } from '@features/Order/helper/orderHelper'
 import { OrderDetail, OrderListItem } from '@features/Order/types/order.interface'
 import { OrderStatus } from '~/features/Order/types/order.enum'
@@ -138,6 +137,7 @@ const ShopOrders = (): JSX.Element => {
         orderId: selectedOrder.orderShopCode,
         data: newStatus
       }).unwrap()
+      console.log(response)
       toast.success('Cập nhật trạng thái đơn hàng thành công')
       setSelectedOrder((prev) => prev ? ({
         ...prev,
@@ -177,7 +177,7 @@ const ShopOrders = (): JSX.Element => {
     )
   }
 
-  const [trigger, { data: orderDetail }] =
+  const [trigger] =
     useLazyGetShopOrderDetailQuery()
 
   const handleView = (order: OrderListItem): void => {

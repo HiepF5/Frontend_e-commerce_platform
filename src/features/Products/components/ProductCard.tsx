@@ -8,11 +8,10 @@ import {
   Chip,
   Container,
   Grid,
-  IconButton,
   Typography,
   Link
 } from '@mui/material'
-import { ChevronRight, Heart, Play } from 'lucide-react'
+import { ChevronRight} from 'lucide-react'
 import { formatPrice } from '@shared/utils/formatPrice'
 import { IProduct } from '~/types/products.interface'
 import { useNavigate } from 'react-router-dom'

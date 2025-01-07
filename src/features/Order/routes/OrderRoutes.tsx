@@ -5,7 +5,7 @@ import OrderTracking from '../components/OrderTracking'
 import LayoutUser from '@features/User/components/LayoutUser'
 import OrderList from '../components/OrderList'
 import OrderDetail from '../components/OrderDetail'
-import OrderCancel from '../components/OrderCancel'
+
 import OrderHistory from '../components/OrderHistory'
 import OrderStatus from '../components/OrderStatus'
 import OrderReceipt from '../components/OrderReceipt'

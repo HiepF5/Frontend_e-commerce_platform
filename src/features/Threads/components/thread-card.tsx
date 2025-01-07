@@ -28,7 +28,6 @@ import {
 import { IPostResponse, ReactionType } from '../types/threads.interface'
 import { useDeleteThreadMutation, useShareThreadMutation } from '../api/threadsApi'
 import { toast } from 'react-toastify'
-import { CommentSection } from './comment-section'
 import { ReactionBar } from './reaction-bar'
 import { useNavigate } from 'react-router-dom'
 
@@ -307,24 +306,20 @@ const ThreadCard = forwardRef<HTMLDivElement, ThreadCardProps>(
           </IconButton>
         </CardActions>
 
-        {showComments && (
+        {/* {showComments && (
           <Box px={2} pb={2}>
             <CommentSection
               postId={post.post_id}
               commentCount={post.comment_count}
-              comments={[]}
-              onAddComment={function (content: string, parentId?: string): void {
+              comments={[]} onAddComment={function (content: string, parentId?: number): void {
                 throw new Error('Function not implemented.')
-              }}
-              onUpdateComment={function (id: string, content: string): void {
+              } } onUpdateComment={function (id: number, content: string): void {
                 throw new Error('Function not implemented.')
-              }}
-              onDeleteComment={function (id: string): void {
+              } } onDeleteComment={function (id: number): void {
                 throw new Error('Function not implemented.')
-              }}
-            />
+              } }            />
           </Box>
-        )}
+        )} */}
 
         <Menu
           anchorEl={anchorEl}

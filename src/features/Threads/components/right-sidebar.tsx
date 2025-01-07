@@ -1,14 +1,11 @@
 import {
   Box,
-  Card,
-  CardContent,
   Typography,
   Avatar,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Divider,
   IconButton,
   Paper
 } from '@mui/material'

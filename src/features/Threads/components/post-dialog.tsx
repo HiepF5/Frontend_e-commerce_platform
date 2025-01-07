@@ -23,6 +23,7 @@ export function PostDialog({
   onSubmit,
 }: PostDialogProps) {
   const user = JSON.parse(localStorage.getItem('user') || '{}')
+  console.log(user)
   return (
     <Dialog
       open={open}

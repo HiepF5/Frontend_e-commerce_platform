@@ -250,13 +250,23 @@ export default function CheckoutPage() {
                 borderTop: '1px dashed',
                 borderColor: 'divider',
                 display: 'flex',
-                justifyContent: 'flex-end',
-                alignItems: 'center',
+                flexDirection: 'column',
+
+                alignItems: 'end',
                 gap: 2
               }}
             >
               <Typography variant='body2' color='text.secondary'>
                 {shop.listItem.length} sản phẩm
+              </Typography>
+              <Typography variant='subtitle1'>
+                Tổng tiền hàng {formatCurrency(shop.productTotal)}
+              </Typography>
+              <Typography variant='subtitle1'>
+                Giảm giá voucher - {formatCurrency(shop.discount)}
+              </Typography>
+              <Typography variant='subtitle1'>
+                Ship của Shop  + {formatCurrency(shop.fee)}
               </Typography>
               <Typography variant='subtitle1'>
                 Tổng đơn shop: {formatCurrency(shop.totalAmount)}
@@ -277,14 +287,14 @@ export default function CheckoutPage() {
           onChange={(e) => setShippingMethod(e.target.value)}
         >
           <FormControlLabel
-        value='GHN'
-        control={<Radio />}
-        label='Giao Hàng Nhanh'
+            value='GHN'
+            control={<Radio />}
+            label='Giao Hàng Nhanh'
           />
           <FormControlLabel
-        value='GHTK'
-        control={<Radio />}
-        label='Giao Hàng Tiết Kiệm'
+            value='GHTK'
+            control={<Radio />}
+            label='Giao Hàng Tiết Kiệm'
           />
         </RadioGroup>
       </Paper>
@@ -301,9 +311,9 @@ export default function CheckoutPage() {
         >
           <FormControlLabel value='VNPAY' control={<Radio />} label='VNPay' />
           <FormControlLabel
-        value='THANH_TOAN_KHI_GIAO_HANG'
-        control={<Radio />}
-        label='Thanh toán khi nhận hàng'
+            value='THANH_TOAN_KHI_GIAO_HANG'
+            control={<Radio />}
+            label='Thanh toán khi nhận hàng'
           />
           <FormControlLabel value='MOMO' control={<Radio />} label='Ví MoMo' />
         </RadioGroup>
@@ -371,7 +381,11 @@ export default function CheckoutPage() {
               </Typography>
               <Typography>
                 Giảm giá:{' '}
-                {formatCurrency(data.shopDiscount + data.ecommerceDiscount + data.ecommerceShipping)}
+                {formatCurrency(
+                  data.shopDiscount +
+                    data.ecommerceDiscount +
+                    data.ecommerceShipping
+                )}
               </Typography>
               <Typography variant='h6' color='primary'>
                 Tổng thanh toán: {formatCurrency(data.totalAmount)}

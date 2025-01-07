@@ -1,7 +1,6 @@
 import Breadcrum from '../components/Breadcrum'
 import DescriptionBox from '../components/DescriptionBox'
 import ShopProducts from '../components/ProductCard'
-import ProductComparison from '../components/ProductComparison'
 import ProductDisplay from '../components/ProductDisplay'
 import ProductFeatures from '../components/ProductFeatures'
 import ProductSpecs from '../components/ProductSpecs'
@@ -91,7 +90,7 @@ const categories = [
         <ProductSpecs specs={productSpecs} categories={categories} />
       </div>
       <RelatedProducts relatedProducts={relatedProducts} />
-      <ProductComparison />
+      {/* <ProductComparison /> */}
       <Reviews productId={productId} productDetail={products} />
       <ReviewToCustomer productId={productId} isShopOwner={isShopOwner} />
       <RecentlyViewed />

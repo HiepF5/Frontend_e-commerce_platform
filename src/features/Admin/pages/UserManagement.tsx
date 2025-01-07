@@ -22,7 +22,6 @@ import {
 } from '@mui/material'
 import { Edit as EditIcon, Block as BlockIcon, AdminPanelSettings as AdminIcon } from '@mui/icons-material'
 import { useGetUsersMutation, useChangeAdminRoleMutation } from '../api/userApi'
-import { formatDate } from '@shared/utils/formatDate'
 import PaginationComponent from '@shared/components/Pagination/PaginationComponent'
 import { IUser } from '~/types/users.interface'
 import { debounce } from 'lodash'

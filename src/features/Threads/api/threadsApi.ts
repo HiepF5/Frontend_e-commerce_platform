@@ -90,7 +90,7 @@ export const threadsApi = createApi({
           data: formData
         }
       },
-      invalidatesTags: (result, error, { post_id }) => [
+      invalidatesTags: (_result, _error, { post_id }) => [
         { type: 'Posts', id: post_id }
       ]
     }),
@@ -142,7 +142,7 @@ export const threadsApi = createApi({
           data: formData
         }
       },
-      invalidatesTags: (result, error, { post_json }) => [
+      invalidatesTags: (_result, _error, { post_json }) => [
         { type: 'Posts', id: post_json.id }
       ]
     }),
@@ -153,7 +153,7 @@ export const threadsApi = createApi({
         url: `${API_ENDPOINTS_THREAD.ApiDeleteThread}/${id}`,
         method: 'DELETE'
       }),
-      invalidatesTags: (result, error, id) => [{ type: 'Posts', id }]
+      invalidatesTags: (_result, _error, id) => [{ type: 'Posts', id }]
     }),
 
     shareThread: builder.mutation<

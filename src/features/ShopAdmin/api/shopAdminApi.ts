@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseElk } from '@shared/libs/rtk-query/axiosBaseElk';
 import { FinancialOverview, MonthlyReport, ShopOverviewResponse } from '../types/order';
 

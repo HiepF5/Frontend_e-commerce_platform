@@ -1,5 +1,5 @@
 import { lazy } from 'react'
-import { Route, Router, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 import AdminLayout from '../layouts/AdminLayout'
 
 const Dashboard = lazy(() => import('../pages/Dashboard'))

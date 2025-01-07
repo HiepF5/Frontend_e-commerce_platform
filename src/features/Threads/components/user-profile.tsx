@@ -1,7 +1,6 @@
-import { Box, Avatar, Typography, Grid, Paper, Button, Divider, Tab, Tabs } from '@mui/material'
+import { Box, Avatar, Typography, Grid, Paper, Button } from '@mui/material'
 import { IPostResponse } from '../types/threads.interface'
 import { CameraAlt, Edit } from '@mui/icons-material'
-import { useState } from 'react'
 
 interface UserProfileProps {
   username: string
@@ -21,7 +20,6 @@ export function UserProfile({
   following,
   postsCount
 }: UserProfileProps) {
-  const [selectedTab, setSelectedTab] = useState(0)
 
   return (
     <Paper elevation={1} sx={{ borderRadius: 3, overflow: 'hidden' }}>

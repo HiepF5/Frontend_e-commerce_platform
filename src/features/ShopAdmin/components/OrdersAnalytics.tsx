@@ -184,7 +184,7 @@ export const OrdersAnalytics = ({ orders }: OrdersAnalyticsProps): JSX.Element =
         <Grid item xs={12} sm={6} md={3}>
           <SummaryCard
             title="Total Revenue"
-            value={`$${totalRevenue.toFixed(2)}`}
+            value={`${totalRevenue.toFixed(2)}`}
             icon={<AttachMoney color="primary" />}
             trend={12.5}
           />
@@ -200,7 +200,7 @@ export const OrdersAnalytics = ({ orders }: OrdersAnalyticsProps): JSX.Element =
         <Grid item xs={12} sm={6} md={3}>
           <SummaryCard
             title="Average Order Value"
-            value={`$${averageOrderValue.toFixed(2)}`}
+            value={`${averageOrderValue.toFixed(2)}`}
             icon={<LocalShipping color="primary" />}
             trend={-2.4}
           />
