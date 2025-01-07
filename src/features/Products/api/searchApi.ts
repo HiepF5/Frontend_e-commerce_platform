@@ -1,5 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseElk } from '@shared/libs/rtk-query/axiosBaseElk';
+import { IBaseResponse } from '~/types/base.interface';
 
 export interface IProductSearchRequest {
   id: number;
@@ -62,6 +63,15 @@ export interface IBaseResponseSearch<T> {
   first: boolean;
   empty: boolean;
 }
+export interface Category {
+  categoryId: number;
+  categoryName: string;
+}
+export interface BrandFilter {
+  id: number;
+  brand : string;
+  productCount: number;
+}
 export const searchApi = createApi({
   reducerPath: 'searchApi',
   baseQuery: axiosBaseElk(), 
@@ -72,6 +82,7 @@ export const searchApi = createApi({
         method: 'POST',
       }),
     }),
+    
   }),
 });
 

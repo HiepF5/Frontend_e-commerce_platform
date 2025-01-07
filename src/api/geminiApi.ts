@@ -11,7 +11,8 @@ import {
   UpdatePromptFormData,
   DeletePromptFormData,
   AnalysisPromptFormData,
-  ChatWithPromptFormData
+  ChatWithPromptFormData,
+  CompareProduct
 } from '~/types/gemini.interface'
 import { API_ENDPOINTS_CHATBOT } from '@config/apiConfig'
 export const chatTextApi = async (
@@ -176,6 +177,28 @@ export const chatWithPromptApi = async (
     return response.data
   } catch (error) {
     console.error('Error in chatWithPromptApi:', error)
+    throw error
+  }
+}
+export const compareProduct = async (
+  data: CompareProduct
+): Promise<IBaseResponse<String>> => {
+  try {
+    const form_data = new FormData()
+    form_data.append('product_id', data.product_id.toString())
+    form_data.append('product_other', data.product_other.toString())
+    const response = await axios.post<IBaseResponse<String>>(
+      `${API_ENDPOINTS_CHATBOT.ApiCompare}`,
+      form_data,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      }
+    )
+    return response.data
+  } catch (error) {
+    console.error('Error in updatePromptApi:', error)
     throw error
   }
 }

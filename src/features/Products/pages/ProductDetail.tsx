@@ -87,9 +87,12 @@ const categories = [
       <DescriptionBox product={products} />
       <div className='max-w-7xl mx-auto p-4 space-y-4'>
         <SellerProfile stats={sellerStats} shopCode={products?.shopCode} />
-        <ProductSpecs specs={productSpecs} categories={categories} />
+        <ProductSpecs product={products} />
       </div>
-      <RelatedProducts relatedProducts={relatedProducts} />
+      <RelatedProducts
+        productId={productId}
+        relatedProducts={relatedProducts}
+      />
       {/* <ProductComparison /> */}
       <Reviews productId={productId} productDetail={products} />
       <ReviewToCustomer productId={productId} isShopOwner={isShopOwner} />

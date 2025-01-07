@@ -39,7 +39,7 @@ export const API_ENDPOINTS_CHATBOT = {
   ApiAnalysisPrompt: `${EPATHS.ServiceGemini}/product-analysis`,
   ApiReviewWithPrompt: `${EPATHS.ServiceGemini}/product-review`,
   ApiChatWithPrompt: `${EPATHS.ServiceGemini}/prompt-text`,
-
+  ApiCompare: '/guest/gemini/product-compare'
 };
 export const API_ENDPOINTS_SHOP = {
   ApiCreateSubscribe: 'customer/shop/subscribe',

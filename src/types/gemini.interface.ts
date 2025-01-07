@@ -74,6 +74,10 @@ export interface ChatWithPromptFormData {
   promptName: string; // Tên của prompt
   message: string; // Tin nhắn
 }
+export interface CompareProduct{
+  product_id: number;
+  product_other: number;
+}
 export interface UpdatePromptFormData {
   prompt_name: string; // Tên của prompt
   new_prompt_name: string; // Tin nhắn

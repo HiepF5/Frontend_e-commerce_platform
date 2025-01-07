@@ -8,15 +8,53 @@ import {
   Typography,
   Card,
   CardMedia,
-  CardContent
+  CardContent,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  CircularProgress
 } from '@mui/material'
 import { formatPrice } from '@shared/utils/formatPrice'
 
 import { IProduct } from '~/types/products.interface'
 import { useNavigate } from 'react-router-dom'
+import { compareProduct } from '@api/geminiApi'
+import { ReactElement, useState } from 'react'
 
-export default function RelatedProducts({ relatedProducts }: { relatedProducts: IProduct[] }) {
+export default function RelatedProducts({
+  relatedProducts,
+  productId
+}: {
+  relatedProducts: IProduct[]
+  productId?: string
+}) {
+ const [open, setOpen] = useState(false)
+ const [modalContent, setModalContent] = useState<string>('')
+
+ const handleClose = () => setOpen(false)
   const navigate = useNavigate()
+    const [loading, setLoading] = useState<boolean>(false)
+const handleCompare = async (event: React.MouseEvent, productOther: number) => {
+  event?.stopPropagation()
+  setLoading(true) // Hiển thị loading
+  setOpen(true) // Mở modal ngay lập tức để hiển thị trạng thái loading
+  try {
+    const response = await compareProduct({
+      product_id: Number(productId),
+      product_other: Number(productOther)
+    })
+    if (response.code === 200) {
+      setModalContent(`Comparison Result: ${response.data}`)
+    } else {
+      setModalContent(`Failed to compare products: ${response.message}`)
+    }
+  } catch (error: any) {
+    setModalContent(`Error: ${error.message}`)
+  } finally {
+    setLoading(false) // Dừng loading sau khi xử lý xong
+  }
+}
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
       <Box sx={{ mb: 4 }}>
@@ -69,7 +107,12 @@ export default function RelatedProducts({ relatedProducts }: { relatedProducts: 
                     {product.rating || 0} ⭐
                   </Typography>
                 </Box>
-                <Button variant='outlined' fullWidth sx={{ mt: 2 }}>
+                <Button
+                  variant='outlined'
+                  fullWidth
+                  sx={{ mt: 2 }}
+                  onClick={(event) => handleCompare(event, product.productId)}
+                >
                   So sánh chi tiết
                 </Button>
               </CardContent>
@@ -77,6 +120,28 @@ export default function RelatedProducts({ relatedProducts }: { relatedProducts: 
           </Grid>
         ))}
       </Grid>
+      <Dialog open={open} onClose={handleClose} maxWidth='sm' fullWidth>
+        <DialogTitle>Kết quả so sánh</DialogTitle>
+        <DialogContent>
+          {loading ? (
+            <Box
+              display='flex'
+              justifyContent='center'
+              alignItems='center'
+              height='100px'
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Typography>{modalContent}</Typography>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color='primary' disabled={loading}>
+            Đóng
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   )
 }

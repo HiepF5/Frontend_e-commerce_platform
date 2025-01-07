@@ -1,4 +1,4 @@
-import  { Fragment, useState } from 'react'
+import  { Fragment, useEffect, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { FaChevronDown, FaThLarge } from 'react-icons/fa'
 import Products from './Products'
@@ -10,6 +10,7 @@ import SortOptionsList from './Sidebar/SortOptionsList'
 import { IoMdSearch } from 'react-icons/io'
 import { useSearchProductQuery } from '../api/searchApi'
 import { skipToken } from '@reduxjs/toolkit/query'
+import { useFetchBrandQuery, useFetchCategoriesQuery } from '../api/productApi'
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -25,43 +26,7 @@ const subCategories = [
   { name: 'Hip Bags', href: '#' },
   { name: 'Laptop Sleeves', href: '#' }
 ]
-const filters = [
-  {
-    id: 'color',
-    name: 'Color',
-    options: [
-      { value: 'white', label: 'White', checked: false },
-      { value: 'beige', label: 'Beige', checked: false },
-      { value: 'blue', label: 'Blue', checked: true },
-      { value: 'brown', label: 'Brown', checked: false },
-      { value: 'green', label: 'Green', checked: false },
-      { value: 'purple', label: 'Purple', checked: false }
-    ]
-  },
-  {
-    id: 'category',
-    name: 'Category',
-    options: [
-      { value: 'new-arrivals', label: 'New Arrivals', checked: false },
-      { value: 'sale', label: 'Sale', checked: false },
-      { value: 'travel', label: 'Travel', checked: true },
-      { value: 'organization', label: 'Organization', checked: false },
-      { value: 'accessories', label: 'Accessories', checked: false }
-    ]
-  },
-  {
-    id: 'size',
-    name: 'Size',
-    options: [
-      { value: '2l', label: '2L', checked: false },
-      { value: '6l', label: '6L', checked: false },
-      { value: '12l', label: '12L', checked: false },
-      { value: '18l', label: '18L', checked: false },
-      { value: '20l', label: '20L', checked: false },
-      { value: '40l', label: '40L', checked: true }
-    ]
-  }
-]
+
 
 export default function Sidebar() {
   const [searchKeyword, setSearchKeyword] = useState('')
@@ -72,7 +37,74 @@ export default function Sidebar() {
     const keyword = e.target.value.toLowerCase()
     setSearchKeyword(keyword)
   }
-  console.log(data)
+  const {data : categoryData} = useFetchCategoriesQuery({categoryLevel: 1})
+  const { data: brandData } = useFetchBrandQuery()
+  console.log(categoryData)
+   const [filters, setFilters] = useState([
+     {
+       id: 'color',
+       name: 'Color',
+       options: [
+         { value: 'white', label: 'White', checked: false },
+         { value: 'beige', label: 'Beige', checked: false },
+         { value: 'blue', label: 'Blue', checked: true },
+         { value: 'brown', label: 'Brown', checked: false },
+         { value: 'green', label: 'Green', checked: false },
+         { value: 'purple', label: 'Purple', checked: false }
+       ]
+     },
+     {
+       id: 'category',
+       name: 'Category',
+       options: [] // Will be populated from API data
+     },
+     {
+       id: 'brand',
+       name: 'Brand',
+       options: [
+        
+       ]
+     }
+   ])
+  useEffect(() => {
+    if (categoryData) {
+      setFilters((prevFilters) => {
+        const updatedFilters = [...prevFilters]
+        const categoryFilter = updatedFilters.find(
+          (filter) => filter.id === 'category'
+        )
+        if (categoryFilter) {
+          categoryFilter.options = categoryData.data.map((category) => ({
+            value: category.categoryId.toString(),
+            label: category.categoryName,
+            
+            checked: false
+          }))
+        }
+        return updatedFilters
+      })
+    }
+  }, [categoryData])
+  useEffect(() => {
+    // Cập nhật filter 'brand' từ dữ liệu brandData
+    if (brandData) {
+      setFilters((prevFilters) => {
+        const updatedFilters = [...prevFilters]
+        const brandFilter = updatedFilters.find(
+          (filter) => filter.id === 'brand'
+        )
+        if (brandFilter) {
+          brandFilter.options = brandData.data.map((brand) => ({
+            value: brand.id.toString(),
+            label: brand.brand,
+            count: brand.productCount,
+            checked: false
+          }))
+        }
+        return updatedFilters
+      })
+    }
+  }, [brandData])
   return (
     <div className='bg-white container'>
       <div>
@@ -129,16 +161,17 @@ export default function Sidebar() {
 
               <form className='lg:block'>
                 <h3 className='sr-only'>Categories</h3>
-                <div className='relative group hidden sm:block'>
+                <div className='relative group hidden sm:block pb-4'>
                   <input
                     type='text'
                     placeholder='Search'
                     value={searchKeyword}
                     onChange={handleSearch}
-                    className='w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800'
+                    className='w-[200px] pr-10 pl-10 transition-all duration-300 rounded-full border border-gray-300 px-4 py-2 focus:outline-none focus:border-primary dark:border-gray-500 dark:bg-gray-800 dark:text-white'
                   />
-                  <IoMdSearch className='text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3' />
+                  <IoMdSearch className='absolute left-3 text-gray-500' style={{top: '15px'}} />
                 </div>
+
                 <SubCategoriesList subCategories={subCategories} />
 
                 {/* Color Filter */}

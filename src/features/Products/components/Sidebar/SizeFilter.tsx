@@ -4,6 +4,7 @@ import InputFilter from '@shared/components/InputFilter/InputFilter'
 interface Option {
   value: string;
   label: string;
+  count?: number;
   checked: boolean;
 }
 
@@ -18,7 +19,7 @@ export default function SizeFilter({ options }: SizeFilterProps) {
         <>
           <h3 className='-mx-2 -my-3 flow-root'>
             <Disclosure.Button className='flex w-full items-center justify-between bg-white px-2 py-3 text-gray-400 hover:text-gray-500'>
-              <span className='font-medium text-gray-900'>Size</span>
+              <span className='font-medium text-gray-900'>Brand</span>
               <span className='ml-6 flex items-center'>
                 {open ? (
                   <FaMinus className='h-5 w-5' aria-hidden='true' />
@@ -36,6 +37,7 @@ export default function SizeFilter({ options }: SizeFilterProps) {
                     id={optionIdx.toString()}
                     value={option.value}
                     label={option.label}
+                    count={option.count}
                     checked={option.checked}
                   />
                 </div>

@@ -69,13 +69,22 @@ const MarkdownContent = styled('div')(({ theme }) => ({
 }))
 
 const reviewImages: ReviewImage[] = [
-  { id: '1', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/1.jpg?raw=true' },
-  { id: '2', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true' },
-  { id: '3', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true' },
-  { id: '4', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true' },
-  { id: '5', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/5.jpg?raw=true' },
-  { id: '6', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/1.jpg?raw=true' },
-  { id: '7', url: 'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true' }
+  {
+    id: '1',
+    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGgug2jAhJhLL3VRBXK2IqF4CiW8iys0CN6g&s'
+  },
+  {
+    id: '2',
+    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTf9D8Nnp4UmG6m5PJVPTGQIgye0_S9yh_dWA&s'
+  },
+  {
+    id: '3',
+    url: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaIujUEVmioFdc3ncRS8TQ6pJAATr6n8Ir1A&s'
+  },
+  {
+    id: '4',
+    url: 'https://www.phanmemninja.com/wp-content/uploads/2024/03/Mau-content-review-san-pham-675x380-1.png'
+  },
 ]
 
 export default function Reviews({ productId, productDetail }: ReviewsProps) {
@@ -175,38 +184,9 @@ export default function Reviews({ productId, productDetail }: ReviewsProps) {
       </Typography>
 
       <Grid container spacing={4}>
-        <Grid item xs={12} md={4}>
-          <Box sx={{ textAlign: 'center', mb: 4 }}>
-            <Typography variant='h3' gutterBottom>
-              5.00
-            </Typography>
-            <Rating value={5} readOnly size='large' />
-            <Typography color='text.secondary' sx={{ mt: 1 }}>
-              (6 đánh giá)
-            </Typography>
-          </Box>
+        
 
-          <Box sx={{ px: 2 }}>
-            {[5, 4, 3, 2, 1].map((rating) => (
-              <Box
-                key={rating}
-                sx={{ display: 'flex', alignItems: 'center', mb: 1 }}
-              >
-                <Rating value={rating} readOnly size='small' sx={{ mr: 1 }} />
-                <LinearProgress
-                  variant='determinate'
-                  value={rating === 5 ? 100 : 0}
-                  sx={{ flexGrow: 1, mx: 1 }}
-                />
-                <Typography variant='body2' color='text.secondary' sx={{ minWidth: 20 }}>
-                  {rating === 5 ? 6 : 0}
-                </Typography>
-              </Box>
-            ))}
-          </Box>
-        </Grid>
-
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={12}>
           <Paper sx={{ p: 3, mb: 4 }}>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Typography variant="h6">

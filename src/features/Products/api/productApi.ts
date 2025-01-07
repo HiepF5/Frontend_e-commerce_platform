@@ -3,6 +3,7 @@ import { axiosBaseQuery } from '@shared/libs/rtk-query/axiosBaseQuery'
 import { IBaseResponse, PaginationResponse } from '~/types/base.interface'
 import { IProduct } from '~/types/products.interface'
 import { IProductData } from '../types/products.interface'
+import { BrandFilter, Category } from './searchApi'
 
 export const productApi = createApi({
   reducerPath: 'productApi',
@@ -71,7 +72,19 @@ export const productApi = createApi({
           pageSize
         }
       })
-    })
+    }),
+    fetchCategories: builder.query<IBaseResponse<Category[]>, { categoryLevel: number }>({
+      query: ({ categoryLevel }) => ({
+        url: `/owner/category?categoryLevel=${categoryLevel}`,
+        method: 'GET',
+      }),
+    }),
+    fetchBrand: builder.query<IBaseResponse<BrandFilter[]>, void>({
+      query: () => ({
+        url: `/guest/product/all-brand`,
+        method: 'GET',
+      }),
+      }),
   })
 })
 
@@ -81,5 +94,7 @@ export const {
   useGetProductRecommendItemBasedQuery,
   useGetProductRecommendUserBasedQuery,
   useGetProductRecommendContentBasedQuery,
-  useListProductOfShopMutation
+  useListProductOfShopMutation,
+  useFetchCategoriesQuery,
+  useFetchBrandQuery
 } = productApi
