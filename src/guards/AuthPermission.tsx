@@ -59,11 +59,11 @@ export const AuthPermission = ({
     }
   }
 
-  if (allowedRoles?.includes('CHUCUAHANG') && !user.shop_code) {
-    toast.warning('Bạn cần có cửa hàng để truy cập trang này')
-    navigate('/', { replace: true })
-    return null
-  }
+  // if (allowedRoles?.includes('CHUCUAHANG') && !user.shop_code) {
+  //   toast.warning('Bạn cần có cửa hàng để truy cập trang này')
+  //   navigate('/', { replace: true })
+  //   return null
+  // }
 
   return children
 }
