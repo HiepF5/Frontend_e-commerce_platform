@@ -1,7 +1,6 @@
 import { createApi } from '@reduxjs/toolkit/query/react';
 import { axiosBaseElk } from '@shared/libs/rtk-query/axiosBaseElk';
 import { FinancialOverview, MonthlyReport, ShopOverviewResponse } from '../types/order';
-
 export const shopAdminApi = createApi({
   reducerPath: 'shopAdminApi',
   baseQuery: axiosBaseElk(),
@@ -23,7 +22,7 @@ export const shopAdminApi = createApi({
         url: `/owner/overview/by-shop/${shop_id}/monthly-revenue-overview`,
         method: 'GET',
       }),
-    }),
+    })
   }),
 });
 
