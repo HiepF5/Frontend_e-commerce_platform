@@ -1,5 +1,5 @@
-import {  Suspense } from 'react'
-import { useRoutes } from 'react-router-dom'
+import {  Suspense, useEffect } from 'react'
+import { useLocation, useRoutes } from 'react-router-dom'
 import LayoutPage from '@layouts/LayoutPage'
 import ShopHomePage from '../page/ShopHomePage'
 import ShopReviews from '../components/ShopReviews'
@@ -49,18 +49,17 @@ const ShopRoutes = (): JSX.Element => {
               element: <ShopReviews />
             }
           ]
-        },
-        {
-          path: 'home',
-          element: <ShopHomePage />,
-          
         }
       ]
     }
   ]
 
   const element = useRoutes(routes)
-
+   const location = useLocation()
+    useEffect(() => {
+        // Cuộn về đầu trang mỗi khi điều hướng đến một route mới
+        window.scrollTo(0, 0)
+      }, [location])
   return <Suspense fallback={<div>Loading...</div>}>{element}</Suspense>
 }
 

@@ -30,9 +30,7 @@ function ProductCard({ product }: { product: IProduct }) {
         <CardMedia
           component='img'
           height='200'
-          image={
-            'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true'
-          }
+          image={product.imageUrl ?? ''}
           alt={product.productTitle}
           sx={{ objectFit: 'cover' }}
         />

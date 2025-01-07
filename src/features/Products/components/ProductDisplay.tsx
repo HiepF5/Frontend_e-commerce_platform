@@ -31,12 +31,12 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
   const [quantity, setQuantity] = React.useState(1)
 
   // Add fake images to the product's image list
-  const fakeImages = [
-    'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
-    'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true',
-    'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true'
-  ]
-  const images = [...product.listImg, ...fakeImages]
+  // const fakeImages = [
+  //   'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/4.jpg?raw=true',
+  //   'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/3.jpg?raw=true',
+  //   'https://github.com/HiepF5/Db_Ecommercer/blob/main/IPhone/IPhone%2015/2.jpg?raw=true'
+  // ]
+  const images = [...product.listImg]
 
   // Group variants by attribute name
   const [selectedAttributes, setSelectedAttributes] = React.useState<{

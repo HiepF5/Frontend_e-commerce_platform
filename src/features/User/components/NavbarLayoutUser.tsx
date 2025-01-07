@@ -12,6 +12,7 @@ import {
 } from '@mui/icons-material'
 
 const NavbarLayoutUser = () => {
+  const user = JSON.parse(localStorage.getItem('user') || '{}')
   return (
     <>
       <div className='flex items-center p-4 gap-4 rounded-lg transition-all duration-300 hover:bg-gray-100 hover:scale-105 hover:shadow-lg'>
@@ -87,7 +88,7 @@ const NavbarLayoutUser = () => {
         <StoreMallIcon className='text-yellow-600' />
 
         <Link
-          to='/shop/home'
+          to={`/shop/${user.shop_id}`}
           className='text-gray-800 font-medium text-lg hover:text-yellow-600'
         >
           Trang chủ Shop của Tôi
