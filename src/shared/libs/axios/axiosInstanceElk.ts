@@ -3,13 +3,14 @@ import axios, { AxiosInstance } from 'axios';
 import Cookies from 'js-cookie';
 
 const axiosInstance: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL_ELK,
 });
 
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = Cookies.get('accessToken');
-    if (token !== undefined && token !== null && token !== '') { 
+    if (token !== undefined && token !== null && token !== '') {
+      config.headers.Authorization = `Bearer ${token}`;
     }
 
     return config;

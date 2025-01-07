@@ -24,7 +24,7 @@ import { orderShopApi } from '@features/Order/api/orderShopApi'
 import { reviewApi } from '@features/Products/api/reviewApi'
 import { userApi } from '@features/Admin/api/userApi'
 import { threadsApi } from '@features/Threads/api/threadsApi'
-
+import { shopAdminApi } from '@features/ShopAdmin/api/shopAdminApi'
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
@@ -49,7 +49,8 @@ export const store = configureStore({
     [checkoutApi.reducerPath]: checkoutApi.reducer,
     [orderShopApi.reducerPath]: orderShopApi.reducer,
     [reviewApi.reducerPath]: reviewApi.reducer,
-    [userApi.reducerPath]: userApi.reducer
+    [userApi.reducerPath]: userApi.reducer,
+    [shopAdminApi.reducerPath]: shopAdminApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
@@ -65,7 +66,8 @@ export const store = configureStore({
       checkoutApi.middleware,
       orderShopApi.middleware,
       reviewApi.middleware,
-      userApi.middleware
+      userApi.middleware,
+      shopAdminApi.middleware
     )
 })
 setupListeners(store.dispatch)

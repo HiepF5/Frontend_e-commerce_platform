@@ -39,8 +39,28 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
   const images = [...product.listImg, ...fakeImages]
 
   // Group variants by attribute name
+  const [selectedAttributes, setSelectedAttributes] = React.useState<{
+    [key: string]: string
+  }>({})
+
+  const handleAttributeChange = (attrName: string, value: string) => {
+    const updatedAttributes = { ...selectedAttributes, [attrName]: value }
+
+    // Cập nhật thuộc tính đã chọn
+    setSelectedAttributes(updatedAttributes)
+
+    // Tìm biến thể dựa trên các thuộc tính đã chọn
+    const matchedVariant = product.productVariant.find((variant) =>
+      variant.attribute.every(
+        (attr) => updatedAttributes[attr.name] === attr.value
+      )
+    )
+
+    // Cập nhật biến thể được chọn
+    setSelectedVariant(matchedVariant?.variantId ?? null)
+  }
   const variantGroups = product.productVariant.reduce(
-    (groups: any, variant) => {
+    (groups: { [key: string]: string[] }, variant) => {
       variant.attribute.forEach((attr) => {
         if (!groups[attr.name]) {
           groups[attr.name] = []
@@ -53,6 +73,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
     },
     {}
   )
+    console.log(variantGroups)
   const navigate = useNavigate()
 
   const formatPrice = (price: number) => {
@@ -112,7 +133,7 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
       setQuantity(quantity - 1)
     }
   }
-  console.log(variantGroups)
+
 
   return (
     <Container maxWidth='lg' sx={{ py: 4 }}>
@@ -240,7 +261,8 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                 </Typography>
               ) : (
                 <Typography variant='h5' color='error.main' gutterBottom>
-                  Giá bán {formatPrice(
+                  Giá bán{' '}
+                  {formatPrice(
                     product.productVariant.find(
                       (v) => v.variantId === selectedVariant
                     )?.sellPrice ?? 0
@@ -256,35 +278,44 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                   {attrName}
                 </Typography>
                 <ToggleButtonGroup
-                  value={selectedVariant}
+                  value={selectedAttributes[attrName] || ''}
                   exclusive
-                  onChange={(_, value) => setSelectedVariant(value as number)}
+                  onChange={(_, value) =>
+                    handleAttributeChange(attrName, value)
+                  }
                   sx={{ flexWrap: 'wrap' }}
                 >
-                  {(values as string[]).map((value) => {
-                    const variant = product.productVariant.find((v) =>
-                      v.attribute.some((a) => a.value === value)
-                    )
-                    return (
-                      <ToggleButton
-                        key={value}
-                        value={variant?.variantId ?? ''}
-                        sx={{
-                          m: 0.5,
-                          border: '1px solid #ddd',
-                          '&.Mui-selected': {
-                            borderColor: 'primary.main',
-                            backgroundColor: 'primary.light'
-                          }
-                        }}
-                      >
-                        {value}
-                      </ToggleButton>
-                    )
-                  })}
+                  {values.map((value) => (
+                    <ToggleButton
+                      key={value}
+                      value={value}
+                      sx={{
+                        m: 0.5,
+                        border: '1px solid #ddd',
+                        '&.Mui-selected': {
+                          borderColor: 'primary.main',
+                          backgroundColor: 'primary.light'
+                        }
+                      }}
+                    >
+                      {value}
+                    </ToggleButton>
+                  ))}
                 </ToggleButtonGroup>
               </Box>
             ))}
+            {selectedVariant && (
+              <Box mt={2}>
+                <Typography variant='h6'>Selected Variant</Typography>
+                <Typography>
+                  Giá bán:{' '}
+                  {product.productVariant
+                    .find((v) => v.variantId === selectedVariant)
+                    ?.sellPrice.toLocaleString('vi-VN')}{' '}
+                  VND
+                </Typography>
+              </Box>
+            )}
 
             {/* Stock Info */}
             {selectedVariant && (
@@ -305,11 +336,14 @@ export default function ProductDisplay({ product }: ProductDetailProps) {
                     )?.soldCount
                   }
                 </Typography>
-                <Typography>Giá bán: {formatPrice(
+                <Typography>
+                  Giá bán:{' '}
+                  {formatPrice(
                     product.productVariant.find(
                       (v) => v.variantId === selectedVariant
                     )?.sellPrice ?? 0
-                  )}</Typography>
+                  )}
+                </Typography>
               </Box>
             )}
 
