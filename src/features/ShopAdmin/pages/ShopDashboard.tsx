@@ -55,10 +55,10 @@ const ShopDashboard = (): JSX.Element => {
   ]
 
   const topProducts = [
-    { name: 'Product A', sales: 150 },
-    { name: 'Product B', sales: 120 },
-    { name: 'Product C', sales: 90 },
-    { name: 'Product D', sales: 60 },
+    { name: 'Iphone 13', sales: 150 },
+    { name: 'Iphone 12', sales: 120 },
+    { name: 'Iphone 14', sales: 90 },
+    { name: 'Iphone 16', sales: 60 },
   ]
 
   return (

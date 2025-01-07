@@ -1,6 +1,6 @@
 import Sidebar from '../components/Sidebar'
-import Introduction from '../components/Introduction'
-import BuyBestPrice from '../components/BuyBestPrice';
+// import Introduction from '../components/Introduction'
+// import BuyBestPrice from '../components/BuyBestPrice';
 
 
 interface ProductsListProps {
@@ -12,8 +12,8 @@ const ProductsList: React.FC<ProductsListProps> = ({ category }) => {
   return (
     <div>
       <Sidebar />
-      <Introduction />
-      <BuyBestPrice />
+      {/* <Introduction />
+      <BuyBestPrice /> */}
     </div>
   )
 }

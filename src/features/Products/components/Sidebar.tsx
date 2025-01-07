@@ -1,4 +1,4 @@
-import  { Fragment } from 'react'
+import  { Fragment, useState } from 'react'
 import { Menu, Transition } from '@headlessui/react'
 import { FaChevronDown, FaThLarge } from 'react-icons/fa'
 import Products from './Products'
@@ -7,6 +7,9 @@ import SizeFilter from './Sidebar/SizeFilter'
 import CategoryFilter from './Sidebar/CategoryFilter'
 import SubCategoriesList from './Sidebar/SubCategories'
 import SortOptionsList from './Sidebar/SortOptionsList'
+import { IoMdSearch } from 'react-icons/io'
+import { useSearchProductQuery } from '../api/searchApi'
+import { skipToken } from '@reduxjs/toolkit/query'
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -61,6 +64,15 @@ const filters = [
 ]
 
 export default function Sidebar() {
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const { data } = useSearchProductQuery(
+    searchKeyword ? { keyword: searchKeyword } : skipToken
+  )
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const keyword = e.target.value.toLowerCase()
+    setSearchKeyword(keyword)
+  }
+  console.log(data)
   return (
     <div className='bg-white container'>
       <div>
@@ -117,6 +129,16 @@ export default function Sidebar() {
 
               <form className='lg:block'>
                 <h3 className='sr-only'>Categories</h3>
+                <div className='relative group hidden sm:block'>
+                  <input
+                    type='text'
+                    placeholder='Search'
+                    value={searchKeyword}
+                    onChange={handleSearch}
+                    className='w-[200px] group-hover:w-[300px] transition-all duration-300 rounded-full border border-gray-300 px-2 py-1 focus:outline-none focus:border-1 focus:border-primary dark:border-gray-500 dark:bg-gray-800'
+                  />
+                  <IoMdSearch className='text-gray-500 group-hover:text-primary absolute top-1/2 -translate-y-1/2 right-3' />
+                </div>
                 <SubCategoriesList subCategories={subCategories} />
 
                 {/* Color Filter */}
@@ -130,7 +152,7 @@ export default function Sidebar() {
               </form>
               {/* Product grid */}
               <div className='lg:col-span-3'>
-                <Products />
+                <Products searchProduct={data} />
               </div>
             </div>
           </section>

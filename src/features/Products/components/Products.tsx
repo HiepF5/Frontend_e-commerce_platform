@@ -3,8 +3,14 @@ import { useState, useEffect, useCallback } from 'react'
 import ProductItem from './ProductItem'
 import { IProduct } from '~/types/products.interface'
 import { useGetListProductQuery } from '../api/productApi'
+import { IBaseResponseSearch, IProductSearchRequest } from '../api/searchApi';
 
-export default function Products() {
+interface ProductsProps {
+  searchProduct?: IBaseResponseSearch<IProductSearchRequest>;
+}
+
+export default function Products({ searchProduct }: ProductsProps) {
+  console.log(searchProduct)
   const [pageNumber, setPageNumber] = useState(1)
   const [hasMore, setHasMore] = useState(true)
   
@@ -25,6 +31,7 @@ export default function Products() {
       }
     }
   }, [data])
+  console.log(data)
 
   const loadMore = useCallback(() => {
     if (!isFetching && hasMore) {
@@ -57,28 +64,53 @@ export default function Products() {
           Danh sách điện thoại
         </h2>
         <div className='mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
-          {products.map((product) => (
-            <div key={product.productId}>
-              <ProductItem
-                product={{
-                  productId: product.productId,
-                  imageUrl: product.imageUrl || '',
-                  productTitle: product.productTitle,
-                  brand: `Brand: ${product.brand}`,
-                  price: product.minPrice,
-                  hasVideo: true,
-                  isFavorite: true,
-                  isBestseller: true,
-                  fastShipping: true,
-                  rating: 4.5,
-                  likes: 1234,
-                  soldCount: 999,
-                  installment: true
-                }}
-                adjustPrice={300000}
-              />
-            </div>
-          ))}
+          {searchProduct
+            ? searchProduct.content.map(
+                (productRequest: IProductSearchRequest, index: number) => {
+                  const product = {
+                    productId: productRequest.id,
+                    imageUrl: productRequest.productUrl || '',
+                    productTitle: productRequest.title,
+                    brand: `Brand: ${productRequest.brandDocument.brandName}`,
+                    price: productRequest.minPrice,
+                    hasVideo: true,
+                    isFavorite: true,
+                    isBestseller: true,
+                    fastShipping: true,
+                    rating: 4.5,
+                    likes: 1234,
+                    soldCount: 999,
+                    installment: true
+                  }
+                  return (
+                    <div key={index} className='group relative'>
+                      <ProductItem product={product} />
+                    </div>
+                  )
+                }
+              )
+            : products.map((product) => (
+                <div key={product.productId}>
+                  <ProductItem
+                    product={{
+                      productId: product.productId,
+                      imageUrl: product.imageUrl || '',
+                      productTitle: product.productTitle,
+                      brand: `Brand: ${product.brand}`,
+                      price: product.minPrice,
+                      hasVideo: true,
+                      isFavorite: true,
+                      isBestseller: true,
+                      fastShipping: true,
+                      rating: 4.5,
+                      likes: 1234,
+                      soldCount: 999,
+                      installment: true
+                    }}
+                    adjustPrice={300000}
+                  />
+                </div>
+              ))}
         </div>
 
         {hasMore && <div id='load-more-trigger' className='h-10'></div>}
