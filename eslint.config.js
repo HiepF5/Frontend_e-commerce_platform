@@ -22,6 +22,8 @@ export default tseslint.config({
   },
   rules: {
     ...reactHooks.configs.recommended.rules,
+    "@typescript-eslint/no-var-requires": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
     'react-refresh/only-export-components': [
       'warn',
       {
